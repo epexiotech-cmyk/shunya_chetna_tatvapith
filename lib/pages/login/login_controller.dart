@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../routes/common/common_app_pages.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final isLoading = false.obs;
+  final isPasswordVisible = false.obs;
+  final isConfirmPasswordVisible = false.obs;
 
   @override
   void onClose() {
@@ -15,13 +16,41 @@ class LoginController extends GetxController {
     super.onClose();
   }
 
-  void login() async {
-    isLoading.value = true;
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+  }
 
-    // Simulate backend call
-    await Future.delayed(const Duration(seconds: 1));
+  void toggleConfirmPasswordVisibility() {
+    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
+  }
 
-    isLoading.value = false;
-    Get.offNamed(routeDashboardpage);
+  void login() {
+    Get.offAndToNamed(routedashboard);
+  }
+  // void login() {
+  //   if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+  //     Get.offAndToNamed(routedashboard);
+  //     Get.snackbar(
+  //       'Success',
+  //       'Login functionality to be implemented',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //     );
+  //   } else {
+  //     Get.snackbar(
+  //       'Error',
+  //       'Please enter email and password',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.redAccent,
+  //       colorText: Colors.white,
+  //     );
+  //   }
+  // }
+
+  void goToRegister() {
+    Get.toNamed(routeregisterpage);
+  }
+
+  void goToLogin() {
+    Get.offAllNamed(routeLoginpage);
   }
 }

@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:shunya_app/dependency_injection.dart';
-import 'package:shunya_app/pages/login/login_controller.dart';
-import 'package:shunya_app/routes/common/common_app_pages.dart';
+import 'package:shunya_app/pages/register/register_controller.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_text.dart';
 import 'package:shunya_app/widgets/custom_textfield.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<LoginController>(
+    return GetBuilder<RegisterController>(
       builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.WHITE,
@@ -27,6 +26,8 @@ class LoginScreen extends StatelessWidget {
                   vertical: hp(2),
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
                     Image.asset(
                       'assets/images/splash_logo.png',
@@ -35,9 +36,30 @@ class LoginScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: hp(2)),
-                    CustomText(text: "PMS Doctor Login"),
+                    CustomText(text: "PMS Create Account"),
 
                     SizedBox(height: hp(4)),
+
+                    // Name Field
+                    CustomTextField(
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
+                      controller: controller.nameController,
+                      hint: "Doctor Name",
+                      labeltext: 'Doctor Name',
+                      validator: formValidation.validation(
+                        type: 'name',
+                        multiValidator: MultiValidator([]),
+                        isRequired: true,
+                        errorText: "Name is required.",
+                      ),
+                      prefixicon: Icon(
+                        Icons.person_2_outlined,
+                        color: AppColors.PRIMARY_COLOR,
+                      ),
+                    ),
+
+                    SizedBox(height: hp(2)),
                     // Email Field
                     CustomTextField(
                       keyboardType: TextInputType.emailAddress,
@@ -57,7 +79,26 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: hp(2)),
+                    // Email Field
+                    CustomTextField(
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: controller.emailController,
+                      hint: "Mobile No",
+                      labeltext: 'Mobile No',
+                      validator: formValidation.validation(
+                        type: 'mobile',
+                        multiValidator: MultiValidator([]),
+                        isRequired: true,
+                        errorText: "Mobile No is required.",
+                      ),
+                      prefixicon: Icon(
+                        Icons.phone_outlined,
+                        color: AppColors.PRIMARY_COLOR,
+                      ),
+                    ),
 
+                    SizedBox(height: hp(2)),
                     // Password Field
                     CustomTextField(
                       obscureText: !controller.isPasswordVisible.value,
@@ -85,24 +126,41 @@ class LoginScreen extends StatelessWidget {
                         color: AppColors.PRIMARY_COLOR,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: hp(1), left: wp(52)),
-                      child: InkWell(
-                        onTap: () {
-                          Get.toNamed(routeforgetpage);
-                        },
-                        child: CustomText(
-                          text: "Forget Password?",
+                    SizedBox(height: hp(2)),
+
+                    // Confirm Password Field
+                    CustomTextField(
+                      obscureText: !controller.isPasswordVisible.value,
+                      controller: controller.confirmPasswordController,
+                      textInputAction: TextInputAction.done,
+                      hint: 'Confirm Password',
+                      labeltext: 'Confirm Password',
+                      validator: formValidation.validation(
+                        type: 'password',
+                        multiValidator: MultiValidator([]),
+                        isRequired: true,
+                        errorText: "Confirm Password is required.",
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.isPasswordVisible.value
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                           color: AppColors.PRIMARY_COLOR,
-                          fontSize: dp(context, 12),
                         ),
+                        onPressed: controller.togglePasswordVisibility,
+                      ),
+                      prefixicon: Icon(
+                        Icons.lock_outline,
+                        color: AppColors.PRIMARY_COLOR,
                       ),
                     ),
-                    SizedBox(height: hp(3)),
 
-                    // Login Button
+                    SizedBox(height: hp(4)),
+
+                    // Register Button
                     Customcontainer(
-                      text: "LOGIN",
+                      text: "REGISTER",
                       context: context,
                       onTap: controller.login,
                     ),
@@ -111,14 +169,14 @@ class LoginScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomText(
-                          text: "Don't have an account? ",
+                          text: "Already have an account? ",
                           color: AppColors.LIGHT_GREY,
                           fontSize: dp(context, 12),
                         ),
                         InkWell(
-                          onTap: () => controller.goToRegister(),
+                          onTap: () => controller.goToLogin(),
                           child: CustomText(
-                            text: "Create Account",
+                            text: "Back to Login",
                             color: AppColors.PRIMARY_COLOR,
                             fontSize: dp(context, 12),
                           ),

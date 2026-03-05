@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../routes/app_routes.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 
-class AuthController extends GetxController {
+class RegisterController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  
+  final mobileController = TextEditingController();
   // Registration specific controllers
   final nameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  
+
   final isPasswordVisible = false.obs;
   final isConfirmPasswordVisible = false.obs;
 
@@ -32,13 +32,19 @@ class AuthController extends GetxController {
 
   void login() {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      Get.snackbar('Success', 'Login functionality to be implemented',
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        'Success',
+        'Login functionality to be implemented',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } else {
-      Get.snackbar('Error', 'Please enter email and password',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Please enter email and password',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -48,27 +54,36 @@ class AuthController extends GetxController {
         passwordController.text.isNotEmpty &&
         confirmPasswordController.text.isNotEmpty) {
       if (passwordController.text == confirmPasswordController.text) {
-        Get.snackbar('Success', 'Registration functionality to be implemented',
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Success',
+          'Registration functionality to be implemented',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       } else {
-         Get.snackbar('Error', 'Passwords do not match',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white);
-      }
-    } else {
-      Get.snackbar('Error', 'Please fill all fields',
+        Get.snackbar(
+          'Error',
+          'Passwords do not match',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+          colorText: Colors.white,
+        );
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        'Please fill all fields',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 
   void goToRegister() {
-    Get.toNamed(AppRoutes.register);
+    Get.toNamed(routeregisterpage);
   }
 
   void goToLogin() {
-    Get.offNamed(AppRoutes.login);
+    Get.offAllNamed(routeLoginpage);
   }
 }

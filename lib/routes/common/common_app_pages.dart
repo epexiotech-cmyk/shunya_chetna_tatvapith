@@ -1,10 +1,11 @@
-// ROUTE CONSTANTS
-
+//COMMON APP ROUTE
 const routeRootpage = "/";
 const routeLoginpage = "/loginpage";
-const routeDashboardpage = "/dashboardpage";
-const routePatientsPage = "/patientspage";
-const routePatientProfilePage = "/patientprofilepage";
-const routeAddVisitPage = "/addvisitpage";
-const routeBillingPage = "/billingpage";
-const routeInventoryPage = "/inventorypage";
+const routeregisterpage = "/registerpage";
+const routedashboard = "/dashboard";
+const routeforgetpage = "/forgetpage";
+const routepatientpage = "/PatientPage";
+const routebillingpage = "/BillingPage";
+const routeinventorypage = "/InventoryPage";
+const routediseasepage = "/DiseasePage";
+const routeprofilepage = "/ProfilePage";

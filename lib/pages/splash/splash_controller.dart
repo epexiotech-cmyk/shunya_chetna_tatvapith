@@ -1,16 +1,51 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../routes/common/common_app_pages.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 
-class SplashController extends GetxController {
+class SplashController extends GetxController
+    with GetSingleTickerProviderStateMixin {
+  late AnimationController animationController;
+  late Animation<double> fadeAnimation;
+  late Animation<Offset> slideAnimation;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    );
+
+    fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 10.0,
+    ).animate(animationController);
+
+    slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: animationController,
+            curve: Curves.bounceInOut,
+          ),
+        );
+
+    animationController.forward();
+  }
+
   @override
   void onReady() {
     super.onReady();
 
-    print("Splash Controller Ready");
-
-    Future.delayed(const Duration(seconds: 2), () {
-      print("Going to Login Page");
+    Timer(const Duration(seconds: 5), () {
       Get.offAllNamed(routeLoginpage);
     });
+  }
+
+  @override
+  void onClose() {
+    animationController.dispose();
+    super.onClose();
   }
 }

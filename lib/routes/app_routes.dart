@@ -1,5 +1,7 @@
 import 'common/common_app_routes.dart';
 
 class AppRoutes {
-  static final routes = [...CommonRoutes.routes];
+  static final routes = [
+    ...CommonRoutes.routes,
+  ];
 }

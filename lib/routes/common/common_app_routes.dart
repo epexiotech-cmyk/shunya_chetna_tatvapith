@@ -1,73 +1,79 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../pages/dashboard/dashboard_binding.dart';
-import '../../pages/dashboard/dashboard_page.dart';
-import '../../pages/login/login_binding.dart';
-import '../../pages/login/login_page.dart';
-import '../../pages/splash/splash_binding.dart';
-import '../../pages/splash/splash_page.dart';
-import 'common_app_pages.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:shunya_app/pages/billing/billing_binding.dart';
+import 'package:shunya_app/pages/billing/billing_page.dart';
+import 'package:shunya_app/pages/dashboard/dashboard_binding.dart';
+import 'package:shunya_app/pages/dashboard/dashboard_page.dart';
+import 'package:shunya_app/pages/disease/disease_binding.dart';
+import 'package:shunya_app/pages/disease/disease_page.dart';
+import 'package:shunya_app/pages/forget/forget_binding.dart';
+import 'package:shunya_app/pages/forget/forget_page.dart';
+import 'package:shunya_app/pages/inventory/inventory_binding.dart';
+import 'package:shunya_app/pages/inventory/inventory_page.dart';
+import 'package:shunya_app/pages/login/login_binding.dart';
+import 'package:shunya_app/pages/login/login_page.dart';
+import 'package:shunya_app/pages/patient/patient_binding.dart';
+import 'package:shunya_app/pages/patient/patient_page.dart';
+import 'package:shunya_app/pages/profile/profile_binding.dart';
+import 'package:shunya_app/pages/profile/profile_page.dart';
+import 'package:shunya_app/pages/register/register_binding.dart';
+import 'package:shunya_app/pages/register/register_screen.dart';
+import 'package:shunya_app/pages/splash/splash_binding.dart';
+import 'package:shunya_app/pages/splash/splash_page.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 
-// PLACEHOLDER BINDINGS
-// (Other bindings will be moved to separate files as modules are implemented)
+//COMMON APP ROUTE HERE
 
-class PatientsBinding extends Bindings {
-  @override
-  void dependencies() {}
-}
-
-class AddVisitBinding extends Bindings {
-  @override
-  void dependencies() {}
-}
-
-class BillingBinding extends Bindings {
-  @override
-  void dependencies() {}
-}
-
-class InventoryBinding extends Bindings {
-  @override
-  void dependencies() {}
-}
-
-// GETPAGE ROUTES
 class CommonRoutes {
   static final routes = [
     GetPage(
       name: routeRootpage,
-      page: () => const SplashPage(),
+      page: () => SplashScreen(),
       binding: SplashBinding(),
     ),
     GetPage(
       name: routeLoginpage,
-      page: () => const LoginPage(),
+      page: () => const LoginScreen(),
       binding: LoginBinding(),
     ),
     GetPage(
-      name: routeDashboardpage,
+      name: routeregisterpage,
+      page: () => const RegisterScreen(),
+      binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: routedashboard,
       page: () => const DashboardPage(),
       binding: DashboardBinding(),
     ),
     GetPage(
-      name: routePatientsPage,
-      page: () => const Scaffold(body: Center(child: Text("Patients Page"))),
-      binding: PatientsBinding(),
+      name: routeforgetpage,
+      page: () => const ForgetScreen(),
+      binding: ForgetBinding(),
     ),
     GetPage(
-      name: routeAddVisitPage,
-      page: () => const Scaffold(body: Center(child: Text("Add Visit Page"))),
-      binding: AddVisitBinding(),
+      name: routepatientpage,
+      page: () => const PatientPage(),
+      binding: PatientBinding(),
     ),
     GetPage(
-      name: routeBillingPage,
-      page: () => const Scaffold(body: Center(child: Text("Billing Page"))),
+      name: routebillingpage,
+      page: () => const BillingPage(),
       binding: BillingBinding(),
     ),
     GetPage(
-      name: routeInventoryPage,
-      page: () => const Scaffold(body: Center(child: Text("Inventory Page"))),
+      name: routeinventorypage,
+      page: () => const InventoryPage(),
       binding: InventoryBinding(),
+    ),
+    GetPage(
+      name: routediseasepage,
+      page: () => const DiseasePage(),
+      binding: DiseaseBinding(),
+    ),
+    GetPage(
+      name: routeprofilepage,
+      page: () => const ProfilePage(),
+      binding: ProfileBinding(),
     ),
   ];
 }

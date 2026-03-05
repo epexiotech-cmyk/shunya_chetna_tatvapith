@@ -1,31 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shunya_app/utils/colors.dart';
+import 'package:shunya_app/utils/responsive.dart';
+import 'package:shunya_app/widgets/custom_text.dart';
 import 'splash_controller.dart';
 
-class SplashPage extends GetView<SplashController> {
-  const SplashPage({super.key});
+class SplashScreen extends GetView<SplashController> {
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Shunya Chetna Tatvapith",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
+    return Scaffold(
+      backgroundColor: AppColors.WHITE,
+      body: Padding(
+        padding: EdgeInsets.only(top: hp(30), left: wp(10), bottom: hp(0.2)),
+        child: FadeTransition(
+          opacity: controller.fadeAnimation,
+          child: SlideTransition(
+            position: controller.slideAnimation,
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/images/splash_logo.png',
+                  scale: dp(context, 2.3),
+                  color: AppColors.PRIMARY_COLOR,
+                ),
+                SizedBox(height: hp(2)),
+                CustomText(text: "Patient Management System"),
+              ],
             ),
-            SizedBox(height: 10),
-            Text("Patient Management System"),
-            SizedBox(height: 30),
-            CircularProgressIndicator(color: Colors.green),
-          ],
+          ),
         ),
       ),
     );
