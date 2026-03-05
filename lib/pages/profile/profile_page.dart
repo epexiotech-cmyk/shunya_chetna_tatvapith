@@ -145,7 +145,7 @@ class ProfilePage extends GetView<ProfileController> {
                           controller: clinic.addressController,
                           hint: "Clinic Address",
                           labeltext: "Clinic Address",
-                          maxLines: 2,
+                          maxLines: 3,
                           prefixicon: Icon(
                             Icons.location_on_outlined,
                             color: AppColors.PRIMARY_COLOR,

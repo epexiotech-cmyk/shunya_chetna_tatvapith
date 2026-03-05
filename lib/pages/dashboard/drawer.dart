@@ -1,0 +1,213 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:marquee/marquee.dart';
+import 'package:shunya_app/utils/colors.dart';
+import 'package:shunya_app/utils/responsive.dart';
+import 'package:shunya_app/widgets/custom_text.dart';
+import 'package:shunya_app/widgets/customcontainer.dart';
+
+// ignore: strict_top_level_inference
+customdrawer({required BuildContext context}) {
+  return Drawer(
+    backgroundColor: AppColors.WHITE,
+    child: ListView(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/images/splash_logo.png',
+                height: hp(5),
+                color: AppColors.PRIMARY_COLOR,
+              ),
+              SizedBox(width: wp(2)),
+
+              /// SCROLLING TITLE
+              Expanded(
+                child: SizedBox(
+                  height: hp(3.5),
+                  child: Marquee(
+                    text: "Patient Management System",
+                    style: TextStyle(
+                      fontSize: dp(context, 20),
+                      color: AppColors.PRIMARY_COLOR,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    scrollAxis: Axis.horizontal,
+                    blankSpace: 100,
+                    velocity: 40,
+                    pauseAfterRound: Duration(seconds: 1),
+                    startPadding: 10,
+                  ),
+                ),
+              ),
+
+              /// LOGO
+            ],
+          ),
+        ),
+        SizedBox(height: hp(2)),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: wp(3), vertical: hp(2)),
+          decoration: BoxDecoration(
+            color: AppColors.PRIMARY_COLOR,
+
+            borderRadius: BorderRadius.only(bottomRight: Radius.circular(60)),
+          ),
+          child: Row(
+            children: [
+              /// PROFILE IMAGE
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.WHITE, width: wp(0.5)),
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  backgroundColor: AppColors.PRIMARY_COLOR,
+                  radius: dp(context, 25),
+                  child: Image.asset(
+                    'assets/images/splash_logo.png',
+                    color: AppColors.WHITE,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+
+              SizedBox(width: wp(4)),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: "Shunya Chetna Tatvapith",
+                      color: AppColors.WHITE,
+                      fontSize: dp(context, 12),
+                    ),
+
+                    SizedBox(height: hp(0.5)),
+                    CustomText(
+                      text: "apurvpatel9112@gmail.com",
+                      color: AppColors.WHITE,
+                      fontSize: dp(context, 10),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Customcontainer(
+          margin: EdgeInsets.only(top: hp(2), left: wp(2), right: wp(2)),
+          padding: EdgeInsets.only(left: wp(5)),
+          mainAxisAlignment: MainAxisAlignment.start,
+          context: context,
+          icon: Icons.person_pin,
+          text: "Profile",
+          color: AppColors.WHITE,
+          bordercolor: AppColors.LIGHT_GREY,
+        ),
+
+        Customcontainer(
+          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+          padding: EdgeInsets.only(left: wp(5)),
+          mainAxisAlignment: MainAxisAlignment.start,
+          context: context,
+          icon: Icons.call,
+          text: "Contact",
+          color: AppColors.WHITE,
+          bordercolor: AppColors.LIGHT_GREY,
+        ),
+        Customcontainer(
+          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+          padding: EdgeInsets.only(left: wp(5)),
+          mainAxisAlignment: MainAxisAlignment.start,
+          context: context,
+          icon: Icons.drive_file_move_rounded,
+          text: "Upload Data",
+          color: AppColors.WHITE,
+          bordercolor: AppColors.LIGHT_GREY,
+        ),
+
+        Customcontainer(
+          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+          padding: EdgeInsets.only(left: wp(5)),
+          mainAxisAlignment: MainAxisAlignment.start,
+          context: context,
+          icon: Icons.logout_sharp,
+          text: "Logout",
+          color: AppColors.WHITE,
+          bordercolor: AppColors.LIGHT_GREY,
+          onTap: () {
+            showDialoglogout(context: context);
+          },
+        ),
+        SizedBox(height: hp(1)),
+      ],
+    ),
+  );
+}
+
+void showDialoglogout({required BuildContext context}) {
+  showDialog(
+    context: context,
+    builder: (_) {
+      return AlertDialog(
+        backgroundColor: AppColors.WHITE,
+        titleTextStyle: TextStyle(
+          color: Colors.red,
+          fontSize: dp(context, 24),
+          fontStyle: FontStyle.italic,
+        ),
+
+        title: Text("Logout", textAlign: TextAlign.center),
+
+        content: Text(
+          "Are You Sure You want to Logout.",
+          textAlign: TextAlign.center,
+        ),
+
+        contentTextStyle: TextStyle(
+          fontSize: dp(context, 15),
+          color: AppColors.DARK,
+        ),
+
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              /// YES BUTTON
+              Customcontainer(
+                onTap: () {
+                  Get.offAllNamed('/loginpage');
+                },
+                context: context,
+                width: wp(32),
+                text: "Yes",
+                textcolor: AppColors.WHITE,
+                color: Colors.red,
+              ),
+
+              SizedBox(width: wp(2)),
+
+              /// NO BUTTON
+              Customcontainer(
+                onTap: () {
+                  Get.back();
+                },
+                width: wp(32),
+                context: context,
+                text: "No",
+                textcolor: AppColors.WHITE,
+                color: AppColors.PRIMARY_COLOR,
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
+}

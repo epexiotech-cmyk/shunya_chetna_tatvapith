@@ -11,8 +11,11 @@ class Customcontainer extends StatelessWidget {
   final IconData? icon;
   final void Function()? onTap;
   final Color? color;
+  final Color? bordercolor;
   final Color? textcolor;
   final double? singlefontSize;
+  final MainAxisAlignment? mainAxisAlignment;
+  final EdgeInsetsGeometry? margin;
   const Customcontainer({
     super.key,
     required this.context,
@@ -25,6 +28,9 @@ class Customcontainer extends StatelessWidget {
     this.width,
     this.singlefontSize,
     this.onTap,
+    this.bordercolor,
+    this.mainAxisAlignment,
+    this.margin,
   });
   @override
   Widget build(BuildContext context) {
@@ -36,8 +42,9 @@ class Customcontainer extends StatelessWidget {
         decoration: BoxDecoration(
           color: color ?? AppColors.PRIMARY_COLOR,
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: bordercolor ?? AppColors.WHITE),
         ),
-
+        margin: margin,
         padding: padding ?? EdgeInsets.only(right: wp(2), left: wp(2.5)),
         child: icon == null
             ? Center(
@@ -50,7 +57,8 @@ class Customcontainer extends StatelessWidget {
                 ),
               )
             : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment:
+                    mainAxisAlignment ?? MainAxisAlignment.center,
                 children: [
                   Icon(
                     icon,

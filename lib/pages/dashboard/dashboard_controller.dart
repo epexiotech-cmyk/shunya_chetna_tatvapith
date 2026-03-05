@@ -12,6 +12,7 @@ class DashboardController extends GetxController
   RxInt bottomNavIndex = 0.obs;
 
   late AnimationController hideBottomBarController;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   final iconList = <String>[
     "assets/images/patients.png",
