@@ -4,6 +4,7 @@ import 'package:shunya_app/pages/billing/billing_page.dart';
 import 'package:shunya_app/pages/dashboard/buttom_bar.dart';
 import 'package:shunya_app/pages/dashboard/drawer.dart';
 import 'package:shunya_app/pages/disease/disease_page.dart';
+import 'package:shunya_app/pages/inventory/add_inventory.dart';
 import 'package:shunya_app/pages/inventory/inventory_page.dart';
 import 'package:shunya_app/pages/patient/add_patient.dart';
 import 'package:shunya_app/pages/patient/patient_page.dart';
@@ -58,7 +59,7 @@ class DashboardPage extends GetView<DashboardController> {
               controller.bottomNavIndex.value == 0
                   ? Get.to(AddPatientPage())
                   : controller.bottomNavIndex.value == 2
-                  ? "Add Inventory"
+                  ? Get.to(AddInventoryPage())
                   : "Add Diseace";
             },
             backgroundColor: AppColors.PRIMARY_COLOR,

@@ -57,7 +57,7 @@ class PatientController extends GetxController
     selectedBloodGroup.value = value;
   }
 
-  final searchController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   RxList<Map<String, String>> patientList = [
     {"name": "Ramesh Patel", "mobile": "9876543210", "address": "Vadodara"},
     {"name": "Suresh Shah", "mobile": "9825147852", "address": "Ahmedabad"},

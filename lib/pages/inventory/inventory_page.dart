@@ -2,20 +2,107 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shunya_app/pages/inventory/inventory_controller.dart';
 import 'package:shunya_app/utils/colors.dart';
+import 'package:shunya_app/utils/responsive.dart';
+import 'package:shunya_app/widgets/custom_text.dart';
+import 'package:shunya_app/widgets/custom_textfield.dart';
 
-class InventoryPage extends GetView<InventoryController> {
+class InventoryPage extends StatelessWidget {
   const InventoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.WHITE,
-      body: Center(
-        child: Text(
-          "Welcome Inventory",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-      ),
+    return GetBuilder<InventoryController>(
+      init: InventoryController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: AppColors.WHITE,
+
+          body: Padding(
+            padding: EdgeInsets.only(top: hp(2), left: wp(5), right: wp(5)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextField(
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  controller: controller.searchController,
+                  hint: "Search Patient",
+                  labeltext: 'Search Patient',
+
+                  suffixIcon: Icon(
+                    Icons.search,
+                    color: AppColors.PRIMARY_COLOR,
+                  ),
+                ),
+                SizedBox(height: hp(2)),
+
+                /// STOCK LIST
+                Expanded(
+                  child: Obx(
+                    () => ListView.builder(
+                      padding: EdgeInsets.all(wp(0.2)),
+                      itemCount: controller.filteredStock.length,
+
+                      itemBuilder: (context, index) {
+                        var item = controller.filteredStock[index];
+
+                        bool lowStock = item["qty"] <= 10;
+
+                        return Card(
+                          color: AppColors.WHITE,
+                          elevation: dp(context, 1),
+                          shadowColor: AppColors.PRIMARY_COLOR,
+                          margin: EdgeInsets.only(bottom: hp(1.5)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+
+                          child: ListTile(
+                            title: CustomText(
+                              text: item["name"] ?? "",
+                              color: AppColors.PRIMARY_COLOR,
+                              fontSize: dp(context, 16),
+                              fontStyle: FontStyle.normal,
+                            ),
+
+                            subtitle: CustomText(
+                              text: "Price ₹${item["price"]}",
+                              color: AppColors.DARK,
+                              fontSize: dp(context, 13),
+                              fontStyle: FontStyle.normal,
+                            ),
+
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomText(
+                                  text: "Qty: ${item["qty"]}",
+                                  color: lowStock ? Colors.red : Colors.green,
+                                  fontSize: dp(context, 12),
+                                  fontStyle: FontStyle.normal,
+                                ),
+
+                                if (lowStock)
+                                  const Text(
+                                    "Low Stock",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
