@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 class PatientController extends GetxController
     with GetTickerProviderStateMixin {
-  // add patient
+  // add patient page
   TextEditingController nameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController dobController = TextEditingController();
@@ -56,6 +56,8 @@ class PatientController extends GetxController
   void changeBloodGroup(String value) {
     selectedBloodGroup.value = value;
   }
+
+  /// patient page list
 
   TextEditingController searchController = TextEditingController();
   RxList<Map<String, String>> patientList = [

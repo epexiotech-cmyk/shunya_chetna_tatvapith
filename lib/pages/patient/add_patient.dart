@@ -77,6 +77,35 @@ class AddPatientPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: hp(2)),
+                    CustomTextField(
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      controller: controller.mobileController,
+                      hint: "Village",
+                      labeltext: 'Village',
+                      validator: formValidation.validation(
+                        type: 'name',
+                        multiValidator: MultiValidator([]),
+                        isRequired: true,
+                        errorText: "Village is required.",
+                      ),
+                      prefixicon: Icon(
+                        Icons.home,
+                        color: AppColors.PRIMARY_COLOR,
+                      ),
+                    ),
+                    SizedBox(height: hp(2)),
+                    CustomTextField(
+                      controller: controller.addressController,
+                      hint: "Address",
+                      labeltext: "Address",
+                      maxLines: 3,
+                      prefixicon: Icon(
+                        Icons.location_on_outlined,
+                        color: AppColors.PRIMARY_COLOR,
+                      ),
+                    ),
+                    SizedBox(height: hp(2)),
 
                     // DOB
                     CustomTextField(
@@ -137,6 +166,45 @@ class AddPatientPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: hp(2)),
+
+                    // Blood group
+                    CustomTextField(
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: controller.nameController,
+                      hint: "BP count",
+                      labeltext: 'BP count',
+                      validator: formValidation.validation(
+                        type: 'bpcount',
+                        multiValidator: MultiValidator([]),
+                        isRequired: true,
+                        errorText: "BP count is required.",
+                      ),
+                      prefixicon: Icon(
+                        Icons.graphic_eq_outlined,
+                        color: AppColors.PRIMARY_COLOR,
+                      ),
+                    ),
+                    SizedBox(height: hp(2)),
+
+                    // Blood group
+                    CustomTextField(
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      controller: controller.nameController,
+                      hint: "Suger lavel",
+                      labeltext: 'Suger lavel',
+                      validator: formValidation.validation(
+                        type: 'suger',
+                        multiValidator: MultiValidator([]),
+                        isRequired: true,
+                        errorText: "Suger lavel is required.",
+                      ),
+                      prefixicon: Icon(
+                        Icons.gradient_sharp,
+                        color: AppColors.PRIMARY_COLOR,
+                      ),
+                    ),
 
                     SizedBox(height: hp(2)),
                     Row(
@@ -340,17 +408,6 @@ class AddPatientPage extends StatelessWidget {
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    SizedBox(height: hp(2)),
-                    CustomTextField(
-                      controller: controller.addressController,
-                      hint: "Address",
-                      labeltext: "Address",
-                      maxLines: 3,
-                      prefixicon: Icon(
-                        Icons.location_on_outlined,
-                        color: AppColors.PRIMARY_COLOR,
                       ),
                     ),
 

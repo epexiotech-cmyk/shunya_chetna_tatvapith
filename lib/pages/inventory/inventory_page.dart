@@ -26,8 +26,8 @@ class InventoryPage extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   controller: controller.searchController,
-                  hint: "Search Patient",
-                  labeltext: 'Search Patient',
+                  hint: "Search Medicine",
+                  labeltext: 'Search Medicine',
 
                   suffixIcon: Icon(
                     Icons.search,
