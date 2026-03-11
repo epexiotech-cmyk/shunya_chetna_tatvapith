@@ -29,7 +29,6 @@ class PatientController extends GetxController
     if (pickedDate != null) {
       selectedDate = pickedDate;
 
-      print("pickedDate  ::: $pickedDate");
       dobController.text =
           "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
 

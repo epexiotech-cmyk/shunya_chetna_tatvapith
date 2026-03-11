@@ -322,8 +322,10 @@ class AddPatientPage extends StatelessWidget {
                               children: [
                                 Radio<String>(
                                   value: "Male",
+                                  // ignore: deprecated_member_use
                                   groupValue: controller.selectedGender.value,
                                   activeColor: AppColors.PRIMARY_COLOR,
+                                  // ignore: deprecated_member_use
                                   onChanged: (value) {
                                     controller.changeGender(value!);
                                   },
@@ -339,8 +341,10 @@ class AddPatientPage extends StatelessWidget {
                               children: [
                                 Radio<String>(
                                   value: "Female",
+                                  // ignore: deprecated_member_use
                                   groupValue: controller.selectedGender.value,
                                   activeColor: AppColors.PRIMARY_COLOR,
+                                  // ignore: deprecated_member_use
                                   onChanged: (value) {
                                     controller.changeGender(value!);
                                   },
@@ -356,8 +360,10 @@ class AddPatientPage extends StatelessWidget {
                               children: [
                                 Radio<String>(
                                   value: "Other",
+                                  // ignore: deprecated_member_use
                                   groupValue: controller.selectedGender.value,
                                   activeColor: AppColors.PRIMARY_COLOR,
+                                  // ignore: deprecated_member_use
                                   onChanged: (value) {
                                     controller.changeGender(value!);
                                   },
@@ -380,8 +386,10 @@ class AddPatientPage extends StatelessWidget {
                               children: [
                                 Radio<String>(
                                   value: "Married",
+                                  // ignore: deprecated_member_use
                                   groupValue: controller.maritalStatus.value,
                                   activeColor: AppColors.PRIMARY_COLOR,
+                                  // ignore: deprecated_member_use
                                   onChanged: (value) {
                                     controller.changeMaritalStatus(value!);
                                   },
@@ -397,8 +405,10 @@ class AddPatientPage extends StatelessWidget {
                               children: [
                                 Radio<String>(
                                   value: "Unmarried",
+                                  // ignore: deprecated_member_use
                                   groupValue: controller.maritalStatus.value,
                                   activeColor: AppColors.PRIMARY_COLOR,
+                                  // ignore: deprecated_member_use
                                   onChanged: (value) {
                                     controller.changeMaritalStatus(value!);
                                   },
