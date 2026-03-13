@@ -9,3 +9,4 @@ const routebillingpage = "/BillingPage";
 const routeinventorypage = "/InventoryPage";
 const routediseasepage = "/DiseasePage";
 const routeprofilepage = "/ProfilePage";
+const routeselectmedicinepage = "/Selectmedicinepage";

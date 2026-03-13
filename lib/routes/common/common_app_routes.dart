@@ -17,6 +17,8 @@ import 'package:shunya_app/pages/profile/profile_binding.dart';
 import 'package:shunya_app/pages/profile/profile_page.dart';
 import 'package:shunya_app/pages/register/register_binding.dart';
 import 'package:shunya_app/pages/register/register_screen.dart';
+import 'package:shunya_app/pages/select_medicine/select_medicine_binding.dart';
+import 'package:shunya_app/pages/select_medicine/select_medicine_screen.dart';
 import 'package:shunya_app/pages/splash/splash_binding.dart';
 import 'package:shunya_app/pages/splash/splash_page.dart';
 import 'package:shunya_app/routes/common/common_app_pages.dart';
@@ -74,6 +76,11 @@ class CommonRoutes {
       name: routeprofilepage,
       page: () => const ProfilePage(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: routeselectmedicinepage,
+      page: () => const SelectMedicineScreen(),
+      binding: SelectMedicineBinding(),
     ),
   ];
 }

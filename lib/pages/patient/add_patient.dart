@@ -6,6 +6,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:shunya_app/dependency_injection.dart';
 import 'package:shunya_app/pages/patient/patient_controller.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
@@ -20,10 +21,31 @@ class AddPatientPage extends StatelessWidget {
     return GetBuilder<PatientController>(
       init: PatientController(),
       builder: (controller) {
+        final args = Get.arguments;
+        print("args ;;;; $args");
+
+        if (args != null) {
+          final patient = args["patientList"];
+
+          controller.nameController.text = patient["name"] ?? "";
+          controller.mobileController.text = patient["mobile"] ?? "";
+          controller.genderController.text = patient["gender"] ?? "";
+          controller.dobController.text = patient["dob"] ?? "";
+          controller.bloodController.text = patient["bloodGroup"] ?? "";
+          controller.maritalstatusController.text =
+              patient["maritalStatus"] ?? "";
+          controller.addressController.text = patient["address"] ?? "";
+          controller.villageController.text = patient["village"] ?? "";
+          controller.weightController.text = patient["weight"] ?? "";
+          controller.hightController.text = patient["height"] ?? "";
+          controller.bpcountController.text = patient["bpCount"] ?? "";
+          controller.sugerlavelController.text = patient["sugarLevel"] ?? "";
+        }
+
         return Scaffold(
           backgroundColor: AppColors.WHITE,
           appBar: CustomAppBarAction(
-            title: "Add Patient",
+            title: Get.arguments != null ? "Patient" : "Add Patient",
             iconleft: Icons.arrow_back_ios_rounded,
             lefticononTap: () {
               Get.back();
@@ -80,7 +102,7 @@ class AddPatientPage extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
-                      controller: controller.mobileController,
+                      controller: controller.villageController,
                       hint: "Village",
                       labeltext: 'Village',
                       validator: formValidation.validation(
@@ -171,7 +193,7 @@ class AddPatientPage extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      controller: controller.nameController,
+                      controller: controller.bpcountController,
                       hint: "BP count",
                       labeltext: 'BP count',
                       validator: formValidation.validation(
@@ -191,7 +213,7 @@ class AddPatientPage extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      controller: controller.nameController,
+                      controller: controller.sugerlavelController,
                       hint: "Suger lavel",
                       labeltext: 'Suger lavel',
                       validator: formValidation.validation(
@@ -420,12 +442,66 @@ class AddPatientPage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    if (Get.arguments != null)
+                      SizedBox(height: hp(2))
+                    else
+                      SizedBox(),
+                    if (Get.arguments != null)
+                      CustomTextField(
+                        controller:
+                            controller.patientobservationlavelController,
+                        hint: "Patient Observation",
+                        labeltext: "Patient Observation",
+                        maxLines: 3,
+                        prefixicon: Icon(
+                          Icons.remove_red_eye_outlined,
+                          color: AppColors.PRIMARY_COLOR,
+                        ),
+                      )
+                    else
+                      SizedBox(),
+                    if (Get.arguments != null)
+                      SizedBox(height: hp(2))
+                    else
+                      SizedBox(),
+                    if (Get.arguments != null)
+                      CustomTextField(
+                        controller: controller.patientproblemController,
+                        hint: "Patient Problem",
+                        labeltext: "Patient Problem",
+                        maxLines: 3,
+                        prefixicon: Icon(
+                          Icons.report_problem_rounded,
+                          color: AppColors.PRIMARY_COLOR,
+                        ),
+                      )
+                    else
+                      SizedBox(),
+                    if (Get.arguments != null)
+                      SizedBox(height: hp(2))
+                    else
+                      SizedBox(),
+                    if (Get.arguments != null)
+                      Customcontainer(
+                        context: context,
+                        text: "Select Medicine",
+                        color: AppColors.WHITE,
+                        textcolor: AppColors.PRIMARY_COLOR,
+                        bordercolor: AppColors.LIGHT_GREY,
+                        onTap: () {
+                          Get.toNamed(routeselectmedicinepage);
+                        },
+                      )
+                    else
+                      SizedBox(),
 
                     SizedBox(height: hp(3)),
 
                     // Login Button
                     Customcontainer(
-                      text: "Create Patient",
+                      text: Get.arguments != null
+                          ? "Save & Next"
+                          : "Create Patient",
                       context: context,
                       onTap: () {
                         Get.back();
