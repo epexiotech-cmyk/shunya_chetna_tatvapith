@@ -5,6 +5,7 @@ import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
 import 'package:shunya_app/widgets/custom_dropdown.dart';
+import 'package:shunya_app/widgets/customcontainer.dart';
 
 class SelectMedicineScreen extends StatelessWidget {
   const SelectMedicineScreen({super.key});
@@ -360,6 +361,16 @@ class SelectMedicineScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  SizedBox(height: hp(3)),
+                  controller.medicineList.isEmpty
+                      ? SizedBox()
+                      : Customcontainer(
+                          context: context,
+                          text: "Save",
+                          onTap: () {
+                            Get.back(result: controller.medicineList);
+                          },
+                        ),
                 ],
               ),
             ),

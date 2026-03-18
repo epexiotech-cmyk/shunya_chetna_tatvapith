@@ -22,7 +22,7 @@ class AddPatientPage extends StatelessWidget {
       init: PatientController(),
       builder: (controller) {
         final args = Get.arguments;
-        print("args ;;;; $args");
+        // print("args ;;;; $args");
 
         if (args != null) {
           final patient = args["patientList"];
@@ -504,7 +504,9 @@ class AddPatientPage extends StatelessWidget {
                           : "Create Patient",
                       context: context,
                       onTap: () {
-                        Get.back();
+                        Get.arguments != null
+                            ? Get.toNamed(routebillingdetailspage)
+                            : Get.back();
                       },
                     ),
                     SizedBox(height: hp(3)),

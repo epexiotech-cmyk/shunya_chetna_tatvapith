@@ -1,6 +1,8 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:shunya_app/pages/billing/billing_binding.dart';
 import 'package:shunya_app/pages/billing/billing_page.dart';
+import 'package:shunya_app/pages/billing_details/billing_details_binding.dart';
+import 'package:shunya_app/pages/billing_details/billing_details_page.dart';
 import 'package:shunya_app/pages/dashboard/dashboard_binding.dart';
 import 'package:shunya_app/pages/dashboard/dashboard_page.dart';
 import 'package:shunya_app/pages/disease/disease_binding.dart';
@@ -81,6 +83,11 @@ class CommonRoutes {
       name: routeselectmedicinepage,
       page: () => const SelectMedicineScreen(),
       binding: SelectMedicineBinding(),
+    ),
+    GetPage(
+      name: routebillingdetailspage,
+      page: () => const BillingDetailsPage(),
+      binding: BillingDetailsBinding(),
     ),
   ];
 }
