@@ -42,14 +42,14 @@ class LoginScreen extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      controller: controller.emailController,
-                      hint: "Email Id",
-                      labeltext: 'Email Id',
+                      controller: controller.loginController,
+                      hint: "Email / Mobile / Name",
+                      labeltext: "Email / Mobile / Name",
                       validator: formValidation.validation(
-                        type: 'email',
+                        type: 'name',
                         multiValidator: MultiValidator([]),
                         isRequired: true,
-                        errorText: "Email is required.",
+                        errorText: "Field is required.",
                       ),
                       prefixicon: Icon(
                         Icons.email_outlined,

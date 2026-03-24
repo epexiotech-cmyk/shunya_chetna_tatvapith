@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:marquee/marquee.dart';
+import 'package:shunya_app/auth_controller.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_text.dart';
@@ -145,6 +148,27 @@ customdrawer({required BuildContext context}) {
             showDialoglogout(context: context);
           },
         ),
+
+        Customcontainer(
+          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+          padding: EdgeInsets.only(left: wp(5)),
+          mainAxisAlignment: MainAxisAlignment.start,
+          context: context,
+          icon: Icons.logout_sharp,
+          text: "Reset PIN",
+          color: AppColors.WHITE,
+          bordercolor: AppColors.LIGHT_GREY,
+          onTap: () async {
+            final storage = FlutterSecureStorage();
+
+            await storage.delete(key: "app_pin");
+
+            Get.toNamed(
+              routepinpage,
+              arguments: {"isSet": false, "isReset": true},
+            );
+          },
+        ),
         SizedBox(height: hp(1)),
       ],
     ),
@@ -152,6 +176,7 @@ customdrawer({required BuildContext context}) {
 }
 
 void showDialoglogout({required BuildContext context}) {
+  final controller = Get.put(AuthController());
   showDialog(
     context: context,
     builder: (_) {
@@ -182,6 +207,7 @@ void showDialoglogout({required BuildContext context}) {
               /// YES BUTTON
               Customcontainer(
                 onTap: () {
+                  controller.logout();
                   Get.offAllNamed('/loginpage');
                 },
                 context: context,

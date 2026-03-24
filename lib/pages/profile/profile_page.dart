@@ -130,6 +130,17 @@ class ProfilePage extends GetView<ProfileController> {
                     return Column(
                       children: [
                         CustomTextField(
+                          controller: clinic.doctornameController,
+                          hint: "Doctor Name",
+                          labeltext: "Doctor Name",
+                          prefixicon: Icon(
+                            Icons.local_hospital,
+                            color: AppColors.PRIMARY_COLOR,
+                          ),
+                        ),
+
+                        SizedBox(height: hp(2)),
+                        CustomTextField(
                           controller: clinic.nameController,
                           hint: "Clinic Name",
                           labeltext: "Clinic Name",
@@ -137,6 +148,47 @@ class ProfilePage extends GetView<ProfileController> {
                             Icons.local_hospital,
                             color: AppColors.PRIMARY_COLOR,
                           ),
+                        ),
+
+                        SizedBox(height: hp(2)),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomTextField(
+                                controller: clinic.upiidController,
+                                hint: "Clinic UPI ID",
+                                labeltext: "Clinic UPI ID",
+                                prefixicon: Icon(
+                                  Icons.account_balance_wallet,
+                                  color: AppColors.PRIMARY_COLOR,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: wp(2)),
+
+                            /// SCAN QR BUTTON
+                            IconButton(
+                              onPressed: () {
+                                controller.openScanner(index);
+                              },
+                              icon: Icon(
+                                Icons.qr_code_scanner,
+                                color: AppColors.PRIMARY_COLOR,
+                              ),
+                            ),
+
+                            /// VERIFY BUTTON
+                            IconButton(
+                              onPressed: () {
+                                controller.verifyUPI(
+                                  clinic.upiidController.text.trim(),
+                                );
+                              },
+                              icon: Icon(Icons.verified, color: Colors.green),
+                            ),
+                          ],
                         ),
 
                         SizedBox(height: hp(2)),

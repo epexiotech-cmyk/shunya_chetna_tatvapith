@@ -15,6 +15,8 @@ import 'package:shunya_app/pages/login/login_binding.dart';
 import 'package:shunya_app/pages/login/login_page.dart';
 import 'package:shunya_app/pages/patient/patient_binding.dart';
 import 'package:shunya_app/pages/patient/patient_page.dart';
+import 'package:shunya_app/pages/pin/pin_binding.dart';
+import 'package:shunya_app/pages/pin/pin_screen.dart';
 import 'package:shunya_app/pages/profile/profile_binding.dart';
 import 'package:shunya_app/pages/profile/profile_page.dart';
 import 'package:shunya_app/pages/register/register_binding.dart';
@@ -88,6 +90,11 @@ class CommonRoutes {
       name: routebillingdetailspage,
       page: () => const BillingDetailsPage(),
       binding: BillingDetailsBinding(),
+    ),
+    GetPage(
+      name: routepinpage,
+      page: () => const PinScreen(),
+      binding: PinBinding(),
     ),
   ];
 }

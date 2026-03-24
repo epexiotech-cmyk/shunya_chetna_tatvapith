@@ -43,6 +43,7 @@ class RegisterScreen extends StatelessWidget {
                     // Name Field
                     CustomTextField(
                       keyboardType: TextInputType.name,
+
                       textInputAction: TextInputAction.next,
                       controller: controller.nameController,
                       hint: "Doctor Name",
@@ -83,7 +84,7 @@ class RegisterScreen extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      controller: controller.emailController,
+                      controller: controller.mobileController,
                       hint: "Mobile No",
                       labeltext: 'Mobile No',
                       validator: formValidation.validation(
@@ -162,7 +163,7 @@ class RegisterScreen extends StatelessWidget {
                     Customcontainer(
                       text: "REGISTER",
                       context: context,
-                      onTap: controller.login,
+                      onTap: controller.register,
                     ),
                     SizedBox(height: hp(3)),
                     Row(

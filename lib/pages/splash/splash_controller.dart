@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:shunya_app/auth_controller.dart';
 import 'package:shunya_app/routes/common/common_app_pages.dart';
 
 class SplashController extends GetxController
@@ -8,6 +11,7 @@ class SplashController extends GetxController
   late AnimationController animationController;
   late Animation<double> fadeAnimation;
   late Animation<Offset> slideAnimation;
+  final auth = Get.find<AuthController>();
 
   @override
   void onInit() {
@@ -38,8 +42,8 @@ class SplashController extends GetxController
   void onReady() {
     super.onReady();
 
-    Timer(const Duration(seconds: 5), () {
-      Get.offAllNamed(routeLoginpage);
+    Future.delayed(Duration(seconds: 5), () {
+      checkAppFlow();
     });
   }
 
@@ -47,5 +51,25 @@ class SplashController extends GetxController
   void onClose() {
     animationController.dispose();
     super.onClose();
+  }
+
+  Future<void> checkAppFlow() async {
+    final sessionBox = GetStorage();
+
+    bool isLogin = sessionBox.read('isLogin') ?? false;
+
+    if (!isLogin) {
+      Get.offAllNamed(routeLoginpage);
+      return;
+    }
+
+    final storage = FlutterSecureStorage();
+    String? pin = await storage.read(key: "app_pin");
+
+    if (pin == null) {
+      Get.offAllNamed(routepinpage, arguments: {"isSet": true});
+    } else {
+      Get.offAllNamed(routepinpage, arguments: {"isSet": false});
+    }
   }
 }

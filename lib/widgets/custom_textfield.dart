@@ -35,6 +35,7 @@ class CustomTextField extends StatelessWidget {
   final TextStyle? hintStyle;
   final int? minLines;
   final int? maxLines;
+  final int? maxLength;
 
   const CustomTextField({
     super.key,
@@ -67,12 +68,14 @@ class CustomTextField extends StatelessWidget {
     this.hintStyle,
     this.prefixicon,
     this.minLines,
-    this.maxLines, // <-- NEW
+    this.maxLines,
+    this.maxLength, // <-- NEW
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLength: maxLength,
       minLines: minLines,
       maxLines: obscureText == true ? 1 : maxLines ?? 1,
       textAlignVertical: TextAlignVertical.center,
