@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shunya_app/routes/common/common_app_pages.dart';
 
 class PinController extends GetxController {
@@ -55,17 +56,42 @@ class PinController extends GetxController {
 
     await storage.write(key: "app_pin", value: enteredPin);
 
-    Get.offAllNamed('/dashboard');
+    Get.offAllNamed(routeprofilepage);
   }
 
   /// VERIFY PIN
-  Future<void> verifyPin() async {
-    String? savedPin = await storage.read(key: "app_pin");
+  // Future<void> verifyPin() async {
+  //   String? savedPin = await storage.read(key: "app_pin");
 
-    if (enteredPin == (savedPin ?? "")) {
+  //   if (enteredPin == (savedPin ?? "")) {
+  //     Get.offAllNamed(routedashboard);
+  //   } else {
+  //     Get.snackbar("Error", "Wrong PIN");
+  //   }
+  // }
+
+  Future<void> verifyPin() async {
+    final box = GetStorage();
+
+    bool profileComplete = box.read('profile_complete') ?? false;
+
+    if (!profileComplete) {
+      Get.offAllNamed(routeprofilepage);
+      return;
+    }
+
+    List clinics = box.read('clinics') ?? [];
+
+    if (clinics.isEmpty) {
+      Get.offAllNamed(routeprofilepage);
+      return;
+    }
+
+    if (clinics.length == 1) {
+      box.write('selected_clinic', clinics.first);
       Get.offAllNamed(routedashboard);
     } else {
-      Get.snackbar("Error", "Wrong PIN");
+      Get.offAllNamed(routeclinicpage);
     }
   }
 

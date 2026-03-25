@@ -69,18 +69,6 @@ class ProfilePage extends GetView<ProfileController> {
                   ),
                 ),
 
-                SizedBox(height: hp(2)),
-
-                CustomTextField(
-                  controller: controller.qualificationController,
-                  hint: "Qualification",
-                  labeltext: 'Qualification',
-                  prefixicon: Icon(
-                    Icons.local_hospital_outlined,
-                    color: AppColors.PRIMARY_COLOR,
-                  ),
-                ),
-
                 SizedBox(height: hp(3)),
 
                 /// Clinics Title
@@ -138,7 +126,17 @@ class ProfilePage extends GetView<ProfileController> {
                             color: AppColors.PRIMARY_COLOR,
                           ),
                         ),
+                        SizedBox(height: hp(2)),
 
+                        CustomTextField(
+                          controller: clinic.qualificationController,
+                          hint: "Qualification",
+                          labeltext: 'Qualification',
+                          prefixicon: Icon(
+                            Icons.local_hospital_outlined,
+                            color: AppColors.PRIMARY_COLOR,
+                          ),
+                        ),
                         SizedBox(height: hp(2)),
                         CustomTextField(
                           controller: clinic.nameController,
@@ -223,7 +221,11 @@ class ProfilePage extends GetView<ProfileController> {
 
                 SizedBox(height: hp(3)),
 
-                Customcontainer(text: "Save", context: context, onTap: () {}),
+                Customcontainer(
+                  text: "Save",
+                  context: context,
+                  onTap: controller.saveProfile,
+                ),
               ],
             ),
           ),

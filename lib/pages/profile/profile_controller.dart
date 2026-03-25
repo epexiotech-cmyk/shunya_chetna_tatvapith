@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shunya_app/auth_controller.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ClinicModel {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController doctornameController = TextEditingController();
+  TextEditingController qualificationController = TextEditingController();
   TextEditingController upiidController = TextEditingController();
 }
 
@@ -15,7 +18,6 @@ class ProfileController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
-  TextEditingController qualificationController = TextEditingController();
   @override
   void onInit() {
     super.onInit();
@@ -114,25 +116,50 @@ class ProfileController extends GetxController {
 
   /// ✅ SAVE VALIDATION
   void saveProfile() {
-    for (var clinic in clinicList) {
-      String upi = clinic.upiidController.text.trim();
+    // for (var clinic in clinicList) {
+    //   String upi = clinic.upiidController.text.trim();
 
-      if (upi.isEmpty || !isValidUPI(upi)) {
-        Get.snackbar(
-          "Invalid UPI",
-          "Please enter valid UPI ID",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        return;
-      }
+    //   if (upi.isEmpty || !isValidUPI(upi)) {
+    //     Get.snackbar(
+    //       "Invalid UPI",
+    //       "Please enter valid UPI ID",
+    //       backgroundColor: Colors.red,
+    //       colorText: Colors.white,
+    //     );
+    //     return;
+    //   }
+    // }
+
+    // Get.snackbar(
+    //   "Success",
+    //   "Profile Saved",
+    //   backgroundColor: Colors.green,
+    //   colorText: Colors.white,
+    // );
+
+    final box = GetStorage();
+
+    /// PROFILE COMPLETE
+    box.write('profile_complete', true);
+
+    /// SAVE CLINICS
+    List clinics = clinicList.map((c) {
+      return {
+        "doctor": c.doctornameController.text,
+        "name": c.nameController.text,
+        "address": c.addressController.text,
+        "upi": c.upiidController.text,
+      };
+    }).toList();
+
+    box.write('clinics', clinics);
+
+    /// FLOW DECISION
+    if (clinics.length == 1) {
+      box.write('selected_clinic', clinics.first);
+      Get.offAllNamed(routedashboard);
+    } else {
+      Get.offAllNamed(routeclinicpage);
     }
-
-    Get.snackbar(
-      "Success",
-      "Profile Saved",
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-    );
   }
 }

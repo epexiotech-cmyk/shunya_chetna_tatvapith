@@ -1,5 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:open_file/open_file.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
 
 class PatientController extends GetxController
     with GetTickerProviderStateMixin {
@@ -367,4 +373,82 @@ class PatientController extends GetxController
       "sugarLevel": "96",
     },
   ].obs;
+
+  final ImagePicker _picker = ImagePicker();
+
+  RxList<File> selectedImages = <File>[].obs;
+  Rx<File?> generatedPdf = Rx<File?>(null);
+
+  /// 📸 MULTIPLE IMAGE PICK + AUTO PDF
+  // RxList<File> pdfList = <File>[].obs;
+
+  /// 📸 MULTI IMAGE → DIRECT PDF
+  Future<void> pickMultipleImages() async {
+    final List<XFile> images = await _picker.pickMultiImage();
+
+    if (images.isEmpty) return;
+
+    await createPdfFromImages(images.map((e) => File(e.path)).toList());
+  }
+
+  /// 🧾 CREATE PDF (BATCH WISE)
+  Future<void> createPdfFromImages(List<File> images) async {
+    final pdf = pw.Document();
+
+    for (var img in images) {
+      final image = pw.MemoryImage(img.readAsBytesSync());
+
+      pdf.addPage(
+        pw.Page(
+          build: (context) {
+            return pw.Center(child: pw.Image(image));
+          },
+        ),
+      );
+    }
+
+    final dir = await getApplicationDocumentsDirectory();
+
+    final file = File(
+      "${dir.path}/patient_${DateTime.now().millisecondsSinceEpoch}.pdf",
+    );
+
+    await file.writeAsBytes(await pdf.save());
+
+    /// ✅ ADD NEW PDF TO LIST
+    pdfList.add(file);
+
+    Get.snackbar("Success", "PDF Created");
+  }
+
+  /// 📄 PICK ONLY PDF
+  RxList<File> pdfList = <File>[].obs;
+
+  /// 📄 MULTIPLE PDF PICK
+  Future<void> pickMultiplePdf() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      allowMultiple: true,
+    );
+
+    if (result != null) {
+      pdfList.addAll(result.files.map((e) => File(e.path!)).toList());
+
+      Get.snackbar("Success", "PDFs Uploaded");
+    }
+  }
+
+  void removePdf(int index) {
+    pdfList.removeAt(index);
+  }
+
+  /// 📄 OPEN PDF IN EXTERNAL APP
+  Future<void> openPdf(File file) async {
+    final result = await OpenFile.open(file.path);
+
+    if (result.type != ResultType.done) {
+      Get.snackbar("Error", "No app found to open PDF");
+    }
+  }
 }

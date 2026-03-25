@@ -12,3 +12,4 @@ const routeprofilepage = "/ProfilePage";
 const routeselectmedicinepage = "/Selectmedicinepage";
 const routebillingdetailspage = "/billingdetailspage";
 const routepinpage = "/PinScreen";
+const routeclinicpage = "/ClinicPage";

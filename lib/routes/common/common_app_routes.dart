@@ -3,6 +3,8 @@ import 'package:shunya_app/pages/billing/billing_binding.dart';
 import 'package:shunya_app/pages/billing/billing_page.dart';
 import 'package:shunya_app/pages/billing_details/billing_details_binding.dart';
 import 'package:shunya_app/pages/billing_details/billing_details_page.dart';
+import 'package:shunya_app/pages/clinic/clinic_binding.dart';
+import 'package:shunya_app/pages/clinic/clinic_page.dart';
 import 'package:shunya_app/pages/dashboard/dashboard_binding.dart';
 import 'package:shunya_app/pages/dashboard/dashboard_page.dart';
 import 'package:shunya_app/pages/disease/disease_binding.dart';
@@ -95,6 +97,11 @@ class CommonRoutes {
       name: routepinpage,
       page: () => const PinScreen(),
       binding: PinBinding(),
+    ),
+    GetPage(
+      name: routeclinicpage,
+      page: () => const ClinicPage(),
+      binding: ClinicBinding(),
     ),
   ];
 }

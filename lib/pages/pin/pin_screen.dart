@@ -23,7 +23,7 @@ class PinScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: wp(5), vertical: hp(2)),
             child: Obx(() {
               return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   /// LOGO
                   Image.asset(
@@ -51,11 +51,13 @@ class PinScreen extends StatelessWidget {
                   if (controller.isSetMode.value ||
                       controller.isResetMode.value) ...[
                     /// ENTER PIN
+                    CustomText(text: "Enter Security PIN"),
                     pinRow(context, controller.pinBoxes, controller.pinFocus),
 
                     SizedBox(height: hp(2)),
 
                     /// CONFIRM PIN
+                    CustomText(text: "Confirm Security PIN"),
                     pinRow(
                       context,
                       controller.confirmBoxes,

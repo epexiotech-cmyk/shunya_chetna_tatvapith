@@ -54,22 +54,51 @@ class SplashController extends GetxController
   }
 
   Future<void> checkAppFlow() async {
-    final sessionBox = GetStorage();
+    final box = GetStorage();
+    final storage = FlutterSecureStorage();
 
-    bool isLogin = sessionBox.read('isLogin') ?? false;
+    /// LOGIN CHECK
+    bool isLogin = box.read('isLogin') ?? false;
 
     if (!isLogin) {
       Get.offAllNamed(routeLoginpage);
       return;
     }
 
-    final storage = FlutterSecureStorage();
+    /// PIN CHECK (🔥 STOP HERE)
     String? pin = await storage.read(key: "app_pin");
 
     if (pin == null) {
       Get.offAllNamed(routepinpage, arguments: {"isSet": true});
+      return; // ✅ VERY IMPORTANT
     } else {
       Get.offAllNamed(routepinpage, arguments: {"isSet": false});
+      return; // ✅ VERY IMPORTANT
     }
   }
 }
+
+
+
+
+
+
+
+
+
+ // Future<void> checkAppFlow() async {
+  //   final sessionBox = GetStorage();
+  //   bool isLogin = sessionBox.read('isLogin') ?? false;
+  //   if (!isLogin) {
+  //     Get.offAllNamed(routeLoginpage);
+  //     return;
+  //   }
+  //   final storage = FlutterSecureStorage();
+  //   String? pin = await storage.read(key: "app_pin");
+
+  //   if (pin == null) {
+  //     Get.offAllNamed(routepinpage, arguments: {"isSet": true});
+  //   } else {
+  //     Get.offAllNamed(routepinpage, arguments: {"isSet": false});
+  //   }
+  // }

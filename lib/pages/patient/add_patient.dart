@@ -133,7 +133,7 @@ class AddPatientPage extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      controller: controller.nameController,
+                      controller: controller.weightController,
                       hint: "Weight",
                       labeltext: 'Weight',
                       validator: formValidation.validation(
@@ -153,7 +153,7 @@ class AddPatientPage extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      controller: controller.nameController,
+                      controller: controller.hightController,
                       hint: "Height In CM",
                       labeltext: 'Height In CM',
                       validator: formValidation.validation(
@@ -173,7 +173,7 @@ class AddPatientPage extends StatelessWidget {
                     CustomTextField(
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
-                      controller: controller.nameController,
+                      controller: controller.ageController,
                       hint: "Age",
                       labeltext: 'Age',
                       validator: formValidation.validation(
@@ -477,6 +477,147 @@ class AddPatientPage extends StatelessWidget {
                       )
                     else
                       SizedBox(),
+                    if (Get.arguments != null)
+                      SizedBox(height: hp(2))
+                    else
+                      SizedBox(),
+
+                    /// image upload and save in pdf formate
+                    ///
+                    /// 📄 MULTIPLE PDF UPLOAD
+                    Customcontainer(
+                      context: context,
+                      text: "Upload PDFs (Multiple)",
+                      color: AppColors.WHITE,
+                      textcolor: AppColors.PRIMARY_COLOR,
+                      bordercolor: AppColors.LIGHT_GREY,
+                      onTap: controller.pickMultiplePdf,
+                    ),
+
+                    SizedBox(height: hp(2)),
+
+                    /// 📸 MULTI IMAGE PICK
+                    Customcontainer(
+                      context: context,
+                      text: "Upload Images (Create PDF)",
+                      color: AppColors.WHITE,
+                      textcolor: AppColors.PRIMARY_COLOR,
+                      bordercolor: AppColors.LIGHT_GREY,
+                      onTap: controller.pickMultipleImages,
+                    ),
+                    Obx(() {
+                      if (controller.generatedPdf.value != null) {
+                        return Text(
+                          "PDF Ready ✅",
+                          style: TextStyle(color: Colors.green),
+                        );
+                      }
+                      return SizedBox();
+                    }),
+                    SizedBox(height: hp(2)),
+
+                    /// 📄 PDF LIST
+                    Obx(() {
+                      if (controller.pdfList.isEmpty) return SizedBox();
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: controller.pdfList.length,
+                        itemBuilder: (context, index) {
+                          final file = controller.pdfList[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              controller.openPdf(file);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: hp(1)),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.LIGHT_GREY),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.picture_as_pdf, color: Colors.red),
+
+                                  SizedBox(width: 10),
+
+                                  Expanded(
+                                    child: Text(
+                                      file.path.split('/').last,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+
+                                  /// ❌ REMOVE BUTTON
+                                  IconButton(
+                                    icon: Icon(Icons.close, color: Colors.red),
+                                    onPressed: () {
+                                      controller.removePdf(index);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                    SizedBox(),
+
+                    // /// 🖼 IMAGE PREVIEW GRID
+                    // SizedBox(height: hp(2)),
+                    // Obx(() {
+                    //   if (controller.pdfList.isEmpty) return SizedBox();
+                    //   return ListView.builder(
+                    //     shrinkWrap: true,
+                    //     physics: NeverScrollableScrollPhysics(),
+                    //     itemCount: controller.pdfList.length,
+                    //     itemBuilder: (context, index) {
+                    //       final file = controller.pdfList[index];
+                    //       return GestureDetector(
+                    //         onTap: () {
+                    //           controller.openPdf(file);
+                    //         },
+                    //         child: Container(
+                    //           margin: EdgeInsets.only(bottom: hp(1)),
+                    //           padding: EdgeInsets.all(10),
+                    //           decoration: BoxDecoration(
+                    //             border: Border.all(color: AppColors.LIGHT_GREY),
+                    //             borderRadius: BorderRadius.circular(8),
+                    //           ),
+                    //           child: Row(
+                    //             children: [
+                    //               Icon(Icons.picture_as_pdf, color: Colors.red),
+                    //               SizedBox(width: 10),
+                    //               Expanded(
+                    //                 child: Text(
+                    //                   "PDF ${index + 1}",
+                    //                   overflow: TextOverflow.ellipsis,
+                    //                 ),
+                    //               ),
+                    //               Icon(
+                    //                 Icons.open_in_new,
+                    //                 color: AppColors.PRIMARY_COLOR,
+                    //               ),
+                    //               IconButton(
+                    //                 icon: Icon(Icons.delete, color: Colors.red),
+                    //                 onPressed: () {
+                    //                   controller.removePdf(index);
+                    //                 },
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //   );
+                    // }),
+                    // SizedBox(height: hp(0.5)),
+
+                    /// 📄 GENERATED PDF STATUS
                     if (Get.arguments != null)
                       SizedBox(height: hp(2))
                     else

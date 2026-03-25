@@ -29,6 +29,7 @@ class ShunyaApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute: routeRootpage,
+      // initialRoute: routeclinicpage,
       getPages: AppRoutes.routes,
     );
   }
