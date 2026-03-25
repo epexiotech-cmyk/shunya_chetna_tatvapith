@@ -54,6 +54,8 @@ class PatientController extends GetxController
     selectedGender.value = value;
   }
 
+  List<String> powerlist = ["TDS", "RSV", "GODANTI", "BHASAM"];
+
   RxString maritalStatus = "Unmarried".obs;
 
   void changeMaritalStatus(String value) {

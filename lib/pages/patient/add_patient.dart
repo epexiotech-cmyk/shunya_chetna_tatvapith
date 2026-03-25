@@ -10,6 +10,7 @@ import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
+import 'package:shunya_app/widgets/custom_dropdown.dart';
 import 'package:shunya_app/widgets/custom_textfield.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 
@@ -481,141 +482,137 @@ class AddPatientPage extends StatelessWidget {
                       SizedBox(height: hp(2))
                     else
                       SizedBox(),
+                    if (Get.arguments != null)
+                      CustomDropdown(
+                        labelText: "Power",
+                        items: controller.powerlist.map((power) {
+                          return DropdownMenuItem(
+                            value: power,
+                            child: Text(power),
+                          );
+                        }).toList(),
+                        iconprefix: Icons.medication,
+                        onChanged: (value) {
+                          // controller.addMedicine(value!);
+                        },
+                      )
+                    else
+                      SizedBox(),
+
+                    if (Get.arguments != null)
+                      SizedBox(height: hp(2))
+                    else
+                      SizedBox(),
 
                     /// image upload and save in pdf formate
                     ///
                     /// 📄 MULTIPLE PDF UPLOAD
-                    Customcontainer(
-                      context: context,
-                      text: "Upload PDFs (Multiple)",
-                      color: AppColors.WHITE,
-                      textcolor: AppColors.PRIMARY_COLOR,
-                      bordercolor: AppColors.LIGHT_GREY,
-                      onTap: controller.pickMultiplePdf,
-                    ),
+                    if (Get.arguments != null)
+                      Customcontainer(
+                        context: context,
+                        text: "Upload PDFs (Multiple)",
+                        color: AppColors.WHITE,
+                        textcolor: AppColors.PRIMARY_COLOR,
+                        bordercolor: AppColors.LIGHT_GREY,
+                        onTap: controller.pickMultiplePdf,
+                      )
+                    else
+                      SizedBox(),
 
-                    SizedBox(height: hp(2)),
+                    if (Get.arguments != null)
+                      SizedBox(height: hp(2))
+                    else
+                      SizedBox(),
 
                     /// 📸 MULTI IMAGE PICK
-                    Customcontainer(
-                      context: context,
-                      text: "Upload Images (Create PDF)",
-                      color: AppColors.WHITE,
-                      textcolor: AppColors.PRIMARY_COLOR,
-                      bordercolor: AppColors.LIGHT_GREY,
-                      onTap: controller.pickMultipleImages,
-                    ),
-                    Obx(() {
-                      if (controller.generatedPdf.value != null) {
-                        return Text(
-                          "PDF Ready ✅",
-                          style: TextStyle(color: Colors.green),
-                        );
-                      }
-                      return SizedBox();
-                    }),
+                    if (Get.arguments != null)
+                      Customcontainer(
+                        context: context,
+                        text: "Upload Images (Create PDF)",
+                        color: AppColors.WHITE,
+                        textcolor: AppColors.PRIMARY_COLOR,
+                        bordercolor: AppColors.LIGHT_GREY,
+                        onTap: controller.pickMultipleImages,
+                      )
+                    else
+                      SizedBox(),
+
+                    if (Get.arguments != null)
+                      Obx(() {
+                        if (controller.generatedPdf.value != null) {
+                          return Text(
+                            "PDF Ready ✅",
+                            style: TextStyle(color: Colors.green),
+                          );
+                        }
+                        return SizedBox();
+                      })
+                    else
+                      SizedBox(),
+
                     SizedBox(height: hp(2)),
 
                     /// 📄 PDF LIST
-                    Obx(() {
-                      if (controller.pdfList.isEmpty) return SizedBox();
+                    ///
+                    if (Get.arguments != null)
+                      Obx(() {
+                        if (controller.pdfList.isEmpty) return SizedBox();
 
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: controller.pdfList.length,
-                        itemBuilder: (context, index) {
-                          final file = controller.pdfList[index];
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: controller.pdfList.length,
+                          itemBuilder: (context, index) {
+                            final file = controller.pdfList[index];
 
-                          return GestureDetector(
-                            onTap: () {
-                              controller.openPdf(file);
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: hp(1)),
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.LIGHT_GREY),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.picture_as_pdf, color: Colors.red),
-
-                                  SizedBox(width: 10),
-
-                                  Expanded(
-                                    child: Text(
-                                      file.path.split('/').last,
-                                      overflow: TextOverflow.ellipsis,
+                            return GestureDetector(
+                              onTap: () {
+                                controller.openPdf(file);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: hp(1)),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.LIGHT_GREY,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.picture_as_pdf,
+                                      color: Colors.red,
                                     ),
-                                  ),
 
-                                  /// ❌ REMOVE BUTTON
-                                  IconButton(
-                                    icon: Icon(Icons.close, color: Colors.red),
-                                    onPressed: () {
-                                      controller.removePdf(index);
-                                    },
-                                  ),
-                                ],
+                                    SizedBox(width: 10),
+
+                                    Expanded(
+                                      child: Text(
+                                        file.path.split('/').last,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+
+                                    /// ❌ REMOVE BUTTON
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        controller.removePdf(index);
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    }),
-                    SizedBox(),
-
-                    // /// 🖼 IMAGE PREVIEW GRID
-                    // SizedBox(height: hp(2)),
-                    // Obx(() {
-                    //   if (controller.pdfList.isEmpty) return SizedBox();
-                    //   return ListView.builder(
-                    //     shrinkWrap: true,
-                    //     physics: NeverScrollableScrollPhysics(),
-                    //     itemCount: controller.pdfList.length,
-                    //     itemBuilder: (context, index) {
-                    //       final file = controller.pdfList[index];
-                    //       return GestureDetector(
-                    //         onTap: () {
-                    //           controller.openPdf(file);
-                    //         },
-                    //         child: Container(
-                    //           margin: EdgeInsets.only(bottom: hp(1)),
-                    //           padding: EdgeInsets.all(10),
-                    //           decoration: BoxDecoration(
-                    //             border: Border.all(color: AppColors.LIGHT_GREY),
-                    //             borderRadius: BorderRadius.circular(8),
-                    //           ),
-                    //           child: Row(
-                    //             children: [
-                    //               Icon(Icons.picture_as_pdf, color: Colors.red),
-                    //               SizedBox(width: 10),
-                    //               Expanded(
-                    //                 child: Text(
-                    //                   "PDF ${index + 1}",
-                    //                   overflow: TextOverflow.ellipsis,
-                    //                 ),
-                    //               ),
-                    //               Icon(
-                    //                 Icons.open_in_new,
-                    //                 color: AppColors.PRIMARY_COLOR,
-                    //               ),
-                    //               IconButton(
-                    //                 icon: Icon(Icons.delete, color: Colors.red),
-                    //                 onPressed: () {
-                    //                   controller.removePdf(index);
-                    //                 },
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       );
-                    //     },
-                    //   );
-                    // }),
-                    // SizedBox(height: hp(0.5)),
+                            );
+                          },
+                        );
+                      })
+                    else
+                      SizedBox(),
 
                     /// 📄 GENERATED PDF STATUS
                     if (Get.arguments != null)
