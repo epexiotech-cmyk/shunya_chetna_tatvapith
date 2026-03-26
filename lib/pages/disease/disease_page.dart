@@ -12,52 +12,58 @@ class DiseasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DiseaseController>(
-      init: DiseaseController(),
-      builder: (controller) {
-        return Scaffold(
-          backgroundColor: AppColors.WHITE,
+    final controller = Get.put(DiseaseController()); //✅ FIXED
 
-          body: Padding(
-            padding: EdgeInsets.only(top: hp(2), left: wp(5), right: wp(5)),
-            child: Obx(
-              () => ListView.builder(
-                padding: EdgeInsets.all(wp(0.2)),
-                itemCount: controller.diseaseList.length,
-                itemBuilder: (context, index) {
-                  final disease = controller.diseaseList[index];
+    return Scaffold(
+      backgroundColor: AppColors.WHITE,
+      body: Padding(
+        padding: EdgeInsets.only(top: hp(2), left: wp(5), right: wp(5)),
 
-                  return Card(
-                    color: AppColors.WHITE,
-                    elevation: dp(context, 1),
-                    shadowColor: AppColors.PRIMARY_COLOR,
-                    margin: EdgeInsets.only(bottom: hp(1)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-
-                    child: ListTile(
-                      title: CustomText(
-                        text: disease["name"] ?? "",
-                        color: AppColors.PRIMARY_COLOR,
-                        fontSize: dp(context, 16),
-                        fontStyle: FontStyle.normal,
-                      ),
-
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          controller.deleteDisease(index);
-                        },
-                      ),
-                    ),
-                  );
-                },
+        /// ONLY OBX (NO GETBUILDER)
+        child: Obx(() {
+          if (controller.diseaseList.isEmpty) {
+            return Center(
+              child: CustomText(
+                text: "No Disease Added",
+                color: AppColors.DARK,
+                fontSize: dp(context, 14),
               ),
-            ),
-          ),
-        );
-      },
+            );
+          }
+
+          return ListView.builder(
+            itemCount: controller.diseaseList.length,
+            itemBuilder: (context, index) {
+              final disease = controller.diseaseList[index];
+
+              return Card(
+                color: AppColors.WHITE,
+                elevation: dp(context, 1),
+                shadowColor: AppColors.PRIMARY_COLOR,
+                margin: EdgeInsets.only(bottom: hp(1)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+
+                child: ListTile(
+                  title: CustomText(
+                    text: disease["name"] ?? "",
+                    color: AppColors.PRIMARY_COLOR,
+                    fontSize: dp(context, 16),
+                  ),
+
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      controller.deleteDisease(index);
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        }),
+      ),
     );
   }
 }
@@ -94,7 +100,7 @@ void showDialogDisease({required BuildContext context}) {
               /// YES BUTTON
               Customcontainer(
                 onTap: () {
-                  Get.back();
+                  controller.addDisease();
                 },
                 context: context,
                 width: wp(32),
