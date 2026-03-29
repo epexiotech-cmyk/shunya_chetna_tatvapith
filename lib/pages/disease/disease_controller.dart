@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-
 class DiseaseController extends GetxController
     with GetTickerProviderStateMixin {
-  final box = GetStorage();
+
 
   TextEditingController adddiseasecontroller = TextEditingController();
 
@@ -13,16 +11,10 @@ class DiseaseController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    loadDiseases();
+
   }
 
-  /// LOAD FROM STORAGE
-  void loadDiseases() {
-    final data = box.read('diseases') ?? [];
-
-    diseaseList.value = List<Map<String, dynamic>>.from(data);
-  }
-
+  
   /// ADD DISEASE
   void addDisease() {
     String name = adddiseasecontroller.text.trim();
@@ -32,10 +24,7 @@ class DiseaseController extends GetxController
       return;
     }
 
-    diseaseList.add({"name": name});
-
-    box.write('diseases', diseaseList); // 🔥 SAVE
-
+   
     adddiseasecontroller.clear();
 
     Get.back();
@@ -46,7 +35,7 @@ class DiseaseController extends GetxController
   void deleteDisease(int index) {
     diseaseList.removeAt(index);
 
-    box.write('diseases', diseaseList); // 🔥 UPDATE STORAGE
+
   }
 
   @override

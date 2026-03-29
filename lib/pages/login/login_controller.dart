@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:shunya_app/auth_controller.dart';
-import 'package:shunya_app/routes/common/common_app_pages.dart';
+import '../../auth_controller.dart';
+import '../../services/db_service.dart';
+import '../../routes/common/common_app_pages.dart';
 
 class LoginController extends GetxController {
   TextEditingController loginController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final controller = Get.put(AuthController());
-  final isPasswordVisible = false.obs;
-  final isConfirmPasswordVisible = false.obs;
 
-  @override
-  void onInit() {
-    loginController.text = "harsh.rural@gmail.com";
-    passwordController.text = "Harsh@1234";
-    super.onInit();
-  }
+  final isPasswordVisible = false.obs;
+
+  final AuthService _authService = AuthService();
 
   @override
   void onClose() {
@@ -29,50 +23,52 @@ class LoginController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
-  }
-
+  /// 🔥 LOGIN FLOW (FIREBASE + ISAR CHECK)
   Future<void> login() async {
-    if (loginController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      if (controller.login(
-        loginController.text, // <-- single input
-        passwordController.text,
-      )) {
+    try {
+      /// 🔥 ALWAYS SIGN IN WITH GOOGLE
+      final result = await _authService.signInWithGoogle();
+
+      if (result == null) {
         Get.snackbar(
-          'Success',
-          "Login Successful",
+          'Error',
+          'Google Sign-In Failed',
           snackPosition: SnackPosition.BOTTOM,
         );
-        // Get.offAndToNamed(routedashboard);
-
-        final storage = FlutterSecureStorage();
-        String? pin = await storage.read(key: "app_pin");
-
-        if (pin == null) {
-          Get.offAllNamed(routepinpage, arguments: {"isSet": true});
-        } else {
-          Get.offAllNamed(routepinpage, arguments: {"isSet": false});
-        }
-      } else {
-        Get.snackbar("Error", "Invalid Credentials");
+        return;
       }
-    } else {
+
+      final firebaseUser = result.user!;
+
+      /// 🔥 SAVE USER AGAIN (IMPORTANT AFTER REINSTALL)
+      await DBService.saveUser(firebaseUser);
+
+      final localUser = await DBService.getUser();
+
+      Get.snackbar(
+        'Success',
+        'Login Successful',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      /// 🔥 PIN FLOW
+      if (localUser?.pinHash == null) {
+        Get.offAllNamed(routepinpage,
+            arguments: {"isSet": true, "isReset": false});
+      } else {
+        Get.offAllNamed(routepinpage,
+            arguments: {"isSet": false, "isReset": false});
+      }
+    } catch (e) {
       Get.snackbar(
         'Error',
-        'Please fill all fields',
+        'Login failed',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
       );
     }
   }
 
   void goToRegister() {
     Get.toNamed(routeregisterpage);
-  }
-
-  void goToLogin() {
-    Get.offAllNamed(routeLoginpage);
   }
 }

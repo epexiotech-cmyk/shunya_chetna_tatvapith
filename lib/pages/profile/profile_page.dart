@@ -55,20 +55,6 @@ class ProfilePage extends GetView<ProfileController> {
                   ),
                 ),
 
-                SizedBox(height: hp(2)),
-
-                CustomTextField(
-                  readOnly: true,
-                  keyboardType: TextInputType.number,
-                  controller: controller.mobileController,
-                  hint: "Mobile No",
-                  labeltext: 'Mobile No',
-                  prefixicon: Icon(
-                    Icons.phone_outlined,
-                    color: AppColors.PRIMARY_COLOR,
-                  ),
-                ),
-
                 SizedBox(height: hp(3)),
 
                 /// Clinics Title
@@ -80,7 +66,6 @@ class ProfilePage extends GetView<ProfileController> {
                       fontSize: dp(context, 16),
                       // fontWeight: FontWeight.bold,
                     ),
-
                     ElevatedButton.icon(
                       onPressed: controller.addClinic,
                       icon: Icon(
@@ -96,7 +81,7 @@ class ProfilePage extends GetView<ProfileController> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             AppColors.PRIMARY_COLOR, // Button background color
-                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -110,7 +95,7 @@ class ProfilePage extends GetView<ProfileController> {
                 /// Dynamic Clinic Fields
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: controller.clinicList.length,
                   itemBuilder: (context, index) {
                     final clinic = controller.clinicList[index];
@@ -127,7 +112,6 @@ class ProfilePage extends GetView<ProfileController> {
                           ),
                         ),
                         SizedBox(height: hp(2)),
-
                         CustomTextField(
                           controller: clinic.qualificationController,
                           hint: "Qualification",
@@ -147,9 +131,18 @@ class ProfilePage extends GetView<ProfileController> {
                             color: AppColors.PRIMARY_COLOR,
                           ),
                         ),
-
                         SizedBox(height: hp(2)),
-
+                        CustomTextField(
+                          keyboardType: TextInputType.number,
+                          controller: clinic.mobileController,
+                          hint: "Mobile No",
+                          labeltext: 'Mobile No',
+                          prefixicon: Icon(
+                            Icons.phone_outlined,
+                            color: AppColors.PRIMARY_COLOR,
+                          ),
+                        ),
+                        SizedBox(height: hp(2)),
                         Row(
                           children: [
                             Expanded(
@@ -184,13 +177,12 @@ class ProfilePage extends GetView<ProfileController> {
                                   clinic.upiidController.text.trim(),
                                 );
                               },
-                              icon: Icon(Icons.verified, color: Colors.green),
+                              icon: const Icon(Icons.verified,
+                                  color: Colors.green),
                             ),
                           ],
                         ),
-
                         SizedBox(height: hp(2)),
-
                         CustomTextField(
                           controller: clinic.addressController,
                           hint: "Clinic Address",
@@ -201,9 +193,7 @@ class ProfilePage extends GetView<ProfileController> {
                             color: AppColors.PRIMARY_COLOR,
                           ),
                         ),
-
                         SizedBox(height: hp(2)),
-
                         if (index != 0)
                           Align(
                             alignment: Alignment.centerRight,
@@ -211,7 +201,7 @@ class ProfilePage extends GetView<ProfileController> {
                               onPressed: () {
                                 controller.removeClinic(index);
                               },
-                              icon: Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete, color: Colors.red),
                             ),
                           ),
                       ],
@@ -224,7 +214,7 @@ class ProfilePage extends GetView<ProfileController> {
                 Customcontainer(
                   text: "Save",
                   context: context,
-                  onTap: controller.saveProfile,
+                  onTap: controller.saveclinic,
                 ),
               ],
             ),

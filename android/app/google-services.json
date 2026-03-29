@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "713845817693",
+    "project_id": "patient-management-syste-596eb",
+    "storage_bucket": "patient-management-syste-596eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713845817693:android:2f35a67b81595a2ee968b4",
+        "android_client_info": {
+          "package_name": "com.example.shunya_chetna_tatvapith"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713845817693-5l7bphaa8necqk8usge5b38st3l7ubcc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shunya_chetna_tatvapith",
+            "certificate_hash": "53cd3ac3edd36e7974f09e9d7886854826457d63"
+          }
+        },
+        {
+          "client_id": "713845817693-06d0cl0frbd8mea63vq50k4n34unln9d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzN-ijH6dXNQfn0CaIo3DDjtvwYkWzK5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713845817693-06d0cl0frbd8mea63vq50k4n34unln9d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

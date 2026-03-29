@@ -1,44 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shunya_app/routes/common/common_app_pages.dart';
+import '../../auth_controller.dart';
+import '../../routes/common/common_app_pages.dart';
 
 class ForgetController extends GetxController {
-  final mobileController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  final emailController = TextEditingController();
 
-  final isPasswordVisible = false.obs;
-  final isConfirmPasswordVisible = false.obs;
+  final AuthService _authService = AuthService();
 
   @override
   void onClose() {
-    mobileController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    emailController.dispose();
     super.onClose();
   }
 
-  void togglePasswordVisibility() {
-    isPasswordVisible.value = !isPasswordVisible.value;
-  }
-
-  void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
-  }
-
-  void login() {
-    if (mobileController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty) {
-      Get.offAndToNamed(routeLoginpage);
-      Get.snackbar(
-        'Success',
-        'Forget functionality to be implemented',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } else {
+  /// 🔥 FIREBASE PASSWORD RESET
+  Future<void> resetPassword() async {
+    if (emailController.text.isEmpty) {
       Get.snackbar(
         'Error',
-        'Please enter mobile and password',
+        'Please enter email',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    try {
+      await _authService.sendPasswordResetEmail(emailController.text.trim());
+
+      Get.snackbar(
+        'Success',
+        'Password reset link sent to your email',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      /// 🔥 BACK TO LOGIN
+      Get.offAllNamed(routeLoginpage);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to send reset email',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,

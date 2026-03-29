@@ -21,7 +21,7 @@ class CustomDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       isExpanded: true,
-      initialValue: initialValue,
+      value: initialValue,
 
       icon: Icon(Icons.keyboard_arrow_down, color: AppColors.PRIMARY_COLOR),
 

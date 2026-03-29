@@ -27,7 +27,6 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Image.asset(
                       'assets/images/splash_logo.png',
@@ -43,7 +42,6 @@ class RegisterScreen extends StatelessWidget {
                     // Name Field
                     CustomTextField(
                       keyboardType: TextInputType.name,
-
                       textInputAction: TextInputAction.next,
                       controller: controller.nameController,
                       hint: "Doctor Name",
@@ -81,25 +79,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                     SizedBox(height: hp(2)),
                     // Email Field
-                    CustomTextField(
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      controller: controller.mobileController,
-                      hint: "Mobile No",
-                      labeltext: 'Mobile No',
-                      validator: formValidation.validation(
-                        type: 'mobile',
-                        multiValidator: MultiValidator([]),
-                        isRequired: true,
-                        errorText: "Mobile No is required.",
-                      ),
-                      prefixicon: Icon(
-                        Icons.phone_outlined,
-                        color: AppColors.PRIMARY_COLOR,
-                      ),
-                    ),
 
-                    SizedBox(height: hp(2)),
                     // Password Field
                     CustomTextField(
                       obscureText: !controller.isPasswordVisible.value,

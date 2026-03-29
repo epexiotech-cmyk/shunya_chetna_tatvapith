@@ -237,7 +237,7 @@ class AddPatientPage extends StatelessWidget {
                           flex: 1,
                           child: Obx(
                             () => DropdownButtonFormField<String>(
-                              initialValue:
+                              value:
                                   controller.selectedBloodGroup.value.isEmpty
                                   ? null
                                   : controller.selectedBloodGroup.value,

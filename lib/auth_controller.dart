@@ -1,56 +1,47 @@
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthController extends GetxController {
-  final box = GetStorage();
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// REGISTER
-  void register({
-    required String name,
-    required String email,
-    required String mobile,
-    required String password,
-  }) {
-    box.write('user', {
-      "name": name,
-      "email": email,
-      "mobile": mobile,
-      "password": password,
-    });
-  }
+  /// 🔹 Google Sign-In
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  /// LOGIN
-  bool login(String input, String password) {
-    final user = box.read('user');
+      if (googleUser == null) return null;
 
-    if (user != null &&
-        password == user['password'] &&
-        (input == user['mobile'] ||
-            input == user['email'] ||
-            input == user['name'])) {
-      box.write('isLogin', true);
-      return true;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      return await _auth.signInWithCredential(credential);
+    } catch (e) {
+      print("Google Sign-In Error: $e");
+      return null;
     }
-
-    return false;
   }
 
-  /// LOGOUT
-  void logout() {
-    box.write('isLogin', false);
+  /// 🔹 Get current Firebase user
+  User? getCurrentUser() {
+    return _auth.currentUser;
   }
 
-  /// CHECK LOGIN
-  bool isLoggedIn() {
-    return box.read('isLogin') ?? false;
+  /// 🔹 Logout
+  Future<void> signOut() async {
+    await GoogleSignIn().signOut();
+    await _auth.signOut();
   }
 
-  /// GET USER DATA
-  Map<String, dynamic>? getUser() {
-    final data = box.read('user');
-    if (data != null) {
-      return Map<String, dynamic>.from(data);
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      rethrow;
     }
-    return null;
   }
 }

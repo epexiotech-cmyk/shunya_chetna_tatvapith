@@ -1,36 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shunya_app/auth_controller.dart';
-import 'package:shunya_app/routes/common/common_app_pages.dart';
+import '../../auth_controller.dart';
+import '../../services/db_service.dart';
+import '../../routes/common/common_app_pages.dart';
 
 class RegisterController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
-  // Registration specific controllers
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  final controller = Get.put(AuthController());
 
   final isPasswordVisible = false.obs;
   final isConfirmPasswordVisible = false.obs;
 
-  @override
-  void onInit() {
-    emailController.text = "harsh.rural@gmail.com";
-    passwordController.text = "Harsh@1234";
-    mobileController.text = "9714384251";
-    nameController.text = "harsh patel";
-    confirmPasswordController.text = "Harsh@1234";
-    super.onInit();
-  }
+  final AuthService _authService = AuthService();
 
   @override
   void onClose() {
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
-    mobileController.dispose();
     confirmPasswordController.dispose();
     super.onClose();
   }
@@ -43,52 +32,12 @@ class RegisterController extends GetxController {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 
-  // void login() {
-  //   if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-  //     Get.snackbar(
-  //       'Success',
-  //       'Login functionality to be implemented',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //     );
-  //   } else {
-  //     Get.snackbar(
-  //       'Error',
-  //       'Please enter email and password',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.redAccent,
-  //       colorText: Colors.white,
-  //     );
-  //   }
-  // }
-
-  void register() {
-    if (nameController.text.isNotEmpty &&
-        emailController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty &&
-        confirmPasswordController.text.isNotEmpty) {
-      if (passwordController.text == confirmPasswordController.text) {
-        controller.register(
-          name: nameController.text,
-          email: emailController.text,
-          mobile: mobileController.text,
-          password: passwordController.text,
-        );
-        Get.snackbar(
-          'Success',
-          "Registration Successful",
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        Get.offAllNamed(routeLoginpage);
-      } else {
-        Get.snackbar(
-          'Error',
-          'Passwords do not match',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
-        );
-      }
-    } else {
+  /// 🔥 REGISTER WITH GOOGLE + SAVE TO ISAR
+  Future<void> register() async {
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty) {
       Get.snackbar(
         'Error',
         'Please fill all fields',
@@ -96,11 +45,62 @@ class RegisterController extends GetxController {
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
       );
+      return;
     }
-  }
 
-  void goToRegister() {
-    Get.toNamed(routeregisterpage);
+    if (passwordController.text != confirmPasswordController.text) {
+      Get.snackbar(
+        'Error',
+        'Passwords do not match',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    try {
+      /// 🔹 Google Sign-In
+      final result = await _authService.signInWithGoogle();
+
+      if (result != null) {
+        final firebaseUser = result.user!;
+
+        /// 🔹 Save to Isar
+        await DBService.saveUser(firebaseUser);
+
+        Get.snackbar(
+          'Success',
+          'Registration Successful',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+
+        /// 🔥 DIRECT → PIN SET (NO LOGIN AGAIN)
+        Get.offAllNamed(
+          routepinpage,
+          arguments: {
+            "isSet": false, // ✅ FIXED
+            "isReset": false,
+          },
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          'Google Sign-In Failed',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    }
   }
 
   void goToLogin() {

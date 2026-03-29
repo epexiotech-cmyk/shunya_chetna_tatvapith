@@ -34,80 +34,24 @@ class ForgetScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: hp(2)),
-                    CustomText(text: "PMS Forget Password"),
+                    const CustomText(text: "PMS Forget Password"),
 
                     SizedBox(height: hp(4)),
                     // Email Field
                     CustomTextField(
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      controller: controller.mobileController,
-                      hint: "Mobile",
-                      labeltext: 'Mobile',
+                      controller: controller.emailController,
+                      hint: "Email",
+                      labeltext: 'Email',
                       validator: formValidation.validation(
-                        type: 'mobile',
+                        type: 'email',
                         multiValidator: MultiValidator([]),
                         isRequired: true,
-                        errorText: "Mobile is required.",
+                        errorText: "Email is required.",
                       ),
                       prefixicon: Icon(
                         Icons.phone,
-                        color: AppColors.PRIMARY_COLOR,
-                      ),
-                    ),
-                    SizedBox(height: hp(2)),
-
-                    // Password Field
-                    CustomTextField(
-                      obscureText: !controller.isPasswordVisible.value,
-                      controller: controller.passwordController,
-                      textInputAction: TextInputAction.done,
-                      hint: 'Password',
-                      labeltext: 'Password',
-                      validator: formValidation.validation(
-                        type: 'password',
-                        multiValidator: MultiValidator([]),
-                        isRequired: true,
-                        errorText: "Password is required.",
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          controller.isPasswordVisible.value
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: AppColors.PRIMARY_COLOR,
-                        ),
-                        onPressed: controller.togglePasswordVisibility,
-                      ),
-                      prefixicon: Icon(
-                        Icons.lock_outline,
-                        color: AppColors.PRIMARY_COLOR,
-                      ),
-                    ),
-                    SizedBox(height: hp(2)),
-                    CustomTextField(
-                      obscureText: !controller.isPasswordVisible.value,
-                      controller: controller.confirmPasswordController,
-                      textInputAction: TextInputAction.done,
-                      hint: 'Confirm Password',
-                      labeltext: 'Confirm Password',
-                      validator: formValidation.validation(
-                        type: 'password',
-                        multiValidator: MultiValidator([]),
-                        isRequired: true,
-                        errorText: "Confirm Password is required.",
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          controller.isPasswordVisible.value
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: AppColors.PRIMARY_COLOR,
-                        ),
-                        onPressed: controller.togglePasswordVisibility,
-                      ),
-                      prefixicon: Icon(
-                        Icons.lock_outline,
                         color: AppColors.PRIMARY_COLOR,
                       ),
                     ),
@@ -118,7 +62,7 @@ class ForgetScreen extends StatelessWidget {
                     Customcontainer(
                       text: "Forget Password",
                       context: context,
-                      onTap: controller.login,
+                      onTap: controller.resetPassword,
                     ),
                   ],
                 ),

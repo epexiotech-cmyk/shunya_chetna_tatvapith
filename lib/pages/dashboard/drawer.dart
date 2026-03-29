@@ -40,7 +40,7 @@ customdrawer({required BuildContext context}) {
                     scrollAxis: Axis.horizontal,
                     blankSpace: 100,
                     velocity: 40,
-                    pauseAfterRound: Duration(seconds: 1),
+                    pauseAfterRound: const Duration(seconds: 1),
                     startPadding: 10,
                   ),
                 ),
@@ -56,8 +56,8 @@ customdrawer({required BuildContext context}) {
           padding: EdgeInsets.symmetric(horizontal: wp(3), vertical: hp(2)),
           decoration: BoxDecoration(
             color: AppColors.PRIMARY_COLOR,
-
-            borderRadius: BorderRadius.only(bottomRight: Radius.circular(60)),
+            borderRadius:
+                const BorderRadius.only(bottomRight: Radius.circular(60)),
           ),
           child: Row(
             children: [
@@ -89,7 +89,6 @@ customdrawer({required BuildContext context}) {
                       color: AppColors.WHITE,
                       fontSize: dp(context, 12),
                     ),
-
                     SizedBox(height: hp(0.5)),
                     CustomText(
                       text: "apurvpatel9112@gmail.com",
@@ -102,7 +101,6 @@ customdrawer({required BuildContext context}) {
             ],
           ),
         ),
-
         Customcontainer(
           margin: EdgeInsets.only(top: hp(2), left: wp(2), right: wp(2)),
           padding: EdgeInsets.only(left: wp(5)),
@@ -113,7 +111,6 @@ customdrawer({required BuildContext context}) {
           color: AppColors.WHITE,
           bordercolor: AppColors.LIGHT_GREY,
         ),
-
         Customcontainer(
           margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
           padding: EdgeInsets.only(left: wp(5)),
@@ -134,7 +131,6 @@ customdrawer({required BuildContext context}) {
           color: AppColors.WHITE,
           bordercolor: AppColors.LIGHT_GREY,
         ),
-
         Customcontainer(
           margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
           padding: EdgeInsets.only(left: wp(5)),
@@ -148,7 +144,6 @@ customdrawer({required BuildContext context}) {
             showDialoglogout(context: context);
           },
         ),
-
         Customcontainer(
           margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
           padding: EdgeInsets.only(left: wp(5)),
@@ -159,7 +154,7 @@ customdrawer({required BuildContext context}) {
           color: AppColors.WHITE,
           bordercolor: AppColors.LIGHT_GREY,
           onTap: () async {
-            final storage = FlutterSecureStorage();
+            const storage = FlutterSecureStorage();
 
             await storage.delete(key: "app_pin");
 
@@ -176,7 +171,7 @@ customdrawer({required BuildContext context}) {
 }
 
 void showDialoglogout({required BuildContext context}) {
-  final controller = Get.put(AuthController());
+  final AuthService authService = AuthService();
   showDialog(
     context: context,
     builder: (_) {
@@ -187,19 +182,15 @@ void showDialoglogout({required BuildContext context}) {
           fontSize: dp(context, 24),
           fontStyle: FontStyle.italic,
         ),
-
-        title: Text("Logout", textAlign: TextAlign.center),
-
-        content: Text(
+        title: const Text("Logout", textAlign: TextAlign.center),
+        content: const Text(
           "Are You Sure You want to Logout.",
           textAlign: TextAlign.center,
         ),
-
         contentTextStyle: TextStyle(
           fontSize: dp(context, 15),
           color: AppColors.DARK,
         ),
-
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -207,8 +198,8 @@ void showDialoglogout({required BuildContext context}) {
               /// YES BUTTON
               Customcontainer(
                 onTap: () {
-                  controller.logout();
-                  Get.offAllNamed('/loginpage');
+                  authService.signOut();
+                  Get.offAllNamed(routeLoginpage);
                 },
                 context: context,
                 width: wp(32),
