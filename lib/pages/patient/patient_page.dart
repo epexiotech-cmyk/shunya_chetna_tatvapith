@@ -28,7 +28,6 @@ class PatientPage extends StatelessWidget {
                   controller: controller.searchController,
                   hint: "Search Patient",
                   labeltext: 'Search Patient',
-
                   suffixIcon: Icon(
                     Icons.search,
                     color: AppColors.PRIMARY_COLOR,
@@ -46,21 +45,28 @@ class PatientPage extends StatelessWidget {
                         return GestureDetector(
                           onTap: () {
                             Get.to(
-                              () => AddPatientPage(),
+                              () => const AddPatientPage(),
                               arguments: {
                                 "patientList": controller.patientList[index],
                               },
                             );
                           },
-                          child: Card(
-                            color: AppColors.WHITE,
-                            elevation: dp(context, 1),
-                            shadowColor: AppColors.PRIMARY_COLOR,
-                            margin: EdgeInsets.only(bottom: hp(1.5)),
-                            shape: RoundedRectangleBorder(
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: hp(1)),
+                            decoration: BoxDecoration(
+                              color: AppColors.WHITE,
                               borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: AppColors.LIGHT_GREY),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.LIGHT_GREY.withOpacity(0.1),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(0,
+                                      3), // changes position of shadow (right, down)
+                                ),
+                              ],
                             ),
-
                             child: ListTile(
                               /// NAME
                               title: Row(
@@ -85,7 +91,6 @@ class PatientPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: hp(0.5)),
-
                                   Row(
                                     children: [
                                       Icon(
@@ -102,9 +107,7 @@ class PatientPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-
                                   SizedBox(height: hp(0.5)),
-
                                   Row(
                                     children: [
                                       Icon(

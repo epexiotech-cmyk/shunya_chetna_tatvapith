@@ -125,12 +125,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:shunya_app/models/clinic_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/db_service.dart';
 import '../../routes/common/common_app_pages.dart';
 
-class ClinicModel {
-  TextEditingController nameController = TextEditingController();
+class ClinicFormModel {
+  TextEditingController clinicnameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController doctornameController = TextEditingController();
   TextEditingController qualificationController = TextEditingController();
@@ -142,7 +143,7 @@ class ProfileController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
-  RxList<ClinicModel> clinicList = <ClinicModel>[ClinicModel()].obs;
+  RxList<ClinicFormModel> clinicList = <ClinicFormModel>[ClinicFormModel()].obs;
 
   /// 🔥 LOAD USER DATA FROM ISAR
   @override
@@ -164,7 +165,7 @@ class ProfileController extends GetxController {
 
   /// 🔥 ADD / REMOVE CLINIC
   void addClinic() {
-    clinicList.add(ClinicModel());
+    clinicList.add(ClinicFormModel());
   }
 
   void removeClinic(int index) {
@@ -232,9 +233,32 @@ class ProfileController extends GetxController {
     );
   }
 
-  /// 🔥 SAVE CLINIC FLOW
   Future<void> saveclinic() async {
-    if (clinicList.length == 1) {
+    List<ClinicModel> clinics = [];
+
+    for (var c in clinicList) {
+      if (c.clinicnameController.text.trim().isNotEmpty &&
+          c.doctornameController.text.trim().isNotEmpty) {
+        clinics.add(
+          ClinicModel()
+            ..clinicName = c.clinicnameController.text.trim()
+            ..doctorName = c.doctornameController.text.trim()
+            ..address = c.addressController.text.trim()
+            ..mobile = c.mobileController.text.trim()
+            ..upiId = c.upiidController.text.trim()
+            ..qualification = c.qualificationController.text.trim(),
+        );
+      }
+    }
+
+    if (clinics.isEmpty) {
+      Get.snackbar("Error", "Add at least one clinic");
+      return;
+    }
+
+    await DBService.saveClinics(clinics);
+
+    if (clinics.length == 1) {
       Get.offAllNamed(routedashboard);
     } else {
       Get.offAllNamed(routeclinicpage);

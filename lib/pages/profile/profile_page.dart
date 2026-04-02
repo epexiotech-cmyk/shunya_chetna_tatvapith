@@ -123,7 +123,7 @@ class ProfilePage extends GetView<ProfileController> {
                         ),
                         SizedBox(height: hp(2)),
                         CustomTextField(
-                          controller: clinic.nameController,
+                          controller: clinic.clinicnameController,
                           hint: "Clinic Name",
                           labeltext: "Clinic Name",
                           prefixicon: Icon(

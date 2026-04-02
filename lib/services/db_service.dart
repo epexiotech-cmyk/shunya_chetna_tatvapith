@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shunya_app/models/clinic_model.dart';
 
 import '../models/user_model.dart';
 
@@ -12,7 +13,7 @@ class DBService {
     final dir = await getApplicationDocumentsDirectory();
 
     isar = await Isar.open(
-      [UserModelSchema],
+      [UserModelSchema, ClinicModelSchema],
       directory: dir.path,
     );
   }
@@ -72,5 +73,25 @@ class DBService {
         await isar.userModels.put(user);
       });
     }
+  }
+
+  /// 🔥 SAVE CLINICS
+  static Future<void> saveClinics(List<ClinicModel> clinics) async {
+    await isar.writeTxn(() async {
+      await isar.clinicModels.clear(); // optional (overwrite)
+      await isar.clinicModels.putAll(clinics);
+    });
+  }
+
+  /// 🔥 GET CLINICS
+  static Future<List<ClinicModel>> getClinics() async {
+    return await isar.clinicModels.where().findAll();
+  }
+
+  /// 🔥 SAVE SELECTED CLINIC
+  static Future<void> saveSelectedClinic(ClinicModel clinic) async {
+    await isar.writeTxn(() async {
+      await isar.clinicModels.put(clinic);
+    });
   }
 }

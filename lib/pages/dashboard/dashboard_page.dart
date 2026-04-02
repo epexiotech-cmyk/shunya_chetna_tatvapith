@@ -31,10 +31,10 @@ class DashboardPage extends StatelessWidget {
               title: controller.bottomNavIndex.value == 0
                   ? "Patients"
                   : controller.bottomNavIndex.value == 1
-                  ? "Billing"
-                  : controller.bottomNavIndex.value == 2
-                  ? "Inventory"
-                  : "Diseace",
+                      ? "Billing"
+                      : controller.bottomNavIndex.value == 2
+                          ? "Inventory"
+                          : "Diseace",
               iconleft: Icons.menu,
               iconright: Icons.person_pin,
               lefticononTap: () {
@@ -48,18 +48,18 @@ class DashboardPage extends StatelessWidget {
             body: Obx(() {
               switch (controller.bottomNavIndex.value) {
                 case 0:
-                  return PatientPage();
+                  return const PatientPage();
                 case 1:
-                  return BillingPage();
+                  return const BillingPage();
                 case 2:
-                  return InventoryPage();
+                  return const InventoryPage();
                 case 3:
-                  return DiseasePage();
+                  return const DiseasePage();
                 default:
-                  return PatientPage();
+                  return const PatientPage();
               }
             }),
-            bottomNavigationBar: Custombuttombar(),
+            bottomNavigationBar: const Custombuttombar(),
             floatingActionButton: Obx(() {
               if (controller.bottomNavIndex.value == 0 ||
                   controller.bottomNavIndex.value == 2 ||
@@ -67,10 +67,10 @@ class DashboardPage extends StatelessWidget {
                 return FloatingActionButton.extended(
                   onPressed: () {
                     controller.bottomNavIndex.value == 0
-                        ? Get.to(AddPatientPage())
+                        ? Get.to(const AddPatientPage())
                         : controller.bottomNavIndex.value == 2
-                        ? Get.to(AddInventoryPage())
-                        : showDialogDisease(context: context);
+                            ? Get.to(const AddInventoryPage())
+                            : showDialogDisease(context: context);
                   },
                   backgroundColor: AppColors.PRIMARY_COLOR,
                   icon: Icon(Icons.add, color: AppColors.WHITE),
@@ -78,8 +78,8 @@ class DashboardPage extends StatelessWidget {
                     text: controller.bottomNavIndex.value == 0
                         ? "Add Patients"
                         : controller.bottomNavIndex.value == 2
-                        ? "Add Inventory"
-                        : "Add Diseace",
+                            ? "Add Inventory"
+                            : "Add Diseace",
                     fontSize: dp(context, 10),
                     color: AppColors.WHITE,
                   ),

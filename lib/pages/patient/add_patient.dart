@@ -10,7 +10,6 @@ import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
-import 'package:shunya_app/widgets/custom_dropdown.dart';
 import 'package:shunya_app/widgets/custom_textfield.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 
@@ -237,37 +236,29 @@ class AddPatientPage extends StatelessWidget {
                           flex: 1,
                           child: Obx(
                             () => DropdownButtonFormField<String>(
-                              value:
-                                  controller.selectedBloodGroup.value.isEmpty
+                              value: controller.selectedBloodGroup.value.isEmpty
                                   ? null
                                   : controller.selectedBloodGroup.value,
-
                               icon: Icon(
                                 Icons.keyboard_arrow_down,
                                 color: AppColors.PRIMARY_COLOR,
                               ),
-
                               dropdownColor: AppColors.WHITE,
-
                               style: TextStyle(
                                 fontSize: dp(context, 14),
                                 color: AppColors.DARK,
                               ),
-
                               decoration: InputDecoration(
                                 labelText: "Blood Group",
                                 focusColor: AppColors.PRIMARY_COLOR,
-
                                 prefixIcon: Icon(
                                   Icons.bloodtype_outlined,
                                   color: AppColors.PRIMARY_COLOR,
                                 ),
-
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: hp(2),
                                   horizontal: wp(3),
                                 ),
-
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
@@ -275,7 +266,6 @@ class AddPatientPage extends StatelessWidget {
                                     width: 1,
                                   ),
                                 ),
-
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
@@ -283,7 +273,6 @@ class AddPatientPage extends StatelessWidget {
                                     width: 1,
                                   ),
                                 ),
-
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
@@ -292,14 +281,12 @@ class AddPatientPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               items: controller.bloodGroups.map((blood) {
                                 return DropdownMenuItem(
                                   value: blood,
                                   child: Text(blood),
                                 );
                               }).toList(),
-
                               onChanged: (value) {
                                 controller.changeBloodGroup(value!);
                               },
@@ -353,7 +340,7 @@ class AddPatientPage extends StatelessWidget {
                                     controller.changeGender(value!);
                                   },
                                 ),
-                                Text("Male"),
+                                const Text("Male"),
                               ],
                             ),
                           ),
@@ -372,7 +359,7 @@ class AddPatientPage extends StatelessWidget {
                                     controller.changeGender(value!);
                                   },
                                 ),
-                                Text("Female"),
+                                const Text("Female"),
                               ],
                             ),
                           ),
@@ -391,7 +378,7 @@ class AddPatientPage extends StatelessWidget {
                                     controller.changeGender(value!);
                                   },
                                 ),
-                                Text("Other"),
+                                const Text("Other"),
                               ],
                             ),
                           ),
@@ -417,7 +404,7 @@ class AddPatientPage extends StatelessWidget {
                                     controller.changeMaritalStatus(value!);
                                   },
                                 ),
-                                Text("Married"),
+                                const Text("Married"),
                               ],
                             ),
                           ),
@@ -436,7 +423,7 @@ class AddPatientPage extends StatelessWidget {
                                     controller.changeMaritalStatus(value!);
                                   },
                                 ),
-                                Text("Unmarried"),
+                                const Text("Unmarried"),
                               ],
                             ),
                           ),
@@ -446,7 +433,7 @@ class AddPatientPage extends StatelessWidget {
                     if (Get.arguments != null)
                       SizedBox(height: hp(2))
                     else
-                      SizedBox(),
+                      const SizedBox(),
                     if (Get.arguments != null)
                       CustomTextField(
                         controller:
@@ -460,11 +447,11 @@ class AddPatientPage extends StatelessWidget {
                         ),
                       )
                     else
-                      SizedBox(),
+                      const SizedBox(),
                     if (Get.arguments != null)
                       SizedBox(height: hp(2))
                     else
-                      SizedBox(),
+                      const SizedBox(),
                     if (Get.arguments != null)
                       CustomTextField(
                         controller: controller.patientproblemController,
@@ -477,32 +464,11 @@ class AddPatientPage extends StatelessWidget {
                         ),
                       )
                     else
-                      SizedBox(),
+                      const SizedBox(),
                     if (Get.arguments != null)
                       SizedBox(height: hp(2))
                     else
-                      SizedBox(),
-                    if (Get.arguments != null)
-                      CustomDropdown(
-                        labelText: "Power",
-                        items: controller.powerlist.map((power) {
-                          return DropdownMenuItem(
-                            value: power,
-                            child: Text(power),
-                          );
-                        }).toList(),
-                        iconprefix: Icons.medication,
-                        onChanged: (value) {
-                          // controller.addMedicine(value!);
-                        },
-                      )
-                    else
-                      SizedBox(),
-
-                    if (Get.arguments != null)
-                      SizedBox(height: hp(2))
-                    else
-                      SizedBox(),
+                      const SizedBox(),
 
                     /// image upload and save in pdf formate
                     ///
@@ -517,12 +483,12 @@ class AddPatientPage extends StatelessWidget {
                         onTap: controller.pickMultiplePdf,
                       )
                     else
-                      SizedBox(),
+                      const SizedBox(),
 
                     if (Get.arguments != null)
                       SizedBox(height: hp(2))
                     else
-                      SizedBox(),
+                      const SizedBox(),
 
                     /// 📸 MULTI IMAGE PICK
                     if (Get.arguments != null)
@@ -535,20 +501,20 @@ class AddPatientPage extends StatelessWidget {
                         onTap: controller.pickMultipleImages,
                       )
                     else
-                      SizedBox(),
+                      const SizedBox(),
 
                     if (Get.arguments != null)
                       Obx(() {
                         if (controller.generatedPdf.value != null) {
-                          return Text(
+                          return const Text(
                             "PDF Ready ✅",
                             style: TextStyle(color: Colors.green),
                           );
                         }
-                        return SizedBox();
+                        return const SizedBox();
                       })
                     else
-                      SizedBox(),
+                      const SizedBox(),
 
                     SizedBox(height: hp(2)),
 
@@ -556,11 +522,11 @@ class AddPatientPage extends StatelessWidget {
                     ///
                     if (Get.arguments != null)
                       Obx(() {
-                        if (controller.pdfList.isEmpty) return SizedBox();
+                        if (controller.pdfList.isEmpty) return const SizedBox();
 
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: controller.pdfList.length,
                           itemBuilder: (context, index) {
                             final file = controller.pdfList[index];
@@ -571,7 +537,7 @@ class AddPatientPage extends StatelessWidget {
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: hp(1)),
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: AppColors.LIGHT_GREY,
@@ -580,12 +546,12 @@ class AddPatientPage extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.picture_as_pdf,
                                       color: Colors.red,
                                     ),
 
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
 
                                     Expanded(
                                       child: Text(
@@ -596,7 +562,7 @@ class AddPatientPage extends StatelessWidget {
 
                                     /// ❌ REMOVE BUTTON
                                     IconButton(
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.close,
                                         color: Colors.red,
                                       ),
@@ -612,13 +578,13 @@ class AddPatientPage extends StatelessWidget {
                         );
                       })
                     else
-                      SizedBox(),
+                      const SizedBox(),
 
                     /// 📄 GENERATED PDF STATUS
                     if (Get.arguments != null)
                       SizedBox(height: hp(2))
                     else
-                      SizedBox(),
+                      const SizedBox(),
                     if (Get.arguments != null)
                       Customcontainer(
                         context: context,
@@ -631,7 +597,7 @@ class AddPatientPage extends StatelessWidget {
                         },
                       )
                     else
-                      SizedBox(),
+                      const SizedBox(),
 
                     SizedBox(height: hp(3)),
 

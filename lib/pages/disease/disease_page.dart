@@ -36,22 +36,28 @@ class DiseasePage extends StatelessWidget {
             itemBuilder: (context, index) {
               final disease = controller.diseaseList[index];
 
-              return Card(
-                color: AppColors.WHITE,
-                elevation: dp(context, 1),
-                shadowColor: AppColors.PRIMARY_COLOR,
+              return Container(
                 margin: EdgeInsets.only(bottom: hp(1)),
-                shape: RoundedRectangleBorder(
+                decoration: BoxDecoration(
+                  color: AppColors.WHITE,
                   borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.LIGHT_GREY),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.LIGHT_GREY.withOpacity(0.1),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(
+                          0, 3), // changes position of shadow (right, down)
+                    ),
+                  ],
                 ),
-
                 child: ListTile(
                   title: CustomText(
                     text: disease["name"] ?? "",
                     color: AppColors.PRIMARY_COLOR,
                     fontSize: dp(context, 16),
                   ),
-
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
@@ -80,19 +86,15 @@ void showDialogDisease({required BuildContext context}) {
           fontSize: dp(context, 24),
           fontStyle: FontStyle.italic,
         ),
-
         title: CustomText(text: "Add Disease"),
-
         content: CustomTextField(
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
           controller: controller.adddiseasecontroller,
           hint: "Disease",
           labeltext: 'Disease',
-
           suffixIcon: Icon(Icons.ac_unit_sharp, color: AppColors.PRIMARY_COLOR),
         ),
-
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

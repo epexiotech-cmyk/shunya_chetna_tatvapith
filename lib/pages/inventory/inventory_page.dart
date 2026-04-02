@@ -16,7 +16,6 @@ class InventoryPage extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.WHITE,
-
           body: Padding(
             padding: EdgeInsets.only(top: hp(2), left: wp(5), right: wp(5)),
             child: Column(
@@ -28,7 +27,6 @@ class InventoryPage extends StatelessWidget {
                   controller: controller.searchController,
                   hint: "Search Medicine",
                   labeltext: 'Search Medicine',
-
                   suffixIcon: Icon(
                     Icons.search,
                     color: AppColors.PRIMARY_COLOR,
@@ -42,21 +40,27 @@ class InventoryPage extends StatelessWidget {
                     () => ListView.builder(
                       padding: EdgeInsets.all(wp(0.2)),
                       itemCount: controller.filteredStock.length,
-
                       itemBuilder: (context, index) {
                         var item = controller.filteredStock[index];
 
                         bool lowStock = item["qty"] <= 10;
 
-                        return Card(
-                          color: AppColors.WHITE,
-                          elevation: dp(context, 1),
-                          shadowColor: AppColors.PRIMARY_COLOR,
-                          margin: EdgeInsets.only(bottom: hp(1.5)),
-                          shape: RoundedRectangleBorder(
+                        return Container(
+                          margin: EdgeInsets.only(bottom: hp(1)),
+                          decoration: BoxDecoration(
+                            color: AppColors.WHITE,
                             borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColors.LIGHT_GREY),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.LIGHT_GREY.withOpacity(0.1),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(0,
+                                    3), // changes position of shadow (right, down)
+                              ),
+                            ],
                           ),
-
                           child: ListTile(
                             title: CustomText(
                               text: item["name"] ?? "",
@@ -64,14 +68,12 @@ class InventoryPage extends StatelessWidget {
                               fontSize: dp(context, 16),
                               fontStyle: FontStyle.normal,
                             ),
-
                             subtitle: CustomText(
                               text: "Price ₹${item["price"]}",
                               color: AppColors.DARK,
                               fontSize: dp(context, 13),
                               fontStyle: FontStyle.normal,
                             ),
-
                             trailing: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -81,7 +83,6 @@ class InventoryPage extends StatelessWidget {
                                   fontSize: dp(context, 12),
                                   fontStyle: FontStyle.normal,
                                 ),
-
                                 if (lowStock)
                                   const Text(
                                     "Low Stock",

@@ -263,7 +263,6 @@ class PinController extends GetxController {
     }
   }
 
-  /// 🔥 VERIFY PIN
   Future<void> verifyPin() async {
     if (enteredPin.length != 4) {
       Get.snackbar("Error", "Enter 4 digit PIN");
@@ -282,7 +281,23 @@ class PinController extends GetxController {
 
       if (enteredHash == user.pinHash) {
         Get.snackbar("Success", "PIN Verified");
-        Get.offAllNamed(routeprofilepage);
+
+        /// 🔥 GET CLINICS FROM ISAR
+        final clinics = await DBService.getClinics();
+
+        /// 🔥 ROUTING LOGIC
+        if (clinics.isEmpty) {
+          /// ❌ No clinic → Profile
+          Get.offAllNamed(routeprofilepage);
+        } else if (clinics.length == 1) {
+          /// ✅ One clinic → Auto select + Dashboard
+          await DBService.saveSelectedClinic(clinics.first);
+
+          Get.offAllNamed(routedashboard);
+        } else {
+          /// 🔥 Multiple clinics → Selection page
+          Get.offAllNamed(routeclinicpage);
+        }
       } else {
         Get.snackbar("Error", "Incorrect PIN");
       }
