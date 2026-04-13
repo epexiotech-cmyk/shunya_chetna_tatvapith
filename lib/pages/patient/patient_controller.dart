@@ -26,6 +26,8 @@ class PatientController extends GetxController
   TextEditingController patientobservationlavelController =
       TextEditingController();
   TextEditingController patientproblemController = TextEditingController();
+  RxBool isEditMode = false.obs;
+  int? editIndex;
   DateTime? selectedDate;
 
   Future<void> pickDate({required BuildContext context}) async {
@@ -450,5 +452,75 @@ class PatientController extends GetxController
     if (result.type != ResultType.done) {
       Get.snackbar("Error", "No app found to open PDF");
     }
+  }
+
+  void setPatientData(Map<String, String> patient, int index) {
+    isEditMode.value = true;
+    editIndex = index;
+
+    nameController.text = patient["name"] ?? "";
+    mobileController.text = patient["mobile"] ?? "";
+    dobController.text = patient["dob"] ?? "";
+    ageController.text = patient["age"] ?? "";
+    addressController.text = patient["address"] ?? "";
+    villageController.text = patient["village"] ?? "";
+    weightController.text = patient["weight"] ?? "";
+    hightController.text = patient["height"] ?? "";
+    bpcountController.text = patient["bpCount"] ?? "";
+    sugerlavelController.text = patient["sugarLevel"] ?? "";
+
+    selectedGender.value = patient["gender"] ?? "Male";
+    selectedBloodGroup.value = patient["bloodGroup"] ?? "";
+    maritalStatus.value = patient["maritalStatus"] ?? "Unmarried";
+  }
+
+  void savePatientTemp() {
+    final data = {
+      "name": nameController.text,
+      "mobile": mobileController.text,
+      "gender": selectedGender.value,
+      "dob": dobController.text,
+      "age": ageController.text,
+      "bloodGroup": selectedBloodGroup.value,
+      "maritalStatus": maritalStatus.value,
+      "village": villageController.text,
+      "address": addressController.text,
+      "weight": weightController.text,
+      "height": hightController.text,
+      "bpCount": bpcountController.text,
+      "sugarLevel": sugerlavelController.text,
+    };
+
+    if (isEditMode.value && editIndex != null) {
+      /// 🔄 UPDATE
+      patientList[editIndex!] = data;
+    } else {
+      /// ➕ ADD
+      patientList.add(data);
+    }
+
+    clearForm();
+
+    Get.back();
+  }
+
+  void clearForm() {
+    nameController.clear();
+    mobileController.clear();
+    dobController.clear();
+    ageController.clear();
+    addressController.clear();
+    villageController.clear();
+    weightController.clear();
+    hightController.clear();
+    bpcountController.clear();
+    sugerlavelController.clear();
+
+    selectedGender.value = "Male";
+    selectedBloodGroup.value = "";
+    maritalStatus.value = "Unmarried";
+
+    isEditMode.value = false;
+    editIndex = null;
   }
 }

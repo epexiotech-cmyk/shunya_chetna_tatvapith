@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shunya_app/models/clinic_model.dart';
+import 'package:shunya_app/models/patient_model.dart';
 
 import '../models/user_model.dart';
 
@@ -18,29 +19,56 @@ class DBService {
     );
   }
 
-  /// 🔹 Save user to local DB
+  /// 🔹 Save or update user in local DB
   static Future<void> saveUser(User firebaseUser) async {
     final existingUser = await isar.userModels
         .filter()
         .firebaseUidEqualTo(firebaseUser.uid)
         .findFirst();
 
-    if (existingUser == null) {
-      final newUser = UserModel()
-        ..firebaseUid = firebaseUser.uid
-        ..name = firebaseUser.displayName ?? ""
-        ..email = firebaseUser.email ?? ""
-        ..isLoggedIn = true;
+    await isar.writeTxn(() async {
+      if (existingUser == null) {
+        /// 🆕 NEW USER
+        final newUser = UserModel()
+          ..firebaseUid = firebaseUser.uid
+          ..name = firebaseUser.displayName ?? ""
+          ..email = firebaseUser.email ?? ""
+          ..mobile = ""
+          ..pinHash = null
+          ..isLoggedIn = true;
 
-      await isar.writeTxn(() async {
         await isar.userModels.put(newUser);
-      });
-    }
+      } else {
+        /// 🔄 EXISTING USER → UPDATE ONLY SAFE FIELDS
+        existingUser.name = firebaseUser.displayName ?? "";
+        existingUser.email = firebaseUser.email ?? "";
+        existingUser.isLoggedIn = true;
+
+        /// ❌ DO NOT TOUCH:
+        /// existingUser.pinHash
+        /// existingUser.mobile
+
+        await isar.userModels.put(existingUser);
+      }
+    });
   }
 
-  /// 🔹 Get current user
+  /// 🔥 UPDATE USER (DO NOT TOUCH PIN)
+  static Future<void> updateUser(User firebaseUser) async {
+    final user = await getUser();
+
+    if (user == null) return;
+
+    user.name = firebaseUser.displayName ?? "";
+    user.email = firebaseUser.email ?? "";
+
+    await isar.writeTxn(() async {
+      await isar.userModels.put(user);
+    });
+  }
+
   static Future<UserModel?> getUser() async {
-    return await isar.userModels.where().findFirst();
+    return await isar.userModels.filter().isLoggedInEqualTo(true).findFirst();
   }
 
   /// 🔹 Update PIN (hashed)
@@ -92,6 +120,25 @@ class DBService {
   static Future<void> saveSelectedClinic(ClinicModel clinic) async {
     await isar.writeTxn(() async {
       await isar.clinicModels.put(clinic);
+    });
+  }
+
+  /// 🔥 SAVE PATIENT
+  static Future<void> savePatient(PatientModel patient) async {
+    await isar.writeTxn(() async {
+      await isar.patientModels.put(patient);
+    });
+  }
+
+  /// 🔥 GET PATIENTS (USER-WISE)
+  static Future<List<PatientModel>> getPatients(String userId) async {
+    return await isar.patientModels.filter().userIdEqualTo(userId).findAll();
+  }
+
+  /// 🔥 UPDATE PATIENT
+  static Future<void> updatePatient(PatientModel patient) async {
+    await isar.writeTxn(() async {
+      await isar.patientModels.put(patient);
     });
   }
 }

@@ -23,10 +23,10 @@ class LoginController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  /// 🔥 LOGIN FLOW (FIREBASE + ISAR CHECK)
+  /// 🔥 FINAL LOGIN FLOW (PRODUCTION READY)
   Future<void> login() async {
     try {
-      /// 🔥 ALWAYS SIGN IN WITH GOOGLE
+      /// 🔥 GOOGLE SIGN-IN
       final result = await _authService.signInWithGoogle();
 
       if (result == null) {
@@ -40,8 +40,16 @@ class LoginController extends GetxController {
 
       final firebaseUser = result.user!;
 
-      /// 🔥 SAVE USER AGAIN (IMPORTANT AFTER REINSTALL)
-      await DBService.saveUser(firebaseUser);
+      /// 🔥 CHECK EXISTING USER (IMPORTANT FIX)
+      final existingUser = await DBService.getUser();
+
+      if (existingUser == null) {
+        /// 🆕 FIRST TIME LOGIN → SAVE USER
+        await DBService.saveUser(firebaseUser);
+      } else {
+        /// 🔄 UPDATE USER DATA (KEEP PIN & DATA SAFE)
+        await DBService.updateUser(firebaseUser);
+      }
 
       final localUser = await DBService.getUser();
 
@@ -53,13 +61,21 @@ class LoginController extends GetxController {
 
       /// 🔥 PIN FLOW
       if (localUser?.pinHash == null) {
-        Get.offAllNamed(routepinpage,
-            arguments: {"isSet": true, "isReset": false});
+        /// FIRST TIME → SET PIN
+        Get.offAllNamed(
+          routepinpage,
+          arguments: {"isSet": true, "isReset": false},
+        );
       } else {
-        Get.offAllNamed(routepinpage,
-            arguments: {"isSet": false, "isReset": false});
+        /// EXISTING → VERIFY PIN
+        Get.offAllNamed(
+          routepinpage,
+          arguments: {"isSet": false, "isReset": false},
+        );
       }
     } catch (e) {
+      print("LOGIN ERROR: $e");
+
       Get.snackbar(
         'Error',
         'Login failed',

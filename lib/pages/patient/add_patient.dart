@@ -23,24 +23,14 @@ class AddPatientPage extends StatelessWidget {
       builder: (controller) {
         final args = Get.arguments;
         // print("args ;;;; $args");
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (args != null && controller.isEditMode.value == false) {
+            final patient = args["patientList"];
+            final index = args["index"];
 
-        if (args != null) {
-          final patient = args["patientList"];
-
-          controller.nameController.text = patient["name"] ?? "";
-          controller.mobileController.text = patient["mobile"] ?? "";
-          controller.genderController.text = patient["gender"] ?? "";
-          controller.dobController.text = patient["dob"] ?? "";
-          controller.bloodController.text = patient["bloodGroup"] ?? "";
-          controller.maritalstatusController.text =
-              patient["maritalStatus"] ?? "";
-          controller.addressController.text = patient["address"] ?? "";
-          controller.villageController.text = patient["village"] ?? "";
-          controller.weightController.text = patient["weight"] ?? "";
-          controller.hightController.text = patient["height"] ?? "";
-          controller.bpcountController.text = patient["bpCount"] ?? "";
-          controller.sugerlavelController.text = patient["sugarLevel"] ?? "";
-        }
+            controller.setPatientData(patient, index);
+          }
+        });
 
         return Scaffold(
           backgroundColor: AppColors.WHITE,
@@ -603,16 +593,24 @@ class AddPatientPage extends StatelessWidget {
 
                     // Login Button
                     Customcontainer(
-                      text: Get.arguments != null
-                          ? "Save & Next"
-                          : "Create Patient",
-                      context: context,
-                      onTap: () {
-                        Get.arguments != null
-                            ? Get.toNamed(routebillingdetailspage)
-                            : Get.back();
-                      },
-                    ),
+                        text: Get.arguments != null
+                            ? "Save & Next"
+                            : "Create Patient",
+                        context: context,
+                        // onTap: () {
+                        //   Get.arguments != null
+                        //       ? Get.toNamed(routebillingdetailspage)
+                        //       : Get.back();
+                        // },
+
+                        onTap: () {
+                          if (Get.arguments != null) {
+                            controller.savePatientTemp();
+                            Get.toNamed(routebillingdetailspage);
+                          } else {
+                            controller.savePatientTemp();
+                          }
+                        }),
                     SizedBox(height: hp(3)),
                   ],
                 ),
