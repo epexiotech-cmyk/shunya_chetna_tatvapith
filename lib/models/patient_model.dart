@@ -6,7 +6,7 @@ part 'patient_model.g.dart';
 class PatientModel {
   Id id = Isar.autoIncrement;
 
-  late String userId; // 🔥 IMPORTANT (link with user)
+  late String userId;
 
   late String name;
   late String mobile;

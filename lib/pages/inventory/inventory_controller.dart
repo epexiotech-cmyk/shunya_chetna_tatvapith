@@ -5,8 +5,10 @@ class InventoryController extends GetxController
     with GetTickerProviderStateMixin {
   // Add Inventory
 
-  RxList<Map<String, TextEditingController>> inventoryList =
-      <Map<String, TextEditingController>>[].obs;
+  RxList<InventoryItem> inventoryList = <InventoryItem>[].obs;
+  bool isedit = false;
+  RxBool isEditMode = false.obs;
+  int? editIndex;
 
   @override
   void onInit() {
@@ -15,20 +17,67 @@ class InventoryController extends GetxController
   }
 
   void addRow() {
-    inventoryList.add({
-      "name": TextEditingController(),
-      "qty": TextEditingController(),
-      "price": TextEditingController(),
-    });
+    inventoryList.add(InventoryItem());
   }
 
   void removeRow(int index) {
     inventoryList.removeAt(index);
   }
 
+  RxList<dynamic> medicineList = [].obs;
+
+  List<String> typelist = ["ARK", "OIL", "Nasya", "Power", "Tablet", "Drop"];
+
+  List<String> uselist = [
+    "1-1",
+    "2 in mon",
+    "2 in night",
+  ];
+  List<String> useoillist = [
+    "1-1-1",
+    "1-1",
+    "Hit",
+    "Non-Hit",
+  ];
+  List<String> useNasaylist = [
+    "1-1",
+    "1-1-1",
+  ];
+  List<String> usepowerlist = [
+    "1-1(Eat)",
+    "1 (Eat)",
+    "(Eat) 1",
+    "Brush",
+    "Past",
+  ];
+
+  List<String> useTabletlist = [
+    "1-1-1",
+    "1-1",
+    "1 (M)",
+    "(N) 1",
+  ];
+
+  List<String> useDroplist = [
+    "20-20-20",
+    "10-10-10",
+    "1-1 (I)",
+    "1-1 (E)",
+  ];
+
+  /// Add medicine
+  void addMedicine(String name) {
+    medicineList.add({"name": name, "qty": 1, "use": "1-1", "price": ""});
+
+    update();
+  }
+
   // Inventory index
 
   TextEditingController searchController = TextEditingController();
+  TextEditingController medicinenameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
 
   RxList<Map<String, dynamic>> stockList = [
     {"name": "Paracetamol", "qty": 120, "price": 10},
@@ -62,9 +111,54 @@ class InventoryController extends GetxController
     return stockList
         .where(
           (item) => item["name"].toLowerCase().contains(
-            searchText.value.toLowerCase(),
-          ),
+                searchText.value.toLowerCase(),
+              ),
         )
         .toList();
   }
+
+  void saveOrUpdateInventory() {
+    final data = {
+      "name": medicinenameController.text,
+      "qty": int.tryParse(quantityController.text) ?? 0,
+      "price": int.tryParse(priceController.text) ?? 0,
+    };
+
+    if (isEditMode.value && editIndex != null) {
+      stockList[editIndex!] = data; // 🔄 UPDATE
+    } else {
+      stockList.add(data); // ➕ ADD
+    }
+
+    clearForm();
+
+    Get.back(result: true);
+  }
+
+  void clearForm() {
+    medicinenameController.clear();
+    quantityController.clear();
+    priceController.clear();
+
+    isEditMode.value = false;
+    editIndex = null;
+  }
+
+  void setEditData(Map<String, dynamic> data, int index) {
+    isEditMode.value = true;
+    editIndex = index;
+
+    medicinenameController.text = data["name"];
+    quantityController.text = data["qty"].toString();
+    priceController.text = data["price"].toString();
+  }
+}
+
+class InventoryItem {
+  TextEditingController name = TextEditingController();
+  TextEditingController qty = TextEditingController();
+  TextEditingController price = TextEditingController();
+
+  RxString type = "ARK".obs;
+  RxString use = "1-1".obs;
 }

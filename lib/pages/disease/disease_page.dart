@@ -54,14 +54,14 @@ class DiseasePage extends StatelessWidget {
                 ),
                 child: ListTile(
                   title: CustomText(
-                    text: disease["name"] ?? "",
+                    text: disease.name,
                     color: AppColors.PRIMARY_COLOR,
                     fontSize: dp(context, 16),
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      controller.deleteDisease(index);
+                      controller.deleteDiseaseById(disease.id);
                     },
                   ),
                 ),
@@ -75,18 +75,17 @@ class DiseasePage extends StatelessWidget {
 }
 
 void showDialogDisease({required BuildContext context}) {
-  DiseaseController controller = DiseaseController();
+  final controller = Get.find<DiseaseController>();
   showDialog(
     context: context,
     builder: (_) {
       return AlertDialog(
-        backgroundColor: AppColors.WHITE,
         titleTextStyle: TextStyle(
           color: Colors.red,
           fontSize: dp(context, 24),
           fontStyle: FontStyle.italic,
         ),
-        title: CustomText(text: "Add Disease"),
+        title: const CustomText(text: "Add Disease"),
         content: CustomTextField(
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,

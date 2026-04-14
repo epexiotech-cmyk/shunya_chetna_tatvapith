@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shunya_app/pages/inventory/add_inventory.dart';
 import 'package:shunya_app/pages/inventory/inventory_controller.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
@@ -68,15 +69,15 @@ class InventoryPage extends StatelessWidget {
                               fontSize: dp(context, 16),
                               fontStyle: FontStyle.normal,
                             ),
-                            subtitle: CustomText(
-                              text: "Price ₹${item["price"]}",
-                              color: AppColors.DARK,
-                              fontSize: dp(context, 13),
-                              fontStyle: FontStyle.normal,
-                            ),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                CustomText(
+                                  text: "Price ₹${item["price"]}",
+                                  color: AppColors.DARK,
+                                  fontSize: dp(context, 13),
+                                  fontStyle: FontStyle.normal,
+                                ),
                                 CustomText(
                                   text: "Qty: ${item["qty"]}",
                                   color: lowStock ? Colors.red : Colors.green,
@@ -92,6 +93,32 @@ class InventoryPage extends StatelessWidget {
                                     ),
                                   ),
                               ],
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                Get.to(
+                                  () => const AddInventoryPage(),
+                                  arguments: {
+                                    "isEdit": true,
+                                    "data": item,
+                                    "index": index,
+                                  },
+                                );
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.edit,
+                                    color: AppColors.PRIMARY_COLOR,
+                                  ),
+                                  CustomText(
+                                    text: "Edit",
+                                    color: AppColors.PRIMARY_COLOR,
+                                    fontSize: dp(context, 10),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );

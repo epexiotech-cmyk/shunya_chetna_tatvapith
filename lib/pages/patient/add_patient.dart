@@ -597,18 +597,12 @@ class AddPatientPage extends StatelessWidget {
                             ? "Save & Next"
                             : "Create Patient",
                         context: context,
-                        // onTap: () {
-                        //   Get.arguments != null
-                        //       ? Get.toNamed(routebillingdetailspage)
-                        //       : Get.back();
-                        // },
-
                         onTap: () {
                           if (Get.arguments != null) {
-                            controller.savePatientTemp();
+                            controller.savePatient(); // ✅ FIXED
                             Get.toNamed(routebillingdetailspage);
                           } else {
-                            controller.savePatientTemp();
+                            controller.savePatient(); // ✅ FIXED
                           }
                         }),
                     SizedBox(height: hp(3)),

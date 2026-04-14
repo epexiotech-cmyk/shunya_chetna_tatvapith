@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
-import 'package:shunya_app/widgets/custom_text.dart';
+import 'package:shunya_app/widgets/custom_dropdown.dart';
 import 'package:shunya_app/widgets/custom_textfield.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 import 'inventory_controller.dart';
@@ -16,13 +16,24 @@ class AddInventoryPage extends StatelessWidget {
     return GetBuilder<InventoryController>(
       init: InventoryController(),
       builder: (controller) {
+        final args = Get.arguments;
+
+        if (args != null && args["isEdit"] == true) {
+          controller.setEditData(args["data"], args["index"]);
+        }
         return Scaffold(
           backgroundColor: AppColors.WHITE,
           appBar: CustomAppBarAction(
-            title: "Add Inventory",
+            title: controller.isEditMode.value
+                ? "Update Inventory"
+                : "Add Inventory",
             iconleft: Icons.arrow_back_ios_rounded,
             lefticononTap: () {
               Get.back();
+            },
+            iconright: Icons.add,
+            righticononTap: () {
+              controller.addRow(); // 🔥 IMPORTANT ()
             },
           ),
           body: Padding(
@@ -30,63 +41,12 @@ class AddInventoryPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// TABLE HEADER
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: CustomText(
-                        text: "Medicine",
-                        fontSize: dp(context, 16),
-                        color: AppColors.PRIMARY_COLOR,
-                        fontStyle: FontStyle.normal,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: CustomText(
-                          text: "Quantity",
-                          fontSize: dp(context, 15),
-                          color: AppColors.PRIMARY_COLOR,
-                          fontStyle: FontStyle.normal,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: CustomText(
-                          text: "Price",
-                          fontSize: dp(context, 15),
-                          color: AppColors.PRIMARY_COLOR,
-                          fontStyle: FontStyle.normal,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 0,
-                      child: Customcontainer(
-                        margin: EdgeInsets.only(top: hp(0), bottom: hp(0)),
-                        context: context,
-                        text: "Add\nMore",
-                        singlefontSize: dp(context, 8),
-                        onTap: controller.addRow,
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(),
-
                 /// INVENTORY LIST
                 Expanded(
                   child: Obx(
                     () => ListView.builder(
                       itemCount: controller.inventoryList.length,
                       itemBuilder: (context, index) {
-                        var item = controller.inventoryList[index];
-
                         return Padding(
                             padding: EdgeInsets.only(bottom: hp(1)),
                             child: Container(
@@ -107,57 +67,133 @@ class AddInventoryPage extends StatelessWidget {
                                 ],
                               ),
                               child: ListTile(
-                                title: CustomTextField(),
-                                subtitle: Row(
+                                title: CustomTextField(
+                                  textInputAction: TextInputAction.next,
+                                  controller:
+                                      controller.inventoryList[index].name,
+                                  hint: "Medicine Name",
+                                  labeltext: 'Medicine Name',
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    /// MEDICINE NAME
-                                    Expanded(
-                                      flex: 2,
-                                      child: TextField(
-                                        controller: item["name"],
-                                        decoration: const InputDecoration(
-                                          hintText: "Medicine Name",
-                                        ),
-                                      ),
+                                    SizedBox(
+                                      height: hp(1),
                                     ),
 
-                                    SizedBox(width: wp(2)),
+                                    /// NASYA + POWER
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Obx(() {
+                                            final item =
+                                                controller.inventoryList[index];
 
-                                    /// QUANTITY
-                                    Expanded(
-                                      flex: 1,
-                                      child: TextField(
-                                        controller: item["qty"],
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          hintText: "Qty",
+                                            return CustomDropdown(
+                                              labelText: "Type",
+                                              initialValue: item.type.value,
+                                              items: controller.typelist
+                                                  .map((type) {
+                                                return DropdownMenuItem(
+                                                  value: type,
+                                                  child: Text(type),
+                                                );
+                                              }).toList(),
+                                              iconprefix: Icons.medication,
+                                              onChanged: (value) {
+                                                item.type.value = value!;
+                                              },
+                                            );
+                                          }),
                                         ),
-                                      ),
-                                    ),
+                                        SizedBox(width: wp(3)),
+                                        Expanded(
+                                          child: Obx(() {
+                                            final item =
+                                                controller.inventoryList[index];
 
-                                    SizedBox(width: wp(2)),
+                                            List<String> useList;
 
-                                    /// PRICE
-                                    Expanded(
-                                      flex: 1,
-                                      child: TextField(
-                                        controller: item["price"],
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          hintText: "Price",
+                                            switch (item.type.value) {
+                                              case "ARK":
+                                                useList = controller.uselist;
+                                                break;
+                                              case "OIL":
+                                                useList = controller.useoillist;
+                                                break;
+                                              case "Nasya":
+                                                useList =
+                                                    controller.useNasaylist;
+                                                break;
+                                              case "Power":
+                                                useList =
+                                                    controller.usepowerlist;
+                                                break;
+                                              case "Tablet":
+                                                useList =
+                                                    controller.useTabletlist;
+                                                break;
+                                              case "Drop":
+                                                useList =
+                                                    controller.useDroplist;
+                                                break;
+                                              default:
+                                                useList = [];
+                                            }
+
+                                            /// 🔥 FIX: VALIDATE VALUE
+                                            String? safeValue =
+                                                useList.contains(item.use.value)
+                                                    ? item.use.value
+                                                    : null;
+
+                                            return CustomDropdown(
+                                              labelText: "Use",
+                                              initialValue: safeValue,
+                                              items: useList.map((use) {
+                                                return DropdownMenuItem(
+                                                  value: use,
+                                                  child: Text(use),
+                                                );
+                                              }).toList(),
+                                              iconprefix: Icons.medication,
+                                              onChanged: (value) {
+                                                item.use.value = value!;
+                                              },
+                                            );
+                                          }),
                                         ),
-                                      ),
+                                      ],
                                     ),
-
-                                    /// DELETE BUTTON
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        controller.removeRow(index);
-                                      },
+                                    SizedBox(
+                                      height: hp(1),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: CustomTextField(
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            controller: controller
+                                                .inventoryList[index].qty,
+                                            hint: "Quantity",
+                                            labeltext: 'Quantity',
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: wp(3),
+                                        ),
+                                        Expanded(
+                                          child: CustomTextField(
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            controller: controller
+                                                .inventoryList[index].price,
+                                            hint: "Price",
+                                            labeltext: 'Price',
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -169,7 +205,9 @@ class AddInventoryPage extends StatelessWidget {
                 ),
                 Customcontainer(
                   context: context,
-                  text: "Save Inventory",
+                  text: controller.isEditMode.value
+                      ? "Update Inventory"
+                      : "Save Inventory",
                   onTap: () {
                     Get.back();
                   },

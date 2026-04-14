@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shunya_app/models/clinic_model.dart';
+import 'package:shunya_app/models/disease_model.dart';
 import 'package:shunya_app/models/patient_model.dart';
 
 import '../models/user_model.dart';
@@ -14,7 +15,12 @@ class DBService {
     final dir = await getApplicationDocumentsDirectory();
 
     isar = await Isar.open(
-      [UserModelSchema, ClinicModelSchema],
+      [
+        UserModelSchema,
+        ClinicModelSchema,
+        PatientModelSchema,
+        DiseaseModelSchema,
+      ],
       directory: dir.path,
     );
   }
@@ -124,13 +130,14 @@ class DBService {
   }
 
   /// 🔥 SAVE PATIENT
+  /// 🔥 SAVE PATIENT
   static Future<void> savePatient(PatientModel patient) async {
     await isar.writeTxn(() async {
       await isar.patientModels.put(patient);
     });
   }
 
-  /// 🔥 GET PATIENTS (USER-WISE)
+  /// 🔥 GET PATIENTS
   static Future<List<PatientModel>> getPatients(String userId) async {
     return await isar.patientModels.filter().userIdEqualTo(userId).findAll();
   }
@@ -139,6 +146,31 @@ class DBService {
   static Future<void> updatePatient(PatientModel patient) async {
     await isar.writeTxn(() async {
       await isar.patientModels.put(patient);
+    });
+  }
+
+  static Future<void> deletePatient(int id) async {
+    await isar.writeTxn(() async {
+      await isar.patientModels.delete(id);
+    });
+  }
+
+  /// 🔥 SAVE DISEASE
+  static Future<void> saveDisease(DiseaseModel disease) async {
+    await isar.writeTxn(() async {
+      await isar.diseaseModels.put(disease);
+    });
+  }
+
+  /// 🔥 GET DISEASES (USER-WISE)
+  static Future<List<DiseaseModel>> getDiseases(String userId) async {
+    return await isar.diseaseModels.filter().userIdEqualTo(userId).findAll();
+  }
+
+  /// 🔥 DELETE DISEASE
+  static Future<void> deleteDisease(int id) async {
+    await isar.writeTxn(() async {
+      await isar.diseaseModels.delete(id);
     });
   }
 }
