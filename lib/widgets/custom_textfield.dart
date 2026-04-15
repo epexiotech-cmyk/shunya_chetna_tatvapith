@@ -102,13 +102,11 @@ class CustomTextField extends StatelessWidget {
         labelText: labeltext,
         labelStyle: TextStyle(color: AppColors.PRIMARY_COLOR),
         hintText: hint ?? "",
-        hintStyle:
-            hintStyle ??
+        hintStyle: hintStyle ??
             TextStyle(color: AppColors.LIGHT_GREY, fontSize: dp(context, 12)),
         filled: true,
         fillColor: backgroundColor ?? AppColors.WHITE, // <-- Default color
-        enabledBorder:
-            enabledBorder ??
+        enabledBorder: enabledBorder ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(dp(context, 10)),
               borderSide: BorderSide(
@@ -116,8 +114,7 @@ class CustomTextField extends StatelessWidget {
                 style: BorderStyle.solid,
               ),
             ),
-        border:
-            border ??
+        border: border ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(dp(context, 10)),
               borderSide: BorderSide(
@@ -126,27 +123,24 @@ class CustomTextField extends StatelessWidget {
                 width: wp(2),
               ),
             ),
-        focusedBorder:
-            focusedBorder ??
+        focusedBorder: focusedBorder ??
             OutlineInputBorder(
               borderSide: BorderSide(color: AppColors.PRIMARY_COLOR),
               borderRadius: BorderRadius.circular(dp(context, 10)),
             ),
-        focusedErrorBorder:
-            focusedErrorBorder ??
+        focusedErrorBorder: focusedErrorBorder ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(dp(context, 10)),
-              borderSide: BorderSide(color: Colors.red, width: 2),
+              borderSide: const BorderSide(color: Colors.red, width: 2),
             ),
 
-        errorBorder:
-            errorBorder ??
+        errorBorder: errorBorder ??
             OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+              borderSide: const BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(dp(context, 10)),
             ),
         errorText: errorText,
-        errorStyle: TextStyle(color: Colors.red),
+        errorStyle: const TextStyle(color: Colors.red),
       ),
       style: TextStyle(color: inputtextcolor ?? AppColors.DARK),
     );

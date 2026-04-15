@@ -1,48 +1,166 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shunya_app/models/inventory_model.dart';
+import 'package:shunya_app/models/inventory_stock_model.dart';
+import 'package:shunya_app/services/db_service.dart';
 
-class InventoryController extends GetxController
-    with GetTickerProviderStateMixin {
-  // Add Inventory
-
+class InventoryController extends GetxController {
   RxList<InventoryItem> inventoryList = <InventoryItem>[].obs;
-  bool isedit = false;
-  RxBool isEditMode = false.obs;
-  int? editIndex;
+
+  RxList stockList = [].obs;
+  TextEditingController searchController = TextEditingController();
+  RxString searchText = "".obs;
+  RxBool isEditMode = false.obs; // 🔥 REQUIRED
+  int? editIndex; // 🔥 REQUIRED
 
   @override
   void onInit() {
     super.onInit();
-    addRow();
+    loadInventory(); // 🔥 MUST
   }
 
   void addRow() {
     inventoryList.add(InventoryItem());
   }
 
-  void removeRow(int index) {
-    inventoryList.removeAt(index);
+  /// 🔍 FILTER
+  List get filteredStock {
+    if (searchText.value.isEmpty) return stockList;
+
+    return stockList.where((item) {
+      return item["name"]
+          .toString()
+          .toLowerCase()
+          .contains(searchText.value.toLowerCase());
+    }).toList();
   }
 
-  RxList<dynamic> medicineList = [].obs;
+  /// 🔥 SAVE INVENTORY
+  Future<void> saveOrUpdateInventory() async {
+    final user = await DBService.getUser();
+    final clinicId = await DBService.getSelectedClinicId();
 
+    if (user == null || clinicId == null) {
+      Get.snackbar("Error", "User/Clinic not found");
+      return;
+    }
+
+    final item = inventoryList.first;
+
+    /// 🔥 CHECK EXISTING MASTER
+    final existing = await DBService.getInventoryByName(
+      item.name.text,
+      user.firebaseUid,
+    );
+
+    int inventoryId;
+
+    if (existing != null) {
+      inventoryId = existing.id;
+    } else {
+      final newItem = InventoryModel()
+        ..userId = user.firebaseUid
+        ..name = item.name.text
+        ..type = item.type.value
+        ..use = item.use.value;
+
+      inventoryId = await DBService.saveInventory(newItem);
+    }
+
+    /// 🔥 CHECK STOCK
+    final existingStock = await DBService.getStockByClinicAndInventory(
+      clinicId,
+      inventoryId,
+    );
+
+    if (existingStock != null) {
+      await DBService.updateStock(
+        existingStock.id,
+        int.tryParse(item.qty.text) ?? 0,
+        int.tryParse(item.price.text) ?? 0,
+      );
+    } else {
+      final stock = InventoryStockModel()
+        ..userId = user.firebaseUid
+        ..clinicId = clinicId
+        ..inventoryId = inventoryId
+        ..qty = int.tryParse(item.qty.text) ?? 0
+        ..price = int.tryParse(item.price.text) ?? 0;
+
+      await DBService.saveInventoryStock(stock);
+    }
+
+    // Get.snackbar("Success", "Inventory Saved");
+
+    /// 🔥 VERY IMPORTANT
+    // 🔥 FORCE REFRESH
+    Get.snackbar(
+      "Success",
+      "Inventory Saved",
+      duration: const Duration(milliseconds: 500),
+    );
+    loadInventory();
+
+    Get.back(closeOverlays: true);
+  }
+
+  /// 🔥 LOAD INVENTORY
+  Future<void> loadInventory() async {
+    final user = await DBService.getUser();
+    final clinicId = await DBService.getSelectedClinicId();
+
+    if (user == null || clinicId == null) {
+      return;
+    }
+
+    final data = await DBService.getInventoryWithStock(
+      user.firebaseUid,
+      clinicId,
+    );
+
+    stockList.assignAll(data);
+  }
+
+  void setEditData(Map<String, dynamic> data, int index) {
+    isEditMode.value = true;
+    editIndex = index;
+
+    inventoryList.clear();
+
+    final item = InventoryItem();
+
+    item.name.text = data["name"] ?? "";
+    item.qty.text = data["qty"].toString();
+    item.price.text = data["price"].toString();
+
+    item.type.value = data["type"] ?? "ARK";
+    item.use.value = data["use"] ?? "1-1";
+
+    inventoryList.add(item);
+  }
+
+  /// 🔥 TYPE LIST
   List<String> typelist = ["ARK", "OIL", "Nasya", "Power", "Tablet", "Drop"];
 
+  /// 🔥 USE LISTS
   List<String> uselist = [
     "1-1",
     "2 in mon",
     "2 in night",
   ];
+
   List<String> useoillist = [
     "1-1-1",
     "1-1",
     "Hit",
     "Non-Hit",
   ];
+
   List<String> useNasaylist = [
     "1-1",
     "1-1-1",
   ];
+
   List<String> usepowerlist = [
     "1-1(Eat)",
     "1 (Eat)",
@@ -65,92 +183,51 @@ class InventoryController extends GetxController
     "1-1 (E)",
   ];
 
-  /// Add medicine
-  void addMedicine(String name) {
-    medicineList.add({"name": name, "qty": 1, "use": "1-1", "price": ""});
-
-    update();
+  List<String> getUseList(String type) {
+    switch (type) {
+      case "ARK":
+        return uselist;
+      case "OIL":
+        return useoillist;
+      case "Nasya":
+        return useNasaylist;
+      case "Power":
+        return usepowerlist;
+      case "Tablet":
+        return useTabletlist;
+      case "Drop":
+        return useDroplist;
+      default:
+        return [];
+    }
   }
 
-  // Inventory index
+  Future<void> deleteInventory(int inventoryId) async {
+    final clinicId = await DBService.getSelectedClinicId();
 
-  TextEditingController searchController = TextEditingController();
-  TextEditingController medicinenameController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController quantityController = TextEditingController();
+    if (clinicId == null) return;
 
-  RxList<Map<String, dynamic>> stockList = [
-    {"name": "Paracetamol", "qty": 120, "price": 10},
-    {"name": "Amoxicillin", "qty": 50, "price": 20},
-    {"name": "Crocin", "qty": 8, "price": 15},
-    {"name": "Dolo 650", "qty": 30, "price": 12},
-    {"name": "Azithromycin", "qty": 45, "price": 25},
-    {"name": "Ibuprofen", "qty": 60, "price": 18},
-    {"name": "Cetrizine", "qty": 75, "price": 8},
-    {"name": "Pantoprazole", "qty": 40, "price": 22},
-    {"name": "Metformin", "qty": 90, "price": 14},
-    {"name": "Atorvastatin", "qty": 35, "price": 30},
-    {"name": "Losartan", "qty": 20, "price": 28},
-    {"name": "Montelukast", "qty": 25, "price": 16},
-    {"name": "Omeprazole", "qty": 70, "price": 19},
-    {"name": "Diclofenac", "qty": 15, "price": 13},
-    {"name": "Levocetirizine", "qty": 55, "price": 11},
-    {"name": "Ranitidine", "qty": 10, "price": 9},
-    {"name": "Aspirin", "qty": 80, "price": 6},
-    {"name": "Clopidogrel", "qty": 18, "price": 32},
-    {"name": "Vitamin D3", "qty": 65, "price": 20},
-    {"name": "Calcium Tablet", "qty": 100, "price": 17},
-  ].obs;
-  RxString searchText = "".obs;
+    /// 🔥 DELETE STOCK (only this clinic)
+    final stock = await DBService.getStockByClinicAndInventory(
+      clinicId,
+      inventoryId,
+    );
 
-  List<Map<String, dynamic>> get filteredStock {
-    if (searchText.value.isEmpty) {
-      return stockList;
+    if (stock != null) {
+      await DBService.deleteStock(stock.id);
     }
 
-    return stockList
-        .where(
-          (item) => item["name"].toLowerCase().contains(
-                searchText.value.toLowerCase(),
-              ),
-        )
-        .toList();
-  }
+    /// 🔥 OPTIONAL: DELETE MASTER IF NOT USED ANYWHERE
+    final isUsed = await DBService.checkInventoryUsedAnywhere(inventoryId);
 
-  void saveOrUpdateInventory() {
-    final data = {
-      "name": medicinenameController.text,
-      "qty": int.tryParse(quantityController.text) ?? 0,
-      "price": int.tryParse(priceController.text) ?? 0,
-    };
-
-    if (isEditMode.value && editIndex != null) {
-      stockList[editIndex!] = data; // 🔄 UPDATE
-    } else {
-      stockList.add(data); // ➕ ADD
+    if (!isUsed) {
+      await DBService.deleteInventory(inventoryId);
     }
 
-    clearForm();
+    /// 🔥 REFRESH LIST
+    await loadInventory();
 
-    Get.back(result: true);
-  }
-
-  void clearForm() {
-    medicinenameController.clear();
-    quantityController.clear();
-    priceController.clear();
-
-    isEditMode.value = false;
-    editIndex = null;
-  }
-
-  void setEditData(Map<String, dynamic> data, int index) {
-    isEditMode.value = true;
-    editIndex = index;
-
-    medicinenameController.text = data["name"];
-    quantityController.text = data["qty"].toString();
-    priceController.text = data["price"].toString();
+    Get.snackbar("Deleted", "Inventory removed");
   }
 }
 

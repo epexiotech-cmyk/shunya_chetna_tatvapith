@@ -35,7 +35,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: hp(2)),
-                    CustomText(text: "PMS Create Account"),
+                    const CustomText(text: "PMS Create Account"),
 
                     SizedBox(height: hp(4)),
 

@@ -74,8 +74,6 @@ class LoginController extends GetxController {
         );
       }
     } catch (e) {
-      print("LOGIN ERROR: $e");
-
       Get.snackbar(
         'Error',
         'Login failed',

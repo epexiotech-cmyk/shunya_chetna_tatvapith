@@ -19,8 +19,8 @@ class ClinicController extends GetxController {
   }
 
   /// 🔥 SELECT CLINIC
-  void selectClinic(ClinicModel clinic) {
-    DBService.saveSelectedClinic(clinic);
+  Future<void> selectClinic(ClinicModel clinic) async {
+    await DBService.updateSelectedClinic(clinic.clinicName);
     Get.offAllNamed(routedashboard);
   }
 }

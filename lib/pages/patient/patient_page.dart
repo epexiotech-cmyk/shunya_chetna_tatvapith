@@ -45,14 +45,6 @@ class PatientPage extends StatelessWidget {
                         final patient = controller.filteredList[index];
 
                         return GestureDetector(
-                          // onTap: () {
-                          //   Get.to(
-                          //     () => const AddPatientPage(),
-                          //     arguments: {
-                          //       "patientList": controller.patientList[index],
-                          //     },
-                          //   );
-                          // },
                           onTap: () {
                             Get.to(
                               () => const AddPatientPage(),

@@ -11,10 +11,12 @@ import 'package:shunya_app/pages/disease/disease_binding.dart';
 import 'package:shunya_app/pages/disease/disease_page.dart';
 import 'package:shunya_app/pages/forget/forget_binding.dart';
 import 'package:shunya_app/pages/forget/forget_page.dart';
+import 'package:shunya_app/pages/inventory/add_inventory.dart';
 import 'package:shunya_app/pages/inventory/inventory_binding.dart';
 import 'package:shunya_app/pages/inventory/inventory_page.dart';
 import 'package:shunya_app/pages/login/login_binding.dart';
 import 'package:shunya_app/pages/login/login_page.dart';
+import 'package:shunya_app/pages/patient/add_patient.dart';
 import 'package:shunya_app/pages/patient/patient_binding.dart';
 import 'package:shunya_app/pages/patient/patient_page.dart';
 import 'package:shunya_app/pages/pin/pin_binding.dart';
@@ -35,7 +37,7 @@ class CommonRoutes {
   static final routes = [
     GetPage(
       name: routeRootpage,
-      page: () => SplashScreen(),
+      page: () => const SplashScreen(),
       binding: SplashBinding(),
     ),
     GetPage(
@@ -102,6 +104,16 @@ class CommonRoutes {
       name: routeclinicpage,
       page: () => const ClinicPage(),
       binding: ClinicBinding(),
+    ),
+    GetPage(
+      name: routeaddinventory,
+      page: () => const AddInventoryPage(),
+      binding: InventoryBinding(),
+    ),
+    GetPage(
+      name: routeaddpatient,
+      page: () => const AddPatientPage(),
+      binding: PatientBinding(),
     ),
   ];
 }

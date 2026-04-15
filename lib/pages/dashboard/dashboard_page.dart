@@ -4,9 +4,7 @@ import 'package:shunya_app/pages/billing/billing_page.dart';
 import 'package:shunya_app/pages/dashboard/buttom_bar.dart';
 import 'package:shunya_app/pages/dashboard/drawer.dart' hide showDialoglogout;
 import 'package:shunya_app/pages/disease/disease_page.dart';
-import 'package:shunya_app/pages/inventory/add_inventory.dart';
 import 'package:shunya_app/pages/inventory/inventory_page.dart';
-import 'package:shunya_app/pages/patient/add_patient.dart';
 import 'package:shunya_app/pages/patient/patient_page.dart';
 import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:shunya_app/utils/colors.dart';
@@ -65,11 +63,17 @@ class DashboardPage extends StatelessWidget {
                   controller.bottomNavIndex.value == 2 ||
                   controller.bottomNavIndex.value == 3) {
                 return FloatingActionButton.extended(
-                  onPressed: () {
+                  onPressed: () async {
                     controller.bottomNavIndex.value == 0
-                        ? Get.to(const AddPatientPage())
+                        ? Get.toNamed(
+                            routeaddpatient,
+                            preventDuplicates: false,
+                          )
                         : controller.bottomNavIndex.value == 2
-                            ? Get.to(const AddInventoryPage())
+                            ? Get.toNamed(
+                                routeaddinventory,
+                                preventDuplicates: false,
+                              )
                             : showDialogDisease(context: context);
                   },
                   backgroundColor: AppColors.PRIMARY_COLOR,

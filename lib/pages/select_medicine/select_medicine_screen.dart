@@ -17,7 +17,6 @@ class SelectMedicineScreen extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.WHITE,
-
           appBar: CustomAppBarAction(
             title: "Select Medicine",
             iconleft: Icons.arrow_back_ios_rounded,
@@ -25,11 +24,9 @@ class SelectMedicineScreen extends StatelessWidget {
               Get.back();
             },
           ),
-
           body: SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: wp(5), vertical: hp(2)),
-
               child: Column(
                 children: [
                   /// ARC + TABLET
@@ -50,9 +47,7 @@ class SelectMedicineScreen extends StatelessWidget {
                           },
                         ),
                       ),
-
                       SizedBox(width: wp(3)),
-
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Tablet",
@@ -91,9 +86,7 @@ class SelectMedicineScreen extends StatelessWidget {
                           },
                         ),
                       ),
-
                       SizedBox(width: wp(3)),
-
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Drop",
@@ -132,9 +125,7 @@ class SelectMedicineScreen extends StatelessWidget {
                           },
                         ),
                       ),
-
                       SizedBox(width: wp(3)),
-
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Power",
@@ -161,16 +152,14 @@ class SelectMedicineScreen extends StatelessWidget {
                       border: Border.all(color: AppColors.PRIMARY_COLOR),
                       borderRadius: BorderRadius.circular(6),
                     ),
-
                     child: Column(
                       children: [
                         /// HEADER
                         Container(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           color: AppColors.PRIMARY_COLOR,
-
-                          child: Row(
-                            children: const [
+                          child: const Row(
+                            children: [
                               Expanded(
                                 flex: 2,
                                 child: Center(
@@ -180,7 +169,6 @@ class SelectMedicineScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               Expanded(
                                 flex: 3,
                                 child: Center(
@@ -190,7 +178,6 @@ class SelectMedicineScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               Expanded(
                                 flex: 2,
                                 child: Center(
@@ -200,7 +187,6 @@ class SelectMedicineScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               Expanded(
                                 flex: 2,
                                 child: Center(
@@ -210,7 +196,6 @@ class SelectMedicineScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               Expanded(flex: 1, child: SizedBox()),
                             ],
                           ),
@@ -221,7 +206,6 @@ class SelectMedicineScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: controller.medicineList.length,
-
                           itemBuilder: (context, index) {
                             final medicine = controller.medicineList[index];
 
@@ -230,7 +214,6 @@ class SelectMedicineScreen extends StatelessWidget {
                                 vertical: 8,
                                 horizontal: 6,
                               ),
-
                               decoration: BoxDecoration(
                                 border: Border(
                                   top: BorderSide(
@@ -238,7 +221,6 @@ class SelectMedicineScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               child: Row(
                                 children: [
                                   /// NAME
@@ -255,7 +237,6 @@ class SelectMedicineScreen extends StatelessWidget {
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -272,13 +253,9 @@ class SelectMedicineScreen extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-
                                         const SizedBox(width: 10),
-
                                         Text("${medicine["qty"]}"),
-
                                         const SizedBox(width: 10),
-
                                         GestureDetector(
                                           onTap: () {
                                             controller.increaseQty(index);
@@ -363,7 +340,7 @@ class SelectMedicineScreen extends StatelessWidget {
                   ),
                   SizedBox(height: hp(3)),
                   controller.medicineList.isEmpty
-                      ? SizedBox()
+                      ? const SizedBox()
                       : Customcontainer(
                           context: context,
                           text: "Save",

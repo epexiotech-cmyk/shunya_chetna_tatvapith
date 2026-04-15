@@ -35,7 +35,7 @@ class LoginScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: hp(2)),
-                    CustomText(text: "PMS Doctor Login"),
+                    const CustomText(text: "PMS Doctor Login"),
 
                     SizedBox(height: hp(4)),
                     // Email Field

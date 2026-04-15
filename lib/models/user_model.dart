@@ -13,4 +13,5 @@ class UserModel {
 
   String? pinHash;
   bool isLoggedIn = false;
+  String? selectedClinicId;
 }

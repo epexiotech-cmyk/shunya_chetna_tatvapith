@@ -83,7 +83,7 @@ class BillingDetailsPage extends StatelessWidget {
 
                         SizedBox(height: hp(1)),
 
-                        Divider(),
+                        const Divider(),
 
                         /// BILL DETAILS
                         Row(
@@ -95,7 +95,6 @@ class BillingDetailsPage extends StatelessWidget {
                               fontSize: dp(context, 12),
                               fontStyle: FontStyle.normal,
                             ),
-
                             CustomText(
                               text: "Date : ${controller.billDate}",
                               color: AppColors.DARK,
@@ -141,7 +140,7 @@ class BillingDetailsPage extends StatelessWidget {
                           ],
                         ),
 
-                        Divider(),
+                        const Divider(),
 
                         /// TABLE HEADER
                         Row(
@@ -185,12 +184,12 @@ class BillingDetailsPage extends StatelessWidget {
                           ],
                         ),
 
-                        Divider(),
+                        const Divider(),
 
                         /// MEDICINE LIST
                         ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: controller.medicineList.length,
                           itemBuilder: (context, index) {
                             final med = controller.medicineList[index];
@@ -209,7 +208,6 @@ class BillingDetailsPage extends StatelessWidget {
                                       fontStyle: FontStyle.normal,
                                     ),
                                   ),
-
                                   Expanded(
                                     flex: 4,
                                     child: Column(
@@ -241,7 +239,6 @@ class BillingDetailsPage extends StatelessWidget {
                                       fontStyle: FontStyle.normal,
                                     ),
                                   ),
-
                                   Expanded(
                                     flex: 2,
                                     child: CustomText(
@@ -257,7 +254,7 @@ class BillingDetailsPage extends StatelessWidget {
                           },
                         ),
 
-                        Divider(),
+                        const Divider(),
 
                         /// TOTAL
                         Row(
@@ -304,7 +301,6 @@ class BillingDetailsPage extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   SizedBox(height: hp(1)),
                   Customcontainer(
                     context: context,

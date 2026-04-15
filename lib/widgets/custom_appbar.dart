@@ -21,7 +21,7 @@ class CustomAppBarAction extends StatelessWidget
   });
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,9 @@ class CustomAppBarAction extends StatelessWidget
       padding: EdgeInsets.only(top: hp(4), right: wp(3.5), left: wp(3.5)),
       decoration: BoxDecoration(
         color: AppColors.PRIMARY_COLOR,
-        boxShadow: [BoxShadow(color: AppColors.WHITE, offset: Offset(-1, 1))],
+        boxShadow: [
+          BoxShadow(color: AppColors.WHITE, offset: const Offset(-1, 1))
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

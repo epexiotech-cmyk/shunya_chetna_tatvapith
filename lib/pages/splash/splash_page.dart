@@ -28,10 +28,8 @@ class SplashScreen extends StatelessWidget {
                       scale: dp(context, 2.3),
                       color: AppColors.PRIMARY_COLOR,
                     ),
-
                     SizedBox(height: hp(2)),
-
-                    CustomText(text: "Patient Management System"),
+                    const CustomText(text: "Patient Management System"),
                   ],
                 ),
               ),

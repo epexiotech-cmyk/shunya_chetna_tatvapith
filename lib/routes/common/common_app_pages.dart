@@ -13,3 +13,5 @@ const routeselectmedicinepage = "/Selectmedicinepage";
 const routebillingdetailspage = "/billingdetailspage";
 const routepinpage = "/PinScreen";
 const routeclinicpage = "/ClinicPage";
+const routeaddinventory = "/AddInventory";
+const routeaddpatient = "/AddPatient";

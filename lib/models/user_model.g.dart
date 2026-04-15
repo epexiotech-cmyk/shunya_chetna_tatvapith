@@ -46,6 +46,11 @@ const UserModelSchema = CollectionSchema(
       id: 5,
       name: r'pinHash',
       type: IsarType.string,
+    ),
+    r'selectedClinicId': PropertySchema(
+      id: 6,
+      name: r'selectedClinicId',
+      type: IsarType.string,
     )
   },
   estimateSize: _userModelEstimateSize,
@@ -78,6 +83,12 @@ int _userModelEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.selectedClinicId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -93,6 +104,7 @@ void _userModelSerialize(
   writer.writeString(offsets[3], object.mobile);
   writer.writeString(offsets[4], object.name);
   writer.writeString(offsets[5], object.pinHash);
+  writer.writeString(offsets[6], object.selectedClinicId);
 }
 
 UserModel _userModelDeserialize(
@@ -109,6 +121,7 @@ UserModel _userModelDeserialize(
   object.mobile = reader.readString(offsets[3]);
   object.name = reader.readString(offsets[4]);
   object.pinHash = reader.readStringOrNull(offsets[5]);
+  object.selectedClinicId = reader.readStringOrNull(offsets[6]);
   return object;
 }
 
@@ -130,6 +143,8 @@ P _userModelDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -960,6 +975,160 @@ extension UserModelQueryFilter
       ));
     });
   }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'selectedClinicId',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'selectedClinicId',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'selectedClinicId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'selectedClinicId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'selectedClinicId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'selectedClinicId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'selectedClinicId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'selectedClinicId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'selectedClinicId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'selectedClinicId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'selectedClinicId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      selectedClinicIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'selectedClinicId',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension UserModelQueryObject
@@ -1038,6 +1207,19 @@ extension UserModelQuerySortBy on QueryBuilder<UserModel, UserModel, QSortBy> {
   QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByPinHashDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinHash', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortBySelectedClinicId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'selectedClinicId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      sortBySelectedClinicIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'selectedClinicId', Sort.desc);
     });
   }
 }
@@ -1127,6 +1309,19 @@ extension UserModelQuerySortThenBy
       return query.addSortBy(r'pinHash', Sort.desc);
     });
   }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenBySelectedClinicId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'selectedClinicId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      thenBySelectedClinicIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'selectedClinicId', Sort.desc);
+    });
+  }
 }
 
 extension UserModelQueryWhereDistinct
@@ -1169,6 +1364,14 @@ extension UserModelQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'pinHash', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QDistinct> distinctBySelectedClinicId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'selectedClinicId',
+          caseSensitive: caseSensitive);
     });
   }
 }
@@ -1214,6 +1417,13 @@ extension UserModelQueryProperty
   QueryBuilder<UserModel, String?, QQueryOperations> pinHashProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinHash');
+    });
+  }
+
+  QueryBuilder<UserModel, String?, QQueryOperations>
+      selectedClinicIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'selectedClinicId');
     });
   }
 }

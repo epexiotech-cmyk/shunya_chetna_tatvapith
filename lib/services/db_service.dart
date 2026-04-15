@@ -3,6 +3,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shunya_app/models/clinic_model.dart';
 import 'package:shunya_app/models/disease_model.dart';
+import 'package:shunya_app/models/inventory_model.dart';
+import 'package:shunya_app/models/inventory_stock_model.dart';
 import 'package:shunya_app/models/patient_model.dart';
 
 import '../models/user_model.dart';
@@ -20,6 +22,8 @@ class DBService {
         ClinicModelSchema,
         PatientModelSchema,
         DiseaseModelSchema,
+        InventoryModelSchema,
+        InventoryStockModelSchema,
       ],
       directory: dir.path,
     );
@@ -172,5 +176,116 @@ class DBService {
     await isar.writeTxn(() async {
       await isar.diseaseModels.delete(id);
     });
+  }
+
+  static Future<int> saveInventory(InventoryModel item) async {
+    return await isar.writeTxn(() async {
+      return await isar.inventoryModels.put(item);
+    });
+  }
+
+  static Future<InventoryModel?> getInventoryByName(
+      String name, String userId) async {
+    return await isar.inventoryModels
+        .filter()
+        .nameEqualTo(name)
+        .userIdEqualTo(userId)
+        .findFirst();
+  }
+
+  static Future<void> saveInventoryStock(InventoryStockModel stock) async {
+    await isar.writeTxn(() async {
+      await isar.inventoryStockModels.put(stock);
+    });
+  }
+
+  static Future<List<Map<String, dynamic>>> getInventoryWithStock(
+      String userId, String clinicId) async {
+    final inventoryList =
+        await isar.inventoryModels.filter().userIdEqualTo(userId).findAll();
+
+    final stockList = await isar.inventoryStockModels
+        .filter()
+        .clinicIdEqualTo(clinicId)
+        .findAll();
+
+    List<Map<String, dynamic>> result = [];
+
+    for (var item in inventoryList) {
+      final stock = stockList.firstWhere(
+        (s) => s.inventoryId == item.id,
+        orElse: () => InventoryStockModel()
+          ..qty = 0
+          ..price = 0,
+      );
+
+      result.add({
+        "id": item.id,
+        "name": item.name,
+        "type": item.type,
+        "use": item.use,
+        "qty": stock.qty,
+        "price": stock.price,
+      });
+    }
+
+    return result;
+  }
+
+  static Future<String?> getSelectedClinicId() async {
+    final user = await getUser();
+    return user?.selectedClinicId;
+  }
+
+  static Future<void> updateSelectedClinic(String clinicId) async {
+    final user = await getUser();
+    if (user == null) return;
+
+    await isar.writeTxn(() async {
+      user.selectedClinicId = clinicId;
+      await isar.userModels.put(user);
+    });
+  }
+
+  static Future<InventoryStockModel?> getStockByClinicAndInventory(
+      String clinicId, int inventoryId) async {
+    return await isar.inventoryStockModels
+        .filter()
+        .clinicIdEqualTo(clinicId)
+        .and()
+        .inventoryIdEqualTo(inventoryId)
+        .findFirst();
+  }
+
+  static Future<void> updateStock(int id, int qty, int price) async {
+    final stock = await isar.inventoryStockModels.get(id);
+    if (stock == null) return;
+
+    await isar.writeTxn(() async {
+      stock.qty = qty;
+      stock.price = price;
+      await isar.inventoryStockModels.put(stock);
+    });
+  }
+
+  static Future<void> deleteStock(int id) async {
+    await isar.writeTxn(() async {
+      await isar.inventoryStockModels.delete(id);
+    });
+  }
+
+  static Future<void> deleteInventory(int id) async {
+    await isar.writeTxn(() async {
+      await isar.inventoryModels.delete(id);
+    });
+  }
+
+  static Future<bool> checkInventoryUsedAnywhere(int inventoryId) async {
+    final data = await isar.inventoryStockModels
+        .filter()
+        .inventoryIdEqualTo(inventoryId)
+        .findAll();
+
+    return data.isNotEmpty;
   }
 }

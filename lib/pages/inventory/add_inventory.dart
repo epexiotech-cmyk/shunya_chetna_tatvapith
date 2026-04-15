@@ -13,211 +13,145 @@ class AddInventoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<InventoryController>(
-      init: InventoryController(),
-      builder: (controller) {
-        final args = Get.arguments;
+    /// 🔥 ONLY THIS (SINGLE CONTROLLER)
+    final controller = Get.find<InventoryController>();
 
-        if (args != null && args["isEdit"] == true) {
-          controller.setEditData(args["data"], args["index"]);
-        }
-        return Scaffold(
-          backgroundColor: AppColors.WHITE,
-          appBar: CustomAppBarAction(
-            title: controller.isEditMode.value
-                ? "Update Inventory"
-                : "Add Inventory",
-            iconleft: Icons.arrow_back_ios_rounded,
-            lefticononTap: () {
-              Get.back();
-            },
-            iconright: Icons.add,
-            righticononTap: () {
-              controller.addRow(); // 🔥 IMPORTANT ()
-            },
-          ),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: wp(5), vertical: hp(2)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /// INVENTORY LIST
-                Expanded(
-                  child: Obx(
-                    () => ListView.builder(
-                      itemCount: controller.inventoryList.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                            padding: EdgeInsets.only(bottom: hp(1)),
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: hp(1)),
-                              decoration: BoxDecoration(
-                                color: AppColors.WHITE,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: AppColors.LIGHT_GREY),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color:
-                                        AppColors.LIGHT_GREY.withOpacity(0.1),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0,
-                                        3), // changes position of shadow (right, down)
-                                  ),
-                                ],
+    final args = Get.arguments;
+
+    /// 🔥 EDIT MODE SAFE LOAD
+    if (args != null &&
+        args["isEdit"] == true &&
+        !controller.isEditMode.value) {
+      controller.setEditData(args["data"], args["index"]);
+    }
+
+    return Scaffold(
+      backgroundColor: AppColors.WHITE,
+      appBar: CustomAppBarAction(
+        title:
+            controller.isEditMode.value ? "Update Inventory" : "Add Inventory",
+        iconleft: Icons.arrow_back_ios_rounded,
+        lefticononTap: () => Get.back(),
+        iconright: Icons.add,
+        righticononTap: () {
+          controller.addRow();
+        },
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: wp(5), vertical: hp(2)),
+        child: Column(
+          children: [
+            Expanded(
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: controller.inventoryList.length,
+                  itemBuilder: (context, index) {
+                    final item = controller.inventoryList[index];
+
+                    return Container(
+                      margin: EdgeInsets.only(bottom: hp(1)),
+                      padding: EdgeInsets.all(wp(2)),
+                      decoration: BoxDecoration(
+                        color: AppColors.WHITE,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.LIGHT_GREY),
+                      ),
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            controller: item.name,
+                            hint: "Medicine Name",
+                            labeltext: "Medicine Name",
+                          ),
+                          SizedBox(height: hp(1)),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Obx(() => CustomDropdown(
+                                      labelText: "Type",
+                                      initialValue: item.type.value,
+                                      items: controller.typelist
+                                          .map((e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
+                                      onChanged: (val) {
+                                        item.type.value = val!;
+                                        item.use.value = "";
+                                      },
+                                    )),
                               ),
-                              child: ListTile(
-                                title: CustomTextField(
-                                  textInputAction: TextInputAction.next,
-                                  controller:
-                                      controller.inventoryList[index].name,
-                                  hint: "Medicine Name",
-                                  labeltext: 'Medicine Name',
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: hp(1),
-                                    ),
+                              SizedBox(width: wp(3)),
+                              Expanded(
+                                child: Obx(() {
+                                  List<String> useList =
+                                      controller.getUseList(item.type.value);
 
-                                    /// NASYA + POWER
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Obx(() {
-                                            final item =
-                                                controller.inventoryList[index];
+                                  String? safeValue =
+                                      useList.contains(item.use.value)
+                                          ? item.use.value
+                                          : null;
 
-                                            return CustomDropdown(
-                                              labelText: "Type",
-                                              initialValue: item.type.value,
-                                              items: controller.typelist
-                                                  .map((type) {
-                                                return DropdownMenuItem(
-                                                  value: type,
-                                                  child: Text(type),
-                                                );
-                                              }).toList(),
-                                              iconprefix: Icons.medication,
-                                              onChanged: (value) {
-                                                item.type.value = value!;
-                                              },
-                                            );
-                                          }),
-                                        ),
-                                        SizedBox(width: wp(3)),
-                                        Expanded(
-                                          child: Obx(() {
-                                            final item =
-                                                controller.inventoryList[index];
-
-                                            List<String> useList;
-
-                                            switch (item.type.value) {
-                                              case "ARK":
-                                                useList = controller.uselist;
-                                                break;
-                                              case "OIL":
-                                                useList = controller.useoillist;
-                                                break;
-                                              case "Nasya":
-                                                useList =
-                                                    controller.useNasaylist;
-                                                break;
-                                              case "Power":
-                                                useList =
-                                                    controller.usepowerlist;
-                                                break;
-                                              case "Tablet":
-                                                useList =
-                                                    controller.useTabletlist;
-                                                break;
-                                              case "Drop":
-                                                useList =
-                                                    controller.useDroplist;
-                                                break;
-                                              default:
-                                                useList = [];
-                                            }
-
-                                            /// 🔥 FIX: VALIDATE VALUE
-                                            String? safeValue =
-                                                useList.contains(item.use.value)
-                                                    ? item.use.value
-                                                    : null;
-
-                                            return CustomDropdown(
-                                              labelText: "Use",
-                                              initialValue: safeValue,
-                                              items: useList.map((use) {
-                                                return DropdownMenuItem(
-                                                  value: use,
-                                                  child: Text(use),
-                                                );
-                                              }).toList(),
-                                              iconprefix: Icons.medication,
-                                              onChanged: (value) {
-                                                item.use.value = value!;
-                                              },
-                                            );
-                                          }),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: hp(1),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CustomTextField(
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            controller: controller
-                                                .inventoryList[index].qty,
-                                            hint: "Quantity",
-                                            labeltext: 'Quantity',
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: wp(3),
-                                        ),
-                                        Expanded(
-                                          child: CustomTextField(
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            controller: controller
-                                                .inventoryList[index].price,
-                                            hint: "Price",
-                                            labeltext: 'Price',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  return CustomDropdown(
+                                    labelText: "Use",
+                                    initialValue: safeValue,
+                                    items: useList
+                                        .map((e) => DropdownMenuItem(
+                                              value: e,
+                                              child: Text(e),
+                                            ))
+                                        .toList(),
+                                    onChanged: (val) {
+                                      item.use.value = val!;
+                                    },
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: hp(1)),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomTextField(
+                                  controller: item.qty,
+                                  hint: "Quantity",
+                                  labeltext: "Quantity",
+                                  keyboardType: TextInputType.number,
                                 ),
                               ),
-                            ));
-                      },
-                    ),
-                  ),
-                ),
-                Customcontainer(
-                  context: context,
-                  text: controller.isEditMode.value
-                      ? "Update Inventory"
-                      : "Save Inventory",
-                  onTap: () {
-                    Get.back();
+                              SizedBox(width: wp(3)),
+                              Expanded(
+                                child: CustomTextField(
+                                  controller: item.price,
+                                  hint: "Price",
+                                  labeltext: "Price",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
-                SizedBox(height: hp(4)),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+            Customcontainer(
+              context: context,
+              text: controller.isEditMode.value
+                  ? "Update Inventory"
+                  : "Save Inventory",
+              onTap: () {
+                controller.saveOrUpdateInventory();
+              },
+            ),
+            SizedBox(height: hp(3)),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -13,8 +13,9 @@ class InventoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<InventoryController>(
-      init: InventoryController(),
+      init: InventoryController()..loadInventory(), // 🔥 IMPORTANT
       builder: (controller) {
+        final controller = Get.put(InventoryController());
         return Scaffold(
           backgroundColor: AppColors.WHITE,
           body: Padding(
@@ -22,27 +23,38 @@ class InventoryPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /// 🔍 SEARCH
                 CustomTextField(
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
                   controller: controller.searchController,
                   hint: "Search Medicine",
                   labeltext: 'Search Medicine',
-                  suffixIcon: Icon(
-                    Icons.search,
-                    color: AppColors.PRIMARY_COLOR,
-                  ),
+                  suffixIcon:
+                      Icon(Icons.search, color: AppColors.PRIMARY_COLOR),
+
+                  /// 🔥 FIX SEARCH
+                  onchange: (value) {
+                    controller.searchText.value = value;
+                  },
                 ),
+
                 SizedBox(height: hp(2)),
 
-                /// STOCK LIST
+                /// 📦 STOCK LIST
                 Expanded(
-                  child: Obx(
-                    () => ListView.builder(
+                  child: Obx(() {
+                    final list = controller.filteredStock;
+
+                    if (list.isEmpty) {
+                      return const Center(
+                        child: Text("No Inventory Found"),
+                      );
+                    }
+
+                    return ListView.builder(
                       padding: EdgeInsets.all(wp(0.2)),
-                      itemCount: controller.filteredStock.length,
+                      itemCount: list.length,
                       itemBuilder: (context, index) {
-                        var item = controller.filteredStock[index];
+                        var item = list[index];
 
                         bool lowStock = item["qty"] <= 10;
 
@@ -57,8 +69,7 @@ class InventoryPage extends StatelessWidget {
                                 color: AppColors.LIGHT_GREY.withOpacity(0.1),
                                 spreadRadius: 5,
                                 blurRadius: 7,
-                                offset: const Offset(0,
-                                    3), // changes position of shadow (right, down)
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -67,8 +78,8 @@ class InventoryPage extends StatelessWidget {
                               text: item["name"] ?? "",
                               color: AppColors.PRIMARY_COLOR,
                               fontSize: dp(context, 16),
-                              fontStyle: FontStyle.normal,
                             ),
+
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -76,13 +87,11 @@ class InventoryPage extends StatelessWidget {
                                   text: "Price ₹${item["price"]}",
                                   color: AppColors.DARK,
                                   fontSize: dp(context, 13),
-                                  fontStyle: FontStyle.normal,
                                 ),
                                 CustomText(
                                   text: "Qty: ${item["qty"]}",
                                   color: lowStock ? Colors.red : Colors.green,
                                   fontSize: dp(context, 12),
-                                  fontStyle: FontStyle.normal,
                                 ),
                                 if (lowStock)
                                   const Text(
@@ -94,37 +103,47 @@ class InventoryPage extends StatelessWidget {
                                   ),
                               ],
                             ),
-                            trailing: GestureDetector(
-                              onTap: () {
-                                Get.to(
-                                  () => const AddInventoryPage(),
-                                  arguments: {
-                                    "isEdit": true,
-                                    "data": item,
-                                    "index": index,
+
+                            /// ✏️ EDIT
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    final result = await Get.to(
+                                      () => const AddInventoryPage(),
+                                      arguments: {
+                                        "isEdit": true,
+                                        "data": item,
+                                        "index": index,
+                                      },
+                                    );
+
+                                    /// 🔥 THIS IS THE FIX
+                                    if (result == true) {
+                                      controller.loadInventory();
+                                    }
                                   },
-                                );
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.edit,
-                                    color: AppColors.PRIMARY_COLOR,
-                                  ),
-                                  CustomText(
-                                    text: "Edit",
-                                    color: AppColors.PRIMARY_COLOR,
-                                    fontSize: dp(context, 10),
-                                  )
-                                ],
-                              ),
+                                  child: Icon(Icons.edit,
+                                      color: AppColors.PRIMARY_COLOR),
+                                ),
+                                SizedBox(
+                                  height: hp(0.8),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    controller.deleteInventory(item["id"]);
+                                  },
+                                  child: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                ),
+                              ],
                             ),
                           ),
                         );
                       },
-                    ),
-                  ),
+                    );
+                  }),
                 ),
               ],
             ),
