@@ -76,8 +76,10 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       maxLength: maxLength,
-      minLines: minLines,
-      maxLines: obscureText == true ? 1 : maxLines ?? 1,
+      // minLines: minLines,
+      // maxLines: obscureText == true ? 1 : maxLines ?? 1,
+      minLines: minLines ?? (maxLines == null ? 1 : null),
+      maxLines: obscureText == true ? 1 : maxLines,
       textAlignVertical: TextAlignVertical.center,
       textInputAction: textInputAction,
       cursorColor: AppColors.PRIMARY_COLOR,

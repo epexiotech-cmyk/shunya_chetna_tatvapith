@@ -17,6 +17,20 @@ class InventoryController extends GetxController {
   void onInit() {
     super.onInit();
     loadInventory(); // 🔥 MUST
+
+    /// 🔥 ONLY ADD DEFAULT IF NOT EDIT MODE
+    if (!isEditMode.value && inventoryList.isEmpty) {
+      addRow();
+    }
+  }
+
+  void resetForm() {
+    isEditMode.value = false;
+    editIndex = null;
+    inventoryList.clear();
+
+    /// 🔥 add fresh empty row
+    addRow();
   }
 
   void addRow() {
@@ -100,7 +114,7 @@ class InventoryController extends GetxController {
       duration: const Duration(milliseconds: 500),
     );
     loadInventory();
-
+    resetForm();
     Get.back(closeOverlays: true);
   }
 

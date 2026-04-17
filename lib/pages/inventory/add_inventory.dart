@@ -31,7 +31,10 @@ class AddInventoryPage extends StatelessWidget {
         title:
             controller.isEditMode.value ? "Update Inventory" : "Add Inventory",
         iconleft: Icons.arrow_back_ios_rounded,
-        lefticononTap: () => Get.back(),
+        lefticononTap: () {
+          controller.resetForm();
+          Get.back();
+        },
         iconright: Icons.add,
         righticononTap: () {
           controller.addRow();

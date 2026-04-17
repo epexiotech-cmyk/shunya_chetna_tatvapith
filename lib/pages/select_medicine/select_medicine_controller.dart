@@ -1,71 +1,137 @@
 import 'package:get/get.dart';
+import 'package:shunya_app/services/db_service.dart';
 
 class SelectMedicineController extends GetxController {
-  /// Medicine table list
+  /// 🔥 Medicine table list
   RxList<dynamic> medicineList = [].obs;
+  late bool isEditMode;
 
-  /// Use dropdown options
+  /// 🔥 Use dropdown options (optional)
   List<String> useList = ["1-1", "1-1-1", "1(M)", "1(N)"];
 
-  /// Add medicine
-  void addMedicine(String name) {
-    medicineList.add({"name": name, "qty": 1, "use": "1-1", "price": ""});
+  /// 🔥 Dynamic inventory lists
+  RxList<String> arclist = <String>[].obs;
+  RxList<String> tabletlist = <String>[].obs;
+  RxList<String> oillist = <String>[].obs;
+  RxList<String> droplist = <String>[].obs;
+  RxList<String> nasyalist = <String>[].obs;
+  RxList<String> powerlist = <String>[].obs;
 
-    update();
+  /// 🔥 MAPS (IMPORTANT)
+  Map<String, int> priceMap = {};
+  Map<String, String> useMap = {};
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadMedicinesFromInventory();
   }
 
-  /// Update use
-  void updateUse(int index, String value) {
-    medicineList[index]["use"] = value;
-    update();
-  }
+  /// 🔥 LOAD INVENTORY DATA
+  Future<void> loadMedicinesFromInventory() async {
+    final user = await DBService.getUser();
+    final clinicId = await DBService.getSelectedClinicId();
 
-  /// Update price
-  void updatePrice(int index, String value) {
-    medicineList[index]["price"] = value;
-    update();
-  }
+    if (user == null || clinicId == null) return;
 
-  /// Remove medicine
-  void removeMedicine(int index) {
-    medicineList.removeAt(index);
-    update();
-  }
+    final data = await DBService.getInventoryWithStock(
+      user.firebaseUid,
+      clinicId,
+    );
 
-  /// Increase quantity
-  void increaseQty(int index) {
-    medicineList[index]["qty"]++;
-    update();
-  }
+    /// clear all
+    arclist.clear();
+    tabletlist.clear();
+    oillist.clear();
+    droplist.clear();
+    nasyalist.clear();
+    powerlist.clear();
+    priceMap.clear();
+    useMap.clear(); // 🔥 important
 
-  /// Decrease quantity
-  void decreaseQty(int index) {
-    if (medicineList[index]["qty"] > 1) {
-      medicineList[index]["qty"]--;
-      update();
+    for (var item in data) {
+      String name = item["name"] ?? "";
+      String type = item["type"] ?? "";
+      int price = item["price"] ?? 0;
+      String use = item["use"] ?? "1-1";
+
+      /// 🔥 store maps
+      priceMap[name] = price;
+      useMap[name] = use;
+
+      /// 🔥 assign category
+      switch (type) {
+        case "ARK":
+          if (!arclist.contains(name)) arclist.add(name);
+          break;
+        case "Tablet":
+          if (!tabletlist.contains(name)) tabletlist.add(name);
+          break;
+        case "OIL":
+          if (!oillist.contains(name)) oillist.add(name);
+          break;
+        case "Drop":
+          if (!droplist.contains(name)) droplist.add(name);
+          break;
+        case "Nasya":
+          if (!nasyalist.contains(name)) nasyalist.add(name);
+          break;
+        case "Power":
+          if (!powerlist.contains(name)) powerlist.add(name);
+          break;
+      }
     }
   }
 
-  /// Dropdown data
+  /// 🔥 ADD MEDICINE (FINAL FIX)
+  void addMedicine(String name) {
+    bool exists = medicineList.any((e) => e["name"] == name);
 
-  List<String> arclist = [
-    "GM Mix",
-    "AJMVR",
-    "M-1",
-    "M-2",
-    "ASHOK",
-    "D",
-    "KRT",
-    "SUAGUL",
-  ];
+    if (!exists) {
+      medicineList.add({
+        "name": name,
+        "qty": 1,
 
-  List<String> tabletlist = ["A+", "A-", "B+", "B-"];
+        /// 🔥 NOW FROM DB
+        "use": useMap[name] ?? "1-1",
 
-  List<String> oillist = ["MLD Oil", "Hair Oil", "SPL Hair Oil"];
+        /// 🔥 PRICE FROM DB
+        "price": (priceMap[name] ?? 0).toString(),
+      });
 
-  List<String> droplist = ["SPL Drop", "EYE Drop", "EAR Drop"];
+      medicineList.refresh();
+    }
+  }
 
-  List<String> nasyalist = ["SPL Nashya", "Nashya", "ROLON"];
+  /// 🔥 UPDATE USE
+  void updateUse(int index, String value) {
+    medicineList[index]["use"] = value;
+    medicineList.refresh();
+  }
 
-  List<String> powerlist = ["TDS", "RSV", "GODANTI", "BHASAM"];
+  /// 🔥 UPDATE PRICE
+  void updatePrice(int index, String value) {
+    medicineList[index]["price"] = value;
+    medicineList.refresh();
+  }
+
+  /// 🔥 REMOVE
+  void removeMedicine(int index) {
+    medicineList.removeAt(index);
+    medicineList.refresh();
+  }
+
+  /// 🔥 QTY +
+  void increaseQty(int index) {
+    medicineList[index]["qty"]++;
+    medicineList.refresh();
+  }
+
+  /// 🔥 QTY -
+  void decreaseQty(int index) {
+    if (medicineList[index]["qty"] > 1) {
+      medicineList[index]["qty"]--;
+      medicineList.refresh();
+    }
+  }
 }

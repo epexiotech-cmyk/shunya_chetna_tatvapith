@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shunya_app/pages/select_medicine/select_medicine_controller.dart';
+import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
 import 'package:shunya_app/widgets/custom_dropdown.dart';
+import 'package:shunya_app/widgets/custom_text.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 
 class SelectMedicineScreen extends StatelessWidget {
@@ -12,17 +14,14 @@ class SelectMedicineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SelectMedicineController>(
-      init: SelectMedicineController(),
-      builder: (controller) {
-        return Scaffold(
+    final controller = Get.put(SelectMedicineController());
+
+    return Obx(() => Scaffold(
           backgroundColor: AppColors.WHITE,
           appBar: CustomAppBarAction(
             title: "Select Medicine",
             iconleft: Icons.arrow_back_ios_rounded,
-            lefticononTap: () {
-              Get.back();
-            },
+            lefticononTap: () => Get.back(),
           ),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -35,12 +34,12 @@ class SelectMedicineScreen extends StatelessWidget {
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Arc",
-                          items: controller.arclist.map((arc) {
-                            return DropdownMenuItem(
-                              value: arc,
-                              child: Text(arc),
-                            );
-                          }).toList(),
+                          items: controller.arclist
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
                           iconprefix: Icons.medication,
                           onChanged: (value) {
                             controller.addMedicine(value!);
@@ -51,12 +50,12 @@ class SelectMedicineScreen extends StatelessWidget {
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Tablet",
-                          items: controller.tabletlist.map((tablet) {
-                            return DropdownMenuItem(
-                              value: tablet,
-                              child: Text(tablet),
-                            );
-                          }).toList(),
+                          items: controller.tabletlist
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
                           iconprefix: Icons.medication,
                           onChanged: (value) {
                             controller.addMedicine(value!);
@@ -74,12 +73,12 @@ class SelectMedicineScreen extends StatelessWidget {
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Oil",
-                          items: controller.oillist.map((oil) {
-                            return DropdownMenuItem(
-                              value: oil,
-                              child: Text(oil),
-                            );
-                          }).toList(),
+                          items: controller.oillist
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
                           iconprefix: Icons.medication,
                           onChanged: (value) {
                             controller.addMedicine(value!);
@@ -90,12 +89,12 @@ class SelectMedicineScreen extends StatelessWidget {
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Drop",
-                          items: controller.droplist.map((drop) {
-                            return DropdownMenuItem(
-                              value: drop,
-                              child: Text(drop),
-                            );
-                          }).toList(),
+                          items: controller.droplist
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
                           iconprefix: Icons.medication,
                           onChanged: (value) {
                             controller.addMedicine(value!);
@@ -113,12 +112,12 @@ class SelectMedicineScreen extends StatelessWidget {
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Nasya",
-                          items: controller.nasyalist.map((nasya) {
-                            return DropdownMenuItem(
-                              value: nasya,
-                              child: Text(nasya),
-                            );
-                          }).toList(),
+                          items: controller.nasyalist
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
                           iconprefix: Icons.medication,
                           onChanged: (value) {
                             controller.addMedicine(value!);
@@ -129,12 +128,12 @@ class SelectMedicineScreen extends StatelessWidget {
                       Expanded(
                         child: CustomDropdown(
                           labelText: "Power",
-                          items: controller.powerlist.map((power) {
-                            return DropdownMenuItem(
-                              value: power,
-                              child: Text(power),
-                            );
-                          }).toList(),
+                          items: controller.powerlist
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
                           iconprefix: Icons.medication,
                           onChanged: (value) {
                             controller.addMedicine(value!);
@@ -146,214 +145,180 @@ class SelectMedicineScreen extends StatelessWidget {
 
                   SizedBox(height: hp(3)),
 
-                  /// MEDICINE TABLE
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.PRIMARY_COLOR),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Column(
-                      children: [
-                        /// HEADER
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          color: AppColors.PRIMARY_COLOR,
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Center(
-                                  child: Text(
-                                    "Name",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Center(
-                                  child: Text(
-                                    "Quantity",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Center(
-                                  child: Text(
-                                    "Use",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Center(
-                                  child: Text(
-                                    "Price",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Expanded(flex: 1, child: SizedBox()),
-                            ],
-                          ),
-                        ),
-
-                        /// ROWS
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller.medicineList.length,
-                          itemBuilder: (context, index) {
-                            final medicine = controller.medicineList[index];
-
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 6,
-                              ),
+                  /// TABLE
+                  controller.medicineList.isEmpty
+                      ? const SizedBox()
+                      : Obx(
+                          () => SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Container(
                               decoration: BoxDecoration(
-                                border: Border(
-                                  top: BorderSide(
-                                    color: AppColors.PRIMARY_COLOR,
-                                  ),
-                                ),
+                                border:
+                                    Border.all(color: AppColors.PRIMARY_COLOR),
+                                borderRadius: BorderRadius.circular(6),
                               ),
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  /// NAME
-                                  Expanded(
-                                    flex: 2,
-                                    child: Center(
-                                      child: Text(medicine["name"]),
-                                    ),
-                                  ),
-
-                                  /// QUANTITY
-                                  Expanded(
-                                    flex: 3,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                  /// HEADER (FIXED)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    color: AppColors.PRIMARY_COLOR,
+                                    child: const Row(
                                       children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            controller.decreaseQty(index);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(),
-                                            ),
-                                            child: const Icon(
-                                              Icons.remove,
-                                              size: 16,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text("${medicine["qty"]}"),
-                                        const SizedBox(width: 10),
-                                        GestureDetector(
-                                          onTap: () {
-                                            controller.increaseQty(index);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(),
-                                            ),
-                                            child: const Icon(
-                                              Icons.add,
-                                              size: 16,
-                                            ),
-                                          ),
-                                        ),
+                                        SizedBox(
+                                            width: 100,
+                                            child: Center(
+                                                child: Text("Name",
+                                                    style: TextStyle(
+                                                        color: Colors.white)))),
+                                        SizedBox(
+                                            width: 120,
+                                            child: Center(
+                                                child: Text("Quantity",
+                                                    style: TextStyle(
+                                                        color: Colors.white)))),
+                                        SizedBox(
+                                            width: 100,
+                                            child: Center(
+                                                child: Text("Use",
+                                                    style: TextStyle(
+                                                        color: Colors.white)))),
+                                        SizedBox(
+                                            width: 100,
+                                            child: Center(
+                                                child: Text("Price",
+                                                    style: TextStyle(
+                                                        color: Colors.white)))),
+                                        SizedBox(width: 60),
                                       ],
                                     ),
                                   ),
 
-                                  /// USE
-                                  Expanded(
-                                    flex: 2,
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        value: medicine["use"],
-                                        isExpanded: true,
-                                        items: controller.useList.map((use) {
-                                          return DropdownMenuItem(
-                                            value: use,
-                                            child: Center(child: Text(use)),
-                                          );
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          controller.updateUse(index, value!);
-                                        },
-                                      ),
-                                    ),
-                                  ),
+                                  /// LIST
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 1.2,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: controller.medicineList.length,
+                                      itemBuilder: (context, index) {
+                                        final m =
+                                            controller.medicineList[index];
 
-                                  /// PRICE
-                                  Expanded(
-                                    flex: 2,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                      ),
-                                      child: TextField(
-                                        keyboardType: TextInputType.number,
-                                        textAlign: TextAlign.center,
-                                        decoration: const InputDecoration(
-                                          hintText: "₹",
-                                          isDense: true,
-                                          border: OutlineInputBorder(),
-                                        ),
-                                        onChanged: (value) {
-                                          controller.updatePrice(index, value);
-                                        },
-                                      ),
-                                    ),
-                                  ),
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: hp(1)),
+                                          child: Row(
+                                            children: [
+                                              /// NAME
+                                              SizedBox(
+                                                width: wp(25),
+                                                child: CustomText(
+                                                  text: m["name"],
+                                                  fontSize: dp(context, 10),
+                                                ),
+                                              ),
 
-                                  /// DELETE
-                                  Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        controller.removeMedicine(index);
+                                              /// QTY
+                                              SizedBox(
+                                                width: wp(30),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: Icon(Icons.remove,
+                                                          size:
+                                                              dp(context, 10)),
+                                                      onPressed: () =>
+                                                          controller
+                                                              .decreaseQty(
+                                                                  index),
+                                                    ),
+                                                    CustomText(
+                                                      text: "${m["qty"]}",
+                                                      fontSize: dp(context, 10),
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(Icons.add,
+                                                          size:
+                                                              dp(context, 10)),
+                                                      onPressed: () =>
+                                                          controller
+                                                              .increaseQty(
+                                                                  index),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                              /// USE
+                                              SizedBox(
+                                                width: wp(25),
+                                                child: Center(
+                                                  child: CustomText(
+                                                    text:
+                                                        m["use"]?.toString() ??
+                                                            "-",
+                                                    fontSize: dp(context, 10),
+                                                  ),
+                                                ),
+                                              ),
+
+                                              /// PRICE (FIXED)
+                                              SizedBox(
+                                                width: wp(30),
+                                                child: Center(
+                                                  child: CustomText(
+                                                    text: "₹ ${m["price"]}",
+                                                    fontSize: dp(context, 10),
+                                                  ),
+                                                ),
+                                              ),
+
+                                              /// DELETE
+                                              SizedBox(
+                                                width: wp(5),
+                                                child: IconButton(
+                                                  icon: const Icon(Icons.delete,
+                                                      color: Colors.red),
+                                                  onPressed: () => controller
+                                                      .removeMedicine(index),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),
                                 ],
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
+
                   SizedBox(height: hp(3)),
+
+                  /// SAVE
                   controller.medicineList.isEmpty
                       ? const SizedBox()
                       : Customcontainer(
                           context: context,
                           text: "Save",
                           onTap: () {
-                            Get.back(result: controller.medicineList);
+                            Get.back(
+                                closeOverlays: false,
+                                result: controller.medicineList);
                           },
                         ),
                 ],
               ),
             ),
           ),
-        );
-      },
-    );
+        ));
   }
 }

@@ -11,6 +11,7 @@ import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
 import 'package:shunya_app/widgets/custom_text.dart';
+import '../inventory/inventory_controller.dart';
 import 'dashboard_controller.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -73,8 +74,11 @@ class DashboardPage extends StatelessWidget {
                             ? Get.toNamed(
                                 routeaddinventory,
                                 preventDuplicates: false,
+                                arguments: {"isEdit": false},
                               )
                             : showDialogDisease(context: context);
+                    final controllers = Get.find<InventoryController>();
+                    controllers.resetForm();
                   },
                   backgroundColor: AppColors.PRIMARY_COLOR,
                   icon: Icon(Icons.add, color: AppColors.WHITE),

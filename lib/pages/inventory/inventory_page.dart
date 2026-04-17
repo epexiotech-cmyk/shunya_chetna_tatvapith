@@ -16,6 +16,10 @@ class InventoryPage extends StatelessWidget {
       init: InventoryController()..loadInventory(), // 🔥 IMPORTANT
       builder: (controller) {
         final controller = Get.put(InventoryController());
+        if (controller.inventoryList.isEmpty &&
+            controller.isEditMode.value == false) {
+          controller.addRow();
+        }
         return Scaffold(
           backgroundColor: AppColors.WHITE,
           body: Padding(
