@@ -37,8 +37,15 @@ class DBService {
         .findFirst();
 
     await isar.writeTxn(() async {
+      /// 🔥 STEP 1: ALL USERS → LOGOUT
+      final allUsers = await isar.userModels.where().findAll();
+      for (var u in allUsers) {
+        u.isLoggedIn = false;
+        await isar.userModels.put(u);
+      }
+
+      /// 🔥 STEP 2: CURRENT USER LOGIN
       if (existingUser == null) {
-        /// 🆕 NEW USER
         final newUser = UserModel()
           ..firebaseUid = firebaseUser.uid
           ..name = firebaseUser.displayName ?? ""
@@ -49,14 +56,9 @@ class DBService {
 
         await isar.userModels.put(newUser);
       } else {
-        /// 🔄 EXISTING USER → UPDATE ONLY SAFE FIELDS
         existingUser.name = firebaseUser.displayName ?? "";
         existingUser.email = firebaseUser.email ?? "";
         existingUser.isLoggedIn = true;
-
-        /// ❌ DO NOT TOUCH:
-        /// existingUser.pinHash
-        /// existingUser.mobile
 
         await isar.userModels.put(existingUser);
       }
@@ -77,8 +79,18 @@ class DBService {
     });
   }
 
+  // static Future<UserModel?> getUser() async {
+  //   return await isar.userModels.filter().isLoggedInEqualTo(true).findFirst();
+  // }
+
   static Future<UserModel?> getUser() async {
-    return await isar.userModels.filter().isLoggedInEqualTo(true).findFirst();
+    final user =
+        await isar.userModels.filter().isLoggedInEqualTo(true).findFirst();
+
+    if (user != null) return user;
+
+    /// 🔥 FALLBACK (IMPORTANT)
+    return await isar.userModels.where().findFirst();
   }
 
   /// 🔹 Update PIN (hashed)
@@ -130,32 +142,6 @@ class DBService {
   static Future<void> saveSelectedClinic(ClinicModel clinic) async {
     await isar.writeTxn(() async {
       await isar.clinicModels.put(clinic);
-    });
-  }
-
-  /// 🔥 SAVE PATIENT
-  /// 🔥 SAVE PATIENT
-  static Future<void> savePatient(PatientModel patient) async {
-    await isar.writeTxn(() async {
-      await isar.patientModels.put(patient);
-    });
-  }
-
-  /// 🔥 GET PATIENTS
-  static Future<List<PatientModel>> getPatients(String userId) async {
-    return await isar.patientModels.filter().userIdEqualTo(userId).findAll();
-  }
-
-  /// 🔥 UPDATE PATIENT
-  static Future<void> updatePatient(PatientModel patient) async {
-    await isar.writeTxn(() async {
-      await isar.patientModels.put(patient);
-    });
-  }
-
-  static Future<void> deletePatient(int id) async {
-    await isar.writeTxn(() async {
-      await isar.patientModels.delete(id);
     });
   }
 
@@ -287,5 +273,28 @@ class DBService {
         .findAll();
 
     return data.isNotEmpty;
+  }
+
+  /// 💾 SAVE PATIENT
+  static Future<void> savePatient(PatientModel patient) async {
+    await isar.writeTxn(() async {
+      await isar.patientModels.put(patient);
+    });
+  }
+
+  /// 📥 GET ALL PATIENTS (USER BASED)
+  static Future<List<PatientModel>> getPatients(String userId) async {
+    return await isar.patientModels
+        .filter()
+        .userIdEqualTo(userId)
+        .sortByCreatedAtDesc()
+        .findAll();
+  }
+
+  /// ❌ DELETE PATIENT
+  static Future<void> deletePatient(int id) async {
+    await isar.writeTxn(() async {
+      await isar.patientModels.delete(id);
+    });
   }
 }

@@ -6,7 +6,7 @@ part 'patient_model.g.dart';
 class PatientModel {
   Id id = Isar.autoIncrement;
 
-  late String userId;
+  late String userId; // 🔥 multi-user support
 
   late String name;
   late String mobile;
@@ -21,4 +21,6 @@ class PatientModel {
   late String height;
   late String bpCount;
   late String sugarLevel;
+
+  DateTime createdAt = DateTime.now();
 }

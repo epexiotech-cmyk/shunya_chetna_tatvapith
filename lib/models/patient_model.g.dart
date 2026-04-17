@@ -37,53 +37,58 @@ const PatientModelSchema = CollectionSchema(
       name: r'bpCount',
       type: IsarType.string,
     ),
-    r'dob': PropertySchema(
+    r'createdAt': PropertySchema(
       id: 4,
+      name: r'createdAt',
+      type: IsarType.dateTime,
+    ),
+    r'dob': PropertySchema(
+      id: 5,
       name: r'dob',
       type: IsarType.string,
     ),
     r'gender': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'gender',
       type: IsarType.string,
     ),
     r'height': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'height',
       type: IsarType.string,
     ),
     r'maritalStatus': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'maritalStatus',
       type: IsarType.string,
     ),
     r'mobile': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'mobile',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'name',
       type: IsarType.string,
     ),
     r'sugarLevel': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'sugarLevel',
       type: IsarType.string,
     ),
     r'userId': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'userId',
       type: IsarType.string,
     ),
     r'village': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'village',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'weight',
       type: IsarType.string,
     )
@@ -135,16 +140,17 @@ void _patientModelSerialize(
   writer.writeString(offsets[1], object.age);
   writer.writeString(offsets[2], object.bloodGroup);
   writer.writeString(offsets[3], object.bpCount);
-  writer.writeString(offsets[4], object.dob);
-  writer.writeString(offsets[5], object.gender);
-  writer.writeString(offsets[6], object.height);
-  writer.writeString(offsets[7], object.maritalStatus);
-  writer.writeString(offsets[8], object.mobile);
-  writer.writeString(offsets[9], object.name);
-  writer.writeString(offsets[10], object.sugarLevel);
-  writer.writeString(offsets[11], object.userId);
-  writer.writeString(offsets[12], object.village);
-  writer.writeString(offsets[13], object.weight);
+  writer.writeDateTime(offsets[4], object.createdAt);
+  writer.writeString(offsets[5], object.dob);
+  writer.writeString(offsets[6], object.gender);
+  writer.writeString(offsets[7], object.height);
+  writer.writeString(offsets[8], object.maritalStatus);
+  writer.writeString(offsets[9], object.mobile);
+  writer.writeString(offsets[10], object.name);
+  writer.writeString(offsets[11], object.sugarLevel);
+  writer.writeString(offsets[12], object.userId);
+  writer.writeString(offsets[13], object.village);
+  writer.writeString(offsets[14], object.weight);
 }
 
 PatientModel _patientModelDeserialize(
@@ -158,17 +164,18 @@ PatientModel _patientModelDeserialize(
   object.age = reader.readString(offsets[1]);
   object.bloodGroup = reader.readString(offsets[2]);
   object.bpCount = reader.readString(offsets[3]);
-  object.dob = reader.readString(offsets[4]);
-  object.gender = reader.readString(offsets[5]);
-  object.height = reader.readString(offsets[6]);
+  object.createdAt = reader.readDateTime(offsets[4]);
+  object.dob = reader.readString(offsets[5]);
+  object.gender = reader.readString(offsets[6]);
+  object.height = reader.readString(offsets[7]);
   object.id = id;
-  object.maritalStatus = reader.readString(offsets[7]);
-  object.mobile = reader.readString(offsets[8]);
-  object.name = reader.readString(offsets[9]);
-  object.sugarLevel = reader.readString(offsets[10]);
-  object.userId = reader.readString(offsets[11]);
-  object.village = reader.readString(offsets[12]);
-  object.weight = reader.readString(offsets[13]);
+  object.maritalStatus = reader.readString(offsets[8]);
+  object.mobile = reader.readString(offsets[9]);
+  object.name = reader.readString(offsets[10]);
+  object.sugarLevel = reader.readString(offsets[11]);
+  object.userId = reader.readString(offsets[12]);
+  object.village = reader.readString(offsets[13]);
+  object.weight = reader.readString(offsets[14]);
   return object;
 }
 
@@ -188,7 +195,7 @@ P _patientModelDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
@@ -206,6 +213,8 @@ P _patientModelDeserializeProp<P>(
     case 12:
       return (reader.readString(offset)) as P;
     case 13:
+      return (reader.readString(offset)) as P;
+    case 14:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -842,6 +851,62 @@ extension PatientModelQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'bpCount',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<PatientModel, PatientModel, QAfterFilterCondition>
+      createdAtEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PatientModel, PatientModel, QAfterFilterCondition>
+      createdAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PatientModel, PatientModel, QAfterFilterCondition>
+      createdAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PatientModel, PatientModel, QAfterFilterCondition>
+      createdAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -2306,6 +2371,18 @@ extension PatientModelQuerySortBy
     });
   }
 
+  QueryBuilder<PatientModel, PatientModel, QAfterSortBy> sortByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PatientModel, PatientModel, QAfterSortBy> sortByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<PatientModel, PatientModel, QAfterSortBy> sortByDob() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dob', Sort.asc);
@@ -2480,6 +2557,18 @@ extension PatientModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<PatientModel, PatientModel, QAfterSortBy> thenByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PatientModel, PatientModel, QAfterSortBy> thenByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<PatientModel, PatientModel, QAfterSortBy> thenByDob() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dob', Sort.asc);
@@ -2645,6 +2734,12 @@ extension PatientModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<PatientModel, PatientModel, QDistinct> distinctByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdAt');
+    });
+  }
+
   QueryBuilder<PatientModel, PatientModel, QDistinct> distinctByDob(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2746,6 +2841,12 @@ extension PatientModelQueryProperty
   QueryBuilder<PatientModel, String, QQueryOperations> bpCountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'bpCount');
+    });
+  }
+
+  QueryBuilder<PatientModel, DateTime, QQueryOperations> createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdAt');
     });
   }
 

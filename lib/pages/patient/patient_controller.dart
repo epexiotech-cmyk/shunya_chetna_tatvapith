@@ -80,26 +80,46 @@ class PatientController extends GetxController
   RxList<PatientModel> patientList = <PatientModel>[].obs;
   RxList<PatientModel> filteredList = <PatientModel>[].obs;
   RxString searchQuery = ''.obs;
+  String userId = "";
 
   /// 🔥 LOAD PATIENTS
   Future<void> loadPatients() async {
-    final user = await DBService.getUser();
-    if (user == null) return;
+    if (userId.isEmpty) {
+      return; // 🔥 NO SNACKBAR
+    }
 
-    final data = await DBService.getPatients(user.firebaseUid);
+    final data = await DBService.getPatients(userId);
 
     patientList.assignAll(data);
-    filteredList.assignAll(data); // 🔥 IMPORTANT
+    filterPatients(); // 🔥 always sync filter
   }
 
   @override
   void onInit() {
     super.onInit();
-    loadPatients();
+
+    Future.delayed(Duration.zero, () {
+      initUser(); // ✅ ONLY THIS
+    });
 
     debounce(searchQuery, (_) {
       filterPatients();
     }, time: const Duration(milliseconds: 300));
+  }
+
+  Future<void> initUser() async {
+    final user = await DBService.getUser();
+
+    if (user != null) {
+      userId = user.firebaseUid;
+      await loadPatients();
+    } else {
+      return; // 🔥 NO UI IN CONTROLLER
+    }
+  }
+
+  void setUser(String id) {
+    userId = id;
   }
 
   void filterPatients() {
@@ -117,32 +137,23 @@ class PatientController extends GetxController
     }
   }
 
-  Future<void> deletePatient(int index) async {
-    if (index < 0 || index >= filteredList.length) {
-      Get.snackbar("Error", "Invalid index");
-      return;
-    }
-
-    final patient = filteredList[index];
-
+  Future<void> deletePatient(PatientModel patient) async {
     await DBService.deletePatient(patient.id);
 
-    Get.snackbar("Success", "Patient Deleted");
+    await loadPatients();
 
-    await loadPatients(); // 🔥 wait for refresh
+    Get.snackbar("Success", "Patient Deleted");
   }
 
   /// 🔥 SAVE PATIENT
   Future<void> savePatient() async {
-    final user = await DBService.getUser();
-
-    if (user == null) {
+    if (userId.isEmpty) {
       Get.snackbar("Error", "User not found");
       return;
     }
 
     final patient = PatientModel()
-      ..userId = user.firebaseUid
+      ..userId = userId
       ..name = nameController.text
       ..mobile = mobileController.text
       ..gender = selectedGender.value
@@ -161,10 +172,8 @@ class PatientController extends GetxController
 
     Get.snackbar("Success", "Patient Saved");
 
+    await loadPatients();
     clearForm();
-
-    /// 🔥 THEN LOAD DATA (AFTER NAVIGATION)
-    loadPatients();
     Get.back(closeOverlays: true);
   }
 
