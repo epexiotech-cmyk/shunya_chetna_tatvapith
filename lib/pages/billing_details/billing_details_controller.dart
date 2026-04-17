@@ -12,36 +12,54 @@ class BillingDetailsController extends GetxController {
   String doctorUPI = "rahulpatel@upi";
 
   /// BILL DETAILS
-  String billNo = "PAT001";
-  String billDate = "01/01/2026";
+  String billNo = "PAT${DateTime.now().millisecondsSinceEpoch}";
+  String billDate =
+      "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
 
   /// PATIENT DETAILS
-  String patientName = "Ramesh Patel";
-  String patientMobile = "9714384251";
-  String patientCity = "Vadodara";
+  String patientName = "";
+  String patientMobile = "";
+  String patientCity = "";
 
-  /// MEDICINE LIST
-  List<Map<String, dynamic>> medicineList = [
-    {"name": "GM", "qty": 3, "price": 1, "use": "1-1"},
-    {"name": "AGMR", "qty": 3, "price": 1, "use": "1(M)"},
-    {"name": "GBM", "qty": 3, "price": 2, "use": "1-1-1"},
-  ];
+  /// 🔥 MEDICINE LIST (NOW DYNAMIC)
+  List<Map<String, dynamic>> medicineList = [];
 
-  /// TOTAL
+  @override
+  void onInit() {
+    super.onInit();
+
+    final args = Get.arguments;
+
+    if (args != null) {
+      /// 🔥 PATIENT DATA
+      final patient = args["patient"];
+
+      patientName = patient["name"] ?? "";
+      patientMobile = patient["mobile"] ?? "";
+      patientCity = patient["village"] ?? "";
+
+      /// 🔥 MEDICINE DATA
+      medicineList = List<Map<String, dynamic>>.from(
+        args["medicines"] ?? [],
+      );
+    }
+  }
+
+  /// 🔥 TOTAL
   int get totalAmount {
     int total = 0;
 
     for (var med in medicineList) {
-      int qty = med["qty"] as int;
-      int price = med["price"] as int;
+      int qty = int.tryParse(med["qty"].toString()) ?? 0;
+      int price = int.tryParse(med["price"].toString()) ?? 0;
 
-      total += qty * price; // ✅ correct
+      total += qty * price;
     }
 
     return total;
   }
 
-  /// UPI QR STRING
+  /// 🔥 UPI QR
   String get upiUrl {
     return "upi://pay?pa=$doctorUPI"
         "&pn=$doctorName"
@@ -49,7 +67,15 @@ class BillingDetailsController extends GetxController {
         "&cu=INR";
   }
 
+  /// 🔥 WHATSAPP MESSAGE (DYNAMIC)
   String getWhatsAppMessage() {
+    String medicineText = "";
+
+    for (var med in medicineList) {
+      medicineText +=
+          "${med["name"]} (${med["qty"]}) - ₹${(int.tryParse(med["qty"].toString()) ?? 0) * (int.tryParse(med["price"].toString()) ?? 0)}\n";
+    }
+
     return '''
 Dear $patientName,
 
@@ -57,19 +83,21 @@ Your bill is generated.
 
 Bill No: $billNo
 Date: $billDate
-Amount: ₹$totalAmount
 
-Download Bill:
-https://drive.google.com/file/d/1ilBe7aaRNyNOkX3mPODoa84Xu2-Gv1x6/view?usp=sharing
+Medicines:
+$medicineText
+
+Total Amount: ₹$totalAmount
 
 Thank you!
 ''';
   }
 
+  /// 🔥 WHATSAPP SEND
   Future<void> sendWhatsAppMessage() async {
     final message = Uri.encodeComponent(getWhatsAppMessage());
 
-    final url = Uri.parse("https://wa.me/91${9974457934}?text=$message");
+    final url = Uri.parse("https://wa.me/91$patientMobile?text=$message");
 
     await launchUrl(url, mode: LaunchMode.externalApplication);
   }
