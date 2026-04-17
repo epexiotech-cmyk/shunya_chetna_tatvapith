@@ -10,6 +10,8 @@ import 'package:shunya_app/widgets/custom_appbar.dart';
 import 'package:shunya_app/widgets/custom_textfield.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 
+import '../../widgets/custom_dropdown.dart';
+
 class AddPatientPage extends StatelessWidget {
   const AddPatientPage({super.key});
 
@@ -232,7 +234,7 @@ class AddPatientPage extends StatelessWidget {
                           ),
                           dropdownColor: AppColors.WHITE,
                           style: TextStyle(
-                            fontSize: dp(context, 14),
+                            fontSize: dp(context, 11.6),
                             color: AppColors.DARK,
                           ),
                           decoration: InputDecoration(
@@ -243,7 +245,7 @@ class AddPatientPage extends StatelessWidget {
                               color: AppColors.PRIMARY_COLOR,
                             ),
                             contentPadding: EdgeInsets.symmetric(
-                              vertical: hp(2),
+                              vertical: hp(2.8),
                               horizontal: wp(3),
                             ),
                             border: OutlineInputBorder(
@@ -285,7 +287,7 @@ class AddPatientPage extends StatelessWidget {
 
                     /// DATE OF BIRTH
                     Flexible(
-                      flex: 1,
+                      flex: 2,
                       child: CustomTextField(
                         readOnly: true,
                         controller: controller.dobController,
@@ -421,6 +423,24 @@ class AddPatientPage extends StatelessWidget {
                   SizedBox(height: hp(2))
                 else
                   const SizedBox(),
+
+                if (Get.arguments != null)
+                  CustomTextField(
+                    controller: controller.patientproblemController,
+                    hint: "Patient Problem",
+                    labeltext: "Patient Problem",
+                    maxLines: 3,
+                    prefixicon: Icon(
+                      Icons.report_problem_rounded,
+                      color: AppColors.PRIMARY_COLOR,
+                    ),
+                  )
+                else
+                  const SizedBox(),
+                if (Get.arguments != null)
+                  SizedBox(height: hp(2))
+                else
+                  const SizedBox(),
                 if (Get.arguments != null)
                   CustomTextField(
                     controller: controller.patientobservationlavelController,
@@ -438,16 +458,20 @@ class AddPatientPage extends StatelessWidget {
                   SizedBox(height: hp(2))
                 else
                   const SizedBox(),
+
                 if (Get.arguments != null)
-                  CustomTextField(
-                    controller: controller.patientproblemController,
-                    hint: "Patient Problem",
-                    labeltext: "Patient Problem",
-                    maxLines: 3,
-                    prefixicon: Icon(
-                      Icons.report_problem_rounded,
-                      color: AppColors.PRIMARY_COLOR,
-                    ),
+                  CustomDropdown(
+                    labelText: "Disease",
+                    items: controller.diseaselist
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    iconprefix: Icons.medication,
+                    onChanged: (value) {
+                      controller.addDisease(value!);
+                    },
                   )
                 else
                   const SizedBox(),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shunya_app/pages/select_medicine/select_medicine_controller.dart';
-import 'package:shunya_app/routes/common/common_app_pages.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';

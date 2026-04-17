@@ -82,6 +82,21 @@ class PatientController extends GetxController
   RxString searchQuery = ''.obs;
   String userId = "";
 
+  RxList<String> diseaselist = <String>[].obs;
+  RxString selectedDisease = "".obs;
+
+  Future<void> loadDiseases() async {
+    final user = await DBService.getUser();
+    if (user == null) return;
+
+    final data = await DBService.getDiseases(user.firebaseUid);
+
+    /// 🔥 MODEL → STRING
+    diseaselist.assignAll(
+      data.map((e) => e.name).toList(),
+    );
+  }
+
   /// 🔥 LOAD PATIENTS
   Future<void> loadPatients() async {
     if (userId.isEmpty) {
@@ -99,7 +114,8 @@ class PatientController extends GetxController
     super.onInit();
 
     Future.delayed(Duration.zero, () {
-      initUser(); // ✅ ONLY THIS
+      initUser();
+      loadDiseases(); // ✅ ONLY THIS
     });
 
     debounce(searchQuery, (_) {
@@ -272,5 +288,11 @@ class PatientController extends GetxController
     if (result.type != ResultType.done) {
       Get.snackbar("Error", "No app found to open PDF");
     }
+  }
+
+  RxList<dynamic> diseaseList = [].obs;
+
+  void addDisease(String name) {
+    selectedDisease.value = name;
   }
 }
