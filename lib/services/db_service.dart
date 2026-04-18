@@ -8,6 +8,7 @@ import 'package:shunya_app/models/inventory_stock_model.dart';
 import 'package:shunya_app/models/patient_model.dart';
 
 import '../models/user_model.dart';
+import '../models/visit_model.dart';
 
 class DBService {
   static late Isar isar;
@@ -21,6 +22,7 @@ class DBService {
         UserModelSchema,
         ClinicModelSchema,
         PatientModelSchema,
+        VisitModelSchema,
         DiseaseModelSchema,
         InventoryModelSchema,
         InventoryStockModelSchema,
@@ -296,5 +298,19 @@ class DBService {
     await isar.writeTxn(() async {
       await isar.patientModels.delete(id);
     });
+  }
+
+  static Future<void> saveVisit(VisitModel visit) async {
+    await isar.writeTxn(() async {
+      await isar.visitModels.put(visit);
+    });
+  }
+
+  static Future<List<VisitModel>> getVisits(int patientId) async {
+    return await isar.visitModels
+        .filter()
+        .patientIdEqualTo(patientId)
+        .sortByDateDesc()
+        .findAll();
   }
 }

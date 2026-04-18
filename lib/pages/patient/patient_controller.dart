@@ -6,8 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
-
 import '../../models/patient_model.dart';
+import '../../models/visit_model.dart';
 import '../../services/db_service.dart';
 
 class PatientController extends GetxController
@@ -294,5 +294,39 @@ class PatientController extends GetxController
 
   void addDisease(String name) {
     selectedDisease.value = name;
+  }
+
+  /// ahi add kar je functionality
+  RxList<dynamic> medicineList = [].obs;
+  RxList<VisitModel> visitList = <VisitModel>[].obs;
+  Future<VisitModel> addVisit(PatientModel patient) async {
+    final now = DateTime.now();
+
+    final visit = VisitModel()
+      ..patientId = patient.id
+      ..date = "${now.day}/${now.month}/${now.year}"
+      ..problem = patientproblemController.text
+      ..observation = patientobservationlavelController.text
+      ..medicines = medicineList.map((e) => e["name"].toString()).toList()
+      ..pdfPaths = pdfList.map((e) => e.path).toList();
+
+    await DBService.saveVisit(visit);
+
+    Get.snackbar("Success", "Visit Added");
+
+    /// clear
+    patientproblemController.clear();
+    patientobservationlavelController.clear();
+    pdfList.clear();
+
+    /// reload
+    loadVisits(patient.id);
+
+    return visit; // 🔥 IMPORTANT
+  }
+
+  Future<void> loadVisits(int patientId) async {
+    final data = await DBService.getVisits(patientId);
+    visitList.assignAll(data);
   }
 }

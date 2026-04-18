@@ -1,22 +1,24 @@
+import 'package:isar/isar.dart';
+
+part 'visit_model.g.dart';
+
+@collection
 class VisitModel {
-  int? id;
+  Id id = Isar.autoIncrement;
 
-  late int patientId; // 🔥 link with patient
-  late int clinicId; // 🔥 link with clinic
+  /// 🔗 relation
+  late int patientId;
 
+  /// 📅 visit date
   late String date;
-  late String observation;
+
+  /// 🧾 details
   late String problem;
+  late String observation;
 
+  /// 💊 medicines
+  List<String> medicines = [];
+
+  /// 📄 pdf paths
   List<String> pdfPaths = [];
-
-  VisitModel({
-    this.id,
-    required this.patientId,
-    required this.clinicId,
-    required this.date,
-    required this.observation,
-    required this.problem,
-    required this.pdfPaths,
-  });
 }

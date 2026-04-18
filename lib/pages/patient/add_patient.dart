@@ -10,7 +10,9 @@ import 'package:shunya_app/widgets/custom_appbar.dart';
 import 'package:shunya_app/widgets/custom_textfield.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 
+import '../../models/patient_model.dart';
 import '../../widgets/custom_dropdown.dart';
+import '../../widgets/custom_text.dart';
 
 class AddPatientPage extends StatelessWidget {
   const AddPatientPage({super.key});
@@ -423,6 +425,34 @@ class AddPatientPage extends StatelessWidget {
                   SizedBox(height: hp(2))
                 else
                   const SizedBox(),
+                if (Get.arguments != null)
+                  Customcontainer(
+                      context: context,
+                      text: "Visit History",
+                      color: AppColors.WHITE,
+                      textcolor: AppColors.PRIMARY_COLOR,
+                      bordercolor: AppColors.LIGHT_GREY,
+                      onTap: () {
+                        final args = Get.arguments;
+                        final patient = args["patientList"];
+
+                        controller.loadVisits(patient.id);
+
+                        Get.toNamed(
+                          routebillingdetailspage,
+                          arguments: {
+                            "patient": patient,
+                            "visits": controller.visitList,
+                            "isHistory": true,
+                          },
+                        );
+                      })
+                else
+                  const SizedBox(),
+                if (Get.arguments != null)
+                  SizedBox(height: hp(2))
+                else
+                  const SizedBox(),
 
                 if (Get.arguments != null)
                   CustomTextField(
@@ -597,34 +627,51 @@ class AddPatientPage extends StatelessWidget {
                   const SizedBox(),
                 if (Get.arguments != null)
                   Customcontainer(
-                    context: context,
-                    text: "Select Medicine",
-                    color: AppColors.WHITE,
-                    textcolor: AppColors.PRIMARY_COLOR,
-                    bordercolor: AppColors.LIGHT_GREY,
-                    onTap: () {
-                      Get.toNamed(routeselectmedicinepage);
-                    },
-                  )
+                      context: context,
+                      text: "Select Medicine",
+                      color: AppColors.WHITE,
+                      textcolor: AppColors.PRIMARY_COLOR,
+                      bordercolor: AppColors.LIGHT_GREY,
+                      onTap: () async {
+                        final result =
+                            await Get.toNamed(routeselectmedicinepage);
+
+                        if (result != null) {
+                          controller.medicineList
+                              .assignAll(result); // 🔥 MAIN FIX
+                        }
+                      })
                 else
                   const SizedBox(),
 
                 SizedBox(height: hp(3)),
 
-                // Login Button
+                //  Button
                 Customcontainer(
-                    text: Get.arguments != null
-                        ? "Save & Next"
-                        : "Create Patient",
-                    context: context,
-                    onTap: () {
-                      if (controller.isEditMode.value) {
-                        // controller.saveVisit(); // ✅ visit save
-                        Get.toNamed(routebillingdetailspage);
-                      } else {
-                        controller.savePatient(); // ✅ new patient
-                      }
-                    }),
+                  text:
+                      Get.arguments != null ? "Save & Next" : "Create Patient",
+                  context: context,
+                  onTap: () async {
+                    if (controller.isEditMode.value) {
+                      final args = Get.arguments;
+                      final patient = args["patientList"]; // 🔥 correct patient
+
+                      final visit = await controller.addVisit(patient);
+
+                      Get.toNamed(
+                        routebillingdetailspage,
+                        arguments: {
+                          "patient": patient,
+                          "visit": visit,
+                          "medicines": controller.medicineList,
+                          "isHistory": false,
+                        },
+                      );
+                    } else {
+                      controller.savePatient();
+                    }
+                  },
+                ),
                 SizedBox(height: hp(3)),
               ],
             ),
@@ -634,3 +681,178 @@ class AddPatientPage extends StatelessWidget {
     );
   }
 }
+
+// void showDialoghistory({
+//   required BuildContext context,
+//   required PatientModel patient,
+// }) {
+//   final controller = Get.find<PatientController>();
+//   showDialog(
+//     context: context,
+//     builder: (_) {
+//       return AlertDialog(
+//         backgroundColor: AppColors.WHITE,
+//         titleTextStyle: TextStyle(
+//           color: Colors.red,
+//           fontSize: dp(context, 24),
+//           fontStyle: FontStyle.italic,
+//         ),
+//         title: CustomText(
+//           text: patient.name,
+//         ),
+//         /// 🔥 FIXED (SizedBox added)
+//         content: SizedBox(
+//           width: double.maxFinite,
+//           height: 400,
+//           child: ListView.builder(
+//             padding: EdgeInsets.all(wp(0.2)),
+//             itemCount: controller.visitList.length,
+//             itemBuilder: (context, index) {
+//               final visit = controller.visitList[index];
+//               return Container(
+//                 margin: EdgeInsets.only(bottom: hp(1)),
+//                 decoration: BoxDecoration(
+//                   color: AppColors.WHITE,
+//                   borderRadius: BorderRadius.circular(16),
+//                   border: Border.all(color: AppColors.LIGHT_GREY),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: AppColors.LIGHT_GREY.withOpacity(0.1),
+//                       spreadRadius: 5,
+//                       blurRadius: 7,
+//                       offset: const Offset(0, 3),
+//                     ),
+//                   ],
+//                 ),
+//                 child: ListTile(
+//                   /// 📅 DATE
+//                   title: CustomText(
+//                     text: visit.date,
+//                     color: AppColors.PRIMARY_COLOR,
+//                     fontSize: dp(context, 16),
+//                   ),
+//                   /// DETAILS
+//                   subtitle: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       SizedBox(height: hp(0.5)),
+//                       /// 🧾 PROBLEM
+//                       CustomText(
+//                         text: visit.problem,
+//                         color: AppColors.DARK,
+//                         fontSize: dp(context, 13),
+//                       ),
+//                       SizedBox(height: hp(0.5)),
+//                       /// 🔍 OBSERVATION
+//                       CustomText(
+//                         text: visit.observation,
+//                         color: AppColors.DARK,
+//                         fontSize: dp(context, 12),
+//                       ),
+//                       SizedBox(height: hp(1)),
+//                       /// 💊 MEDICINE TABLE
+//                       SingleChildScrollView(
+//                         scrollDirection: Axis.horizontal,
+//                         child: Container(
+//                           decoration: BoxDecoration(
+//                             border: Border.all(color: AppColors.PRIMARY_COLOR),
+//                             borderRadius: BorderRadius.circular(6),
+//                           ),
+//                           child: Column(
+//                             children: [
+//                               /// HEADER
+//                               Container(
+//                                 padding:
+//                                     const EdgeInsets.symmetric(vertical: 10),
+//                                 color: AppColors.PRIMARY_COLOR,
+//                                 child: const Row(
+//                                   children: [
+//                                     SizedBox(
+//                                         width: 100,
+//                                         child: Center(
+//                                             child: Text("Name",
+//                                                 style: TextStyle(
+//                                                     color: Colors.white)))),
+//                                     SizedBox(
+//                                         width: 120,
+//                                         child: Center(
+//                                             child: Text("Quantity",
+//                                                 style: TextStyle(
+//                                                     color: Colors.white)))),
+//                                     SizedBox(
+//                                         width: 100,
+//                                         child: Center(
+//                                             child: Text("Use",
+//                                                 style: TextStyle(
+//                                                     color: Colors.white)))),
+//                                   ],
+//                                 ),
+//                               ),
+//                               /// LIST
+//                               SizedBox(
+//                                 width: MediaQuery.of(context).size.width * 1.2,
+//                                 child: ListView.builder(
+//                                   shrinkWrap: true,
+//                                   physics: const NeverScrollableScrollPhysics(),
+//                                   /// ✅ FIXED
+//                                   itemCount: visit.medicines.length,
+//                                   itemBuilder: (context, i) {
+//                                     final m = visit.medicines[i];
+//                                     return Padding(
+//                                       padding:
+//                                           EdgeInsets.symmetric(vertical: hp(1)),
+//                                       child: Row(
+//                                         children: [
+//                                           /// NAME
+//                                           SizedBox(
+//                                             width: wp(25),
+//                                             child: CustomText(
+//                                               text: m.toString(),
+//                                               fontSize: dp(context, 10),
+//                                             ),
+//                                           ),
+//                                           /// QTY (temporary)
+//                                           SizedBox(
+//                                             width: wp(30),
+//                                             child: Center(
+//                                               child: CustomText(
+//                                                 text: "-",
+//                                                 fontSize: dp(context, 10),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                           /// USE (temporary)
+//                                           SizedBox(
+//                                             width: wp(25),
+//                                             child: Center(
+//                                               child: CustomText(
+//                                                 text: "-",
+//                                                 fontSize: dp(context, 10),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     );
+//                                   },
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//         contentTextStyle: TextStyle(
+//           fontSize: dp(context, 15),
+//           color: AppColors.DARK,
+//         ),
+//       );
+//     },
+//   );
+// }

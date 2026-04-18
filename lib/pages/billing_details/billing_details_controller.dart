@@ -31,17 +31,29 @@ class BillingDetailsController extends GetxController {
     final args = Get.arguments;
 
     if (args != null) {
-      /// 🔥 PATIENT DATA
+      /// 🔥 MODE CHECK
+      isHistory = args["isHistory"] ?? false;
+
+      /// 🔥 PATIENT
       final patient = args["patient"];
 
-      patientName = patient["name"] ?? "";
-      patientMobile = patient["mobile"] ?? "";
-      patientCity = patient["village"] ?? "";
+      patientName = patient.name ?? "";
+      patientMobile = patient.mobile ?? "";
+      patientCity = patient.village ?? "";
 
-      /// 🔥 MEDICINE DATA
-      medicineList = List<Map<String, dynamic>>.from(
-        args["medicines"] ?? [],
-      );
+      /// 🔥 BILL MODE
+      if (!isHistory) {
+        currentVisit = args["visit"];
+
+        medicineList = List<Map<String, dynamic>>.from(
+          args["medicines"] ?? [],
+        );
+      }
+
+      /// 🔥 HISTORY MODE
+      else {
+        visitList = args["visits"] ?? [];
+      }
     }
   }
 
@@ -101,4 +113,8 @@ Thank you!
 
     await launchUrl(url, mode: LaunchMode.externalApplication);
   }
+
+  bool isHistory = false;
+  List<dynamic> visitList = [];
+  dynamic currentVisit;
 }
