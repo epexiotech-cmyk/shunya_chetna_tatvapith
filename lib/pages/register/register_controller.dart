@@ -9,10 +9,8 @@ class RegisterController extends GetxController {
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
   final isPasswordVisible = false.obs;
   final isConfirmPasswordVisible = false.obs;
-
   final AuthService _authService = AuthService();
 
   @override

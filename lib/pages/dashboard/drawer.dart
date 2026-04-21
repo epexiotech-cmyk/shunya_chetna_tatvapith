@@ -8,163 +8,191 @@ import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_text.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: strict_top_level_inference
 customdrawer({required BuildContext context}) {
   return Drawer(
     backgroundColor: AppColors.WHITE,
-    child: ListView(
+    child: Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
-          child: Row(
-            children: [
-              Image.asset(
-                'assets/images/splash_logo.png',
-                height: hp(5),
-                color: AppColors.PRIMARY_COLOR,
-              ),
-              SizedBox(width: wp(2)),
-
-              /// SCROLLING TITLE
-              Expanded(
-                child: SizedBox(
-                  height: hp(3.5),
-                  child: Marquee(
-                    text: "Patient Management System",
-                    style: TextStyle(
-                      fontSize: dp(context, 20),
-                      color: AppColors.PRIMARY_COLOR,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    scrollAxis: Axis.horizontal,
-                    blankSpace: 100,
-                    velocity: 40,
-                    pauseAfterRound: const Duration(seconds: 1),
-                    startPadding: 10,
-                  ),
-                ),
-              ),
-
-              /// LOGO
-            ],
-          ),
-        ),
-        SizedBox(height: hp(2)),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: wp(3), vertical: hp(2)),
-          decoration: BoxDecoration(
-            color: AppColors.PRIMARY_COLOR,
-            borderRadius:
-                const BorderRadius.only(bottomRight: Radius.circular(60)),
-          ),
-          child: Row(
-            children: [
-              /// PROFILE IMAGE
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.WHITE, width: wp(0.5)),
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  backgroundColor: AppColors.PRIMARY_COLOR,
-                  radius: dp(context, 25),
-                  child: Image.asset(
+        ListView(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+              child: Row(
+                children: [
+                  Image.asset(
                     'assets/images/splash_logo.png',
-                    color: AppColors.WHITE,
-                    fit: BoxFit.fill,
+                    height: hp(5),
+                    color: AppColors.PRIMARY_COLOR,
                   ),
-                ),
+                  SizedBox(width: wp(2)),
+
+                  /// SCROLLING TITLE
+                  Expanded(
+                    child: SizedBox(
+                      height: hp(3.5),
+                      child: Marquee(
+                        text: "Patient Management System",
+                        style: TextStyle(
+                          fontSize: dp(context, 20),
+                          color: AppColors.PRIMARY_COLOR,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        scrollAxis: Axis.horizontal,
+                        blankSpace: 100,
+                        velocity: 40,
+                        pauseAfterRound: const Duration(seconds: 1),
+                        startPadding: 10,
+                      ),
+                    ),
+                  ),
+
+                  /// LOGO
+                ],
               ),
+            ),
+            SizedBox(height: hp(2)),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: wp(3), vertical: hp(2)),
+              decoration: BoxDecoration(
+                color: AppColors.PRIMARY_COLOR,
+                borderRadius:
+                    const BorderRadius.only(bottomRight: Radius.circular(60)),
+              ),
+              child: Row(
+                children: [
+                  /// PROFILE IMAGE
+                  Container(
+                    decoration: BoxDecoration(
+                      border:
+                          Border.all(color: AppColors.WHITE, width: wp(0.5)),
+                      shape: BoxShape.circle,
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.PRIMARY_COLOR,
+                      radius: dp(context, 25),
+                      child: Image.asset(
+                        'assets/images/splash_logo.png',
+                        color: AppColors.WHITE,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
 
-              SizedBox(width: wp(4)),
+                  SizedBox(width: wp(4)),
 
-              Expanded(
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: "Shunya Chetna Tatvapith",
+                          color: AppColors.WHITE,
+                          fontSize: dp(context, 12),
+                        ),
+                        SizedBox(height: hp(0.5)),
+                        CustomText(
+                          text: "apurvpatel9112@gmail.com",
+                          color: AppColors.WHITE,
+                          fontSize: dp(context, 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Customcontainer(
+              margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+              padding: EdgeInsets.only(left: wp(5)),
+              mainAxisAlignment: MainAxisAlignment.start,
+              context: context,
+              icon: Icons.refresh_sharp,
+              text: "Refresh Data",
+              color: AppColors.WHITE,
+              bordercolor: AppColors.LIGHT_GREY,
+            ),
+            Customcontainer(
+              margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+              padding: EdgeInsets.only(left: wp(5)),
+              mainAxisAlignment: MainAxisAlignment.start,
+              context: context,
+              icon: Icons.logout_sharp,
+              text: "Logout",
+              color: AppColors.WHITE,
+              bordercolor: AppColors.LIGHT_GREY,
+              onTap: () {
+                showDialoglogout(context: context);
+              },
+            ),
+            Customcontainer(
+              margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+              padding: EdgeInsets.only(left: wp(5)),
+              mainAxisAlignment: MainAxisAlignment.start,
+              context: context,
+              icon: Icons.logout_sharp,
+              text: "Reset PIN",
+              color: AppColors.WHITE,
+              bordercolor: AppColors.LIGHT_GREY,
+              onTap: () async {
+                const storage = FlutterSecureStorage();
+
+                await storage.delete(key: "app_pin");
+
+                Get.toNamed(
+                  routepinpage,
+                  arguments: {"isSet": false, "isReset": true},
+                );
+              },
+            ),
+            Positioned(
+              bottom: hp(2),
+              left: 0,
+              right: 0,
+              child: Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomText(
-                      text: "Shunya Chetna Tatvapith",
-                      color: AppColors.WHITE,
-                      fontSize: dp(context, 12),
+                    SizedBox(
+                      height: hp(40),
                     ),
-                    SizedBox(height: hp(0.5)),
-                    CustomText(
-                      text: "apurvpatel9112@gmail.com",
-                      color: AppColors.WHITE,
-                      fontSize: dp(context, 10),
-                    ),
+                    Divider(color: AppColors.LIGHT_GREY),
+                    SizedBox(height: hp(3)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: wp(5),
+                        ),
+                        CustomText(
+                          text: "Powered By ",
+                          color: AppColors.DARK,
+                          fontSize: dp(context, 12),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await launchUrl(
+                              Uri.parse("https://epexio.in"),
+                              mode: LaunchMode.externalApplication,
+                            );
+                          },
+                          child: CustomText(
+                            text: "Epexio Techno Solution",
+                            color: AppColors.PRIMARY_COLOR,
+                            fontSize: dp(context, 12),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        Customcontainer(
-          margin: EdgeInsets.only(top: hp(2), left: wp(2), right: wp(2)),
-          padding: EdgeInsets.only(left: wp(5)),
-          mainAxisAlignment: MainAxisAlignment.start,
-          context: context,
-          icon: Icons.person_pin,
-          text: "Profile",
-          color: AppColors.WHITE,
-          bordercolor: AppColors.LIGHT_GREY,
-        ),
-        Customcontainer(
-          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
-          padding: EdgeInsets.only(left: wp(5)),
-          mainAxisAlignment: MainAxisAlignment.start,
-          context: context,
-          icon: Icons.call,
-          text: "Contact",
-          color: AppColors.WHITE,
-          bordercolor: AppColors.LIGHT_GREY,
-        ),
-        Customcontainer(
-          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
-          padding: EdgeInsets.only(left: wp(5)),
-          mainAxisAlignment: MainAxisAlignment.start,
-          context: context,
-          icon: Icons.drive_file_move_rounded,
-          text: "Upload Data",
-          color: AppColors.WHITE,
-          bordercolor: AppColors.LIGHT_GREY,
-        ),
-        Customcontainer(
-          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
-          padding: EdgeInsets.only(left: wp(5)),
-          mainAxisAlignment: MainAxisAlignment.start,
-          context: context,
-          icon: Icons.logout_sharp,
-          text: "Logout",
-          color: AppColors.WHITE,
-          bordercolor: AppColors.LIGHT_GREY,
-          onTap: () {
-            showDialoglogout(context: context);
-          },
-        ),
-        Customcontainer(
-          margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
-          padding: EdgeInsets.only(left: wp(5)),
-          mainAxisAlignment: MainAxisAlignment.start,
-          context: context,
-          icon: Icons.logout_sharp,
-          text: "Reset PIN",
-          color: AppColors.WHITE,
-          bordercolor: AppColors.LIGHT_GREY,
-          onTap: () async {
-            const storage = FlutterSecureStorage();
-
-            await storage.delete(key: "app_pin");
-
-            Get.toNamed(
-              routepinpage,
-              arguments: {"isSet": false, "isReset": true},
-            );
-          },
-        ),
-        SizedBox(height: hp(1)),
       ],
     ),
   );
