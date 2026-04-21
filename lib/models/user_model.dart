@@ -10,6 +10,7 @@ class UserModel {
   late String name;
   late String email;
   late String mobile;
+  String? passwordHash;
 
   String? pinHash;
   bool isLoggedIn = false;

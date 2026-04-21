@@ -5,10 +5,10 @@ import '../../services/db_service.dart';
 import '../../routes/common/common_app_pages.dart';
 
 class RegisterController extends GetxController {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   final isPasswordVisible = false.obs;
   final isConfirmPasswordVisible = false.obs;
@@ -25,85 +25,78 @@ class RegisterController extends GetxController {
   }
 
   void togglePasswordVisibility() {
-    isPasswordVisible.value = !isPasswordVisible.value;
+    isPasswordVisible.toggle();
   }
 
   void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
+    isConfirmPasswordVisible.toggle();
   }
 
-  /// 🔥 REGISTER WITH GOOGLE + SAVE TO ISAR
   Future<void> register() async {
-    if (nameController.text.isEmpty ||
-        emailController.text.isEmpty ||
-        passwordController.text.isEmpty ||
-        confirmPasswordController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please fill all fields',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+    final confirmPassword = confirmPasswordController.text;
+    final name = nameController.text.trim();
+
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
+      Get.snackbar('Error', 'Please fill all fields');
       return;
     }
 
-    if (passwordController.text != confirmPasswordController.text) {
-      Get.snackbar(
-        'Error',
-        'Passwords do not match',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+    if (password != confirmPassword) {
+      Get.snackbar('Error', 'Passwords do not match');
       return;
     }
 
     try {
-      /// 🔹 Google Sign-In
       final result = await _authService.signInWithGoogle();
 
-      if (result != null) {
-        final firebaseUser = result.user!;
-
-        /// 🔹 Save to Isar
-        await DBService.saveUser(firebaseUser);
-
-        Get.snackbar(
-          'Success',
-          'Registration Successful',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-
-        /// 🔥 DIRECT → PIN SET (NO LOGIN AGAIN)
-        Get.offAllNamed(
-          routepinpage,
-          arguments: {
-            "isSet": false, // ✅ FIXED
-            "isReset": false,
-          },
-        );
-      } else {
-        Get.snackbar(
-          'Error',
-          'Google Sign-In Failed',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
-        );
+      if (result == null) {
+        Get.snackbar('Error', 'Google Sign-In Failed');
+        return;
       }
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Something went wrong',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+
+      final firebaseUser = result.user!;
+
+      /// 🔥 EMAIL MATCH CHECK
+      if ((firebaseUser.email ?? "") != email) {
+        Get.snackbar('Error', 'Google email does not match');
+
+        await _authService.signOut();
+        return;
+      }
+
+      /// 🔥 CHECK EXISTING USER
+      final existingUser = await DBService.getUserByEmail(email);
+
+      if (existingUser != null) {
+        Get.snackbar('Error', 'User already registered');
+        return;
+      }
+
+      /// ✅ SAVE USER
+      await DBService.saveUserWithPassword(
+        firebaseUser,
+        password,
+        name,
       );
+
+      Get.snackbar('Success', 'Registration Successful');
+
+      /// 🔥 NAVIGATION (AUTO DISPOSE SAFE)
+      Get.offAllNamed(
+        routepinpage,
+        arguments: {"isSet": true, "isReset": false},
+      );
+    } catch (e) {
+      Get.snackbar('Error', 'Something went wrong');
     }
   }
 
   void goToLogin() {
-    Get.offAllNamed(routeLoginpage);
+    Get.back();
   }
 }

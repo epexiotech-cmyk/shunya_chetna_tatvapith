@@ -42,13 +42,18 @@ const UserModelSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'pinHash': PropertySchema(
+    r'passwordHash': PropertySchema(
       id: 5,
+      name: r'passwordHash',
+      type: IsarType.string,
+    ),
+    r'pinHash': PropertySchema(
+      id: 6,
       name: r'pinHash',
       type: IsarType.string,
     ),
     r'selectedClinicId': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'selectedClinicId',
       type: IsarType.string,
     )
@@ -78,6 +83,12 @@ int _userModelEstimateSize(
   bytesCount += 3 + object.mobile.length * 3;
   bytesCount += 3 + object.name.length * 3;
   {
+    final value = object.passwordHash;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.pinHash;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -103,8 +114,9 @@ void _userModelSerialize(
   writer.writeBool(offsets[2], object.isLoggedIn);
   writer.writeString(offsets[3], object.mobile);
   writer.writeString(offsets[4], object.name);
-  writer.writeString(offsets[5], object.pinHash);
-  writer.writeString(offsets[6], object.selectedClinicId);
+  writer.writeString(offsets[5], object.passwordHash);
+  writer.writeString(offsets[6], object.pinHash);
+  writer.writeString(offsets[7], object.selectedClinicId);
 }
 
 UserModel _userModelDeserialize(
@@ -120,8 +132,9 @@ UserModel _userModelDeserialize(
   object.isLoggedIn = reader.readBool(offsets[2]);
   object.mobile = reader.readString(offsets[3]);
   object.name = reader.readString(offsets[4]);
-  object.pinHash = reader.readStringOrNull(offsets[5]);
-  object.selectedClinicId = reader.readStringOrNull(offsets[6]);
+  object.passwordHash = reader.readStringOrNull(offsets[5]);
+  object.pinHash = reader.readStringOrNull(offsets[6]);
+  object.selectedClinicId = reader.readStringOrNull(offsets[7]);
   return object;
 }
 
@@ -145,6 +158,8 @@ P _userModelDeserializeProp<P>(
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -829,6 +844,159 @@ extension UserModelQueryFilter
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'passwordHash',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'passwordHash',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition> passwordHashEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'passwordHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'passwordHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'passwordHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition> passwordHashBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'passwordHash',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'passwordHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'passwordHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'passwordHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition> passwordHashMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'passwordHash',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'passwordHash',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      passwordHashIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'passwordHash',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition> pinHashIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1198,6 +1366,18 @@ extension UserModelQuerySortBy on QueryBuilder<UserModel, UserModel, QSortBy> {
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByPasswordHash() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'passwordHash', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByPasswordHashDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'passwordHash', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByPinHash() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinHash', Sort.asc);
@@ -1298,6 +1478,18 @@ extension UserModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByPasswordHash() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'passwordHash', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByPasswordHashDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'passwordHash', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByPinHash() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinHash', Sort.asc);
@@ -1360,6 +1552,13 @@ extension UserModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QDistinct> distinctByPasswordHash(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'passwordHash', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QDistinct> distinctByPinHash(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1411,6 +1610,12 @@ extension UserModelQueryProperty
   QueryBuilder<UserModel, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<UserModel, String?, QQueryOperations> passwordHashProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'passwordHash');
     });
   }
 
