@@ -9,10 +9,7 @@ import 'package:shunya_app/utils/responsive.dart';
 import 'package:shunya_app/widgets/custom_appbar.dart';
 import 'package:shunya_app/widgets/custom_textfield.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
-
-import '../../models/patient_model.dart';
 import '../../widgets/custom_dropdown.dart';
-import '../../widgets/custom_text.dart';
 
 class AddPatientPage extends StatelessWidget {
   const AddPatientPage({super.key});

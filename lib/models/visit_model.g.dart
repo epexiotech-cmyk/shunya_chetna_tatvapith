@@ -22,28 +22,33 @@ const VisitModelSchema = CollectionSchema(
       name: r'date',
       type: IsarType.string,
     ),
-    r'medicines': PropertySchema(
+    r'disease': PropertySchema(
       id: 1,
-      name: r'medicines',
-      type: IsarType.stringList,
+      name: r'disease',
+      type: IsarType.string,
+    ),
+    r'medicinesJson': PropertySchema(
+      id: 2,
+      name: r'medicinesJson',
+      type: IsarType.string,
     ),
     r'observation': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'observation',
       type: IsarType.string,
     ),
     r'patientId': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'patientId',
       type: IsarType.long,
     ),
     r'pdfPaths': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'pdfPaths',
       type: IsarType.stringList,
     ),
     r'problem': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'problem',
       type: IsarType.string,
     )
@@ -69,11 +74,16 @@ int _visitModelEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.date.length * 3;
-  bytesCount += 3 + object.medicines.length * 3;
   {
-    for (var i = 0; i < object.medicines.length; i++) {
-      final value = object.medicines[i];
-      bytesCount += value.length * 3;
+    final value = object.disease;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.medicinesJson;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
     }
   }
   bytesCount += 3 + object.observation.length * 3;
@@ -95,11 +105,12 @@ void _visitModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.date);
-  writer.writeStringList(offsets[1], object.medicines);
-  writer.writeString(offsets[2], object.observation);
-  writer.writeLong(offsets[3], object.patientId);
-  writer.writeStringList(offsets[4], object.pdfPaths);
-  writer.writeString(offsets[5], object.problem);
+  writer.writeString(offsets[1], object.disease);
+  writer.writeString(offsets[2], object.medicinesJson);
+  writer.writeString(offsets[3], object.observation);
+  writer.writeLong(offsets[4], object.patientId);
+  writer.writeStringList(offsets[5], object.pdfPaths);
+  writer.writeString(offsets[6], object.problem);
 }
 
 VisitModel _visitModelDeserialize(
@@ -110,12 +121,13 @@ VisitModel _visitModelDeserialize(
 ) {
   final object = VisitModel();
   object.date = reader.readString(offsets[0]);
+  object.disease = reader.readStringOrNull(offsets[1]);
   object.id = id;
-  object.medicines = reader.readStringList(offsets[1]) ?? [];
-  object.observation = reader.readString(offsets[2]);
-  object.patientId = reader.readLong(offsets[3]);
-  object.pdfPaths = reader.readStringList(offsets[4]) ?? [];
-  object.problem = reader.readString(offsets[5]);
+  object.medicinesJson = reader.readStringOrNull(offsets[2]);
+  object.observation = reader.readString(offsets[3]);
+  object.patientId = reader.readLong(offsets[4]);
+  object.pdfPaths = reader.readStringList(offsets[5]) ?? [];
+  object.problem = reader.readString(offsets[6]);
   return object;
 }
 
@@ -129,14 +141,16 @@ P _visitModelDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readLong(offset)) as P;
     case 5:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -364,6 +378,155 @@ extension VisitModelQueryFilter
     });
   }
 
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'disease',
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      diseaseIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'disease',
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'disease',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      diseaseGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'disease',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'disease',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'disease',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'disease',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'disease',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'disease',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'disease',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> diseaseIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'disease',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      diseaseIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'disease',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -418,13 +581,31 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementEqualTo(
-    String value, {
+      medicinesJsonIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'medicinesJson',
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      medicinesJsonIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'medicinesJson',
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      medicinesJsonEqualTo(
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'medicines',
+        property: r'medicinesJson',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -432,15 +613,15 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementGreaterThan(
-    String value, {
+      medicinesJsonGreaterThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'medicines',
+        property: r'medicinesJson',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -448,15 +629,15 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementLessThan(
-    String value, {
+      medicinesJsonLessThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'medicines',
+        property: r'medicinesJson',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -464,16 +645,16 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementBetween(
-    String lower,
-    String upper, {
+      medicinesJsonBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'medicines',
+        property: r'medicinesJson',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -484,13 +665,13 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementStartsWith(
+      medicinesJsonStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'medicines',
+        property: r'medicinesJson',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -498,13 +679,13 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementEndsWith(
+      medicinesJsonEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'medicines',
+        property: r'medicinesJson',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -512,10 +693,10 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementContains(String value, {bool caseSensitive = true}) {
+      medicinesJsonContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'medicines',
+        property: r'medicinesJson',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -523,10 +704,10 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementMatches(String pattern, {bool caseSensitive = true}) {
+      medicinesJsonMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'medicines',
+        property: r'medicinesJson',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -534,111 +715,22 @@ extension VisitModelQueryFilter
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementIsEmpty() {
+      medicinesJsonIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'medicines',
+        property: r'medicinesJson',
         value: '',
       ));
     });
   }
 
   QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesElementIsNotEmpty() {
+      medicinesJsonIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'medicines',
+        property: r'medicinesJson',
         value: '',
       ));
-    });
-  }
-
-  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'medicines',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'medicines',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'medicines',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'medicines',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'medicines',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
-      medicinesLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'medicines',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 
@@ -1210,6 +1302,30 @@ extension VisitModelQuerySortBy
     });
   }
 
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByDisease() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'disease', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByDiseaseDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'disease', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByMedicinesJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'medicinesJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByMedicinesJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'medicinesJson', Sort.desc);
+    });
+  }
+
   QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByObservation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'observation', Sort.asc);
@@ -1261,6 +1377,18 @@ extension VisitModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenByDisease() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'disease', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenByDiseaseDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'disease', Sort.desc);
+    });
+  }
+
   QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1270,6 +1398,18 @@ extension VisitModelQuerySortThenBy
   QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenByMedicinesJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'medicinesJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenByMedicinesJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'medicinesJson', Sort.desc);
     });
   }
 
@@ -1319,9 +1459,18 @@ extension VisitModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<VisitModel, VisitModel, QDistinct> distinctByMedicines() {
+  QueryBuilder<VisitModel, VisitModel, QDistinct> distinctByDisease(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'medicines');
+      return query.addDistinctBy(r'disease', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QDistinct> distinctByMedicinesJson(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'medicinesJson',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -1366,9 +1515,15 @@ extension VisitModelQueryProperty
     });
   }
 
-  QueryBuilder<VisitModel, List<String>, QQueryOperations> medicinesProperty() {
+  QueryBuilder<VisitModel, String?, QQueryOperations> diseaseProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'medicines');
+      return query.addPropertyName(r'disease');
+    });
+  }
+
+  QueryBuilder<VisitModel, String?, QQueryOperations> medicinesJsonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'medicinesJson');
     });
   }
 

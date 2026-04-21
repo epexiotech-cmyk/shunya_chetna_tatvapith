@@ -17,8 +17,9 @@ class VisitModel {
   late String observation;
 
   /// 💊 medicines
-  List<String> medicines = [];
+  String? medicinesJson;
 
   /// 📄 pdf paths
   List<String> pdfPaths = [];
+  String? disease;
 }

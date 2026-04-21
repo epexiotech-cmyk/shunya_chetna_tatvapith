@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BillingDetailsController extends GetxController {
@@ -12,7 +13,7 @@ class BillingDetailsController extends GetxController {
   String doctorUPI = "rahulpatel@upi";
 
   /// BILL DETAILS
-  String billNo = "PAT${DateTime.now().millisecondsSinceEpoch}";
+  String billNo = "";
   String billDate =
       "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
 
@@ -27,7 +28,7 @@ class BillingDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    generateBillNo();
     final args = Get.arguments;
 
     if (args != null) {
@@ -55,6 +56,31 @@ class BillingDetailsController extends GetxController {
         visitList = args["visits"] ?? [];
       }
     }
+  }
+
+  void generateBillNo() {
+    final now = DateTime.now();
+
+    int startYear;
+    int endYear;
+
+    if (now.month >= 4) {
+      startYear = now.year;
+      endYear = now.year + 1;
+    } else {
+      startYear = now.year - 1;
+      endYear = now.year;
+    }
+
+    String fy =
+        "${startYear.toString().substring(2)}-${endYear.toString().substring(2)}";
+
+    /// 🔥 TEMP: static counter (later DB thi laisu)
+    int count = DateTime.now().millisecondsSinceEpoch % 1000;
+
+    String serial = count.toString().padLeft(3, '0');
+
+    billNo = "PMS/$fy/$serial";
   }
 
   /// 🔥 TOTAL
@@ -117,4 +143,8 @@ Thank you!
   bool isHistory = false;
   List<dynamic> visitList = [];
   dynamic currentVisit;
+
+  Future<void> openPdf(String path) async {
+    await OpenFile.open(path);
+  }
 }

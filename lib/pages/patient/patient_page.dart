@@ -57,14 +57,6 @@ class PatientPage extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        // Get.to(
-                        //   () => const AddPatientPage(),
-                        //   arguments: {
-                        //     "patientList": controller.patientList[index],
-                        //     "index": index, // 🔥 IMPORTANT
-                        //   },
-                        // );
-
                         Get.toNamed(
                           routeaddpatient,
                           arguments: {
@@ -72,14 +64,6 @@ class PatientPage extends StatelessWidget {
                             "index": controller.patientList.indexOf(patient),
                           },
                         );
-
-                        // Get.to(
-                        //   () => const AddPatientPage(),
-                        //   arguments: {
-                        //     "patientList": patient,
-                        //     "index": controller.patientList.indexOf(patient),
-                        //   },
-                        // );
                       },
                       child: Container(
                         margin: EdgeInsets.only(bottom: hp(1)),

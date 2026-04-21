@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -299,6 +301,7 @@ class PatientController extends GetxController
   /// ahi add kar je functionality
   RxList<dynamic> medicineList = [].obs;
   RxList<VisitModel> visitList = <VisitModel>[].obs;
+
   Future<VisitModel> addVisit(PatientModel patient) async {
     final now = DateTime.now();
 
@@ -307,20 +310,30 @@ class PatientController extends GetxController
       ..date = "${now.day}/${now.month}/${now.year}"
       ..problem = patientproblemController.text
       ..observation = patientobservationlavelController.text
-      ..medicines = medicineList.map((e) => e["name"].toString()).toList()
-      ..pdfPaths = pdfList.map((e) => e.path).toList();
+      ..medicinesJson = jsonEncode(
+        medicineList
+            .map((e) => {
+                  "name": e["name"],
+                  "qty": e["qty"],
+                })
+            .toList(),
+      )
+      ..pdfPaths = pdfList.map((e) => e.path).toList()
+      ..disease = selectedDisease.value.isEmpty ? null : selectedDisease.value;
 
     await DBService.saveVisit(visit);
 
+    // print("Saving Disease ::: ${selectedDisease.value}");
+
     Get.snackbar("Success", "Visit Added");
 
-    /// clear
+    /// reload visits
+    await loadVisits(patient.id);
+
+    /// ⚠️ CLEAR AFTER SAVE (SAFE)
     patientproblemController.clear();
     patientobservationlavelController.clear();
     pdfList.clear();
-
-    /// reload
-    loadVisits(patient.id);
 
     return visit; // 🔥 IMPORTANT
   }
