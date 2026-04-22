@@ -531,6 +531,13 @@ class DBService {
     });
   }
 
+  static Future<ClinicModel?> getClinicById(String clinicId) async {
+    final id = int.tryParse(clinicId);
+    if (id == null) return null;
+
+    return await isar.clinicModels.get(id);
+  }
+
   // =========================
   // 💊 DISEASE
   // =========================

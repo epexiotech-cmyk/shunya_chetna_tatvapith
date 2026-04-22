@@ -58,55 +58,70 @@ customdrawer({required BuildContext context}) {
             ),
             SizedBox(height: hp(2)),
             FutureBuilder(
-              future: DBService.getUser(),
+              future: Future.wait([
+                DBService.getUser(),
+                DBService.getSelectedClinicId(),
+              ]),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox();
-                }
-                // ignore: unnecessary_cast
-                final user = snapshot.data as UserModel?;
-                return Container(
-                  width: double.infinity,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: wp(3), vertical: hp(2)),
-                  decoration: BoxDecoration(
-                    color: AppColors.PRIMARY_COLOR,
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(60),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: AppColors.PRIMARY_COLOR,
-                        radius: dp(context, 25),
-                        child: Image.asset(
-                          'assets/images/splash_logo.png',
-                          color: AppColors.WHITE,
-                          fit: BoxFit.fill,
+                if (!snapshot.hasData) return const SizedBox();
+
+                final user = snapshot.data![0] as UserModel?;
+                final clinicId = snapshot.data![1] as String?;
+
+                return FutureBuilder(
+                  future: DBService.getClinicById(clinicId ?? ""),
+                  builder: (context, clinicSnap) {
+                    final clinic = clinicSnap.data;
+
+                    return Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: wp(3), vertical: hp(2)),
+                      decoration: BoxDecoration(
+                        color: AppColors.PRIMARY_COLOR,
+                        borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(60),
                         ),
                       ),
-                      SizedBox(width: wp(4)),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText(
-                              text: user?.name ?? "No Name",
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: AppColors.PRIMARY_COLOR,
+                            radius: dp(context, 25),
+                            child: Image.asset(
+                              'assets/images/splash_logo.png',
                               color: AppColors.WHITE,
-                              fontSize: dp(context, 12),
+                              fit: BoxFit.fill,
                             ),
-                            SizedBox(height: hp(0.5)),
-                            CustomText(
-                              text: user?.email ?? "No Email",
-                              color: AppColors.WHITE,
-                              fontSize: dp(context, 10),
+                          ),
+                          SizedBox(width: wp(4)),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// 🔥 CLINIC NAME
+                                CustomText(
+                                  text: clinic?.clinicName ??
+                                      "No Clinic Selected",
+                                  color: AppColors.WHITE,
+                                  fontSize: dp(context, 12),
+                                ),
+
+                                SizedBox(height: hp(0.5)),
+
+                                /// 🔥 USER EMAIL
+                                CustomText(
+                                  text: user?.email ?? "",
+                                  color: AppColors.WHITE,
+                                  fontSize: dp(context, 10),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
             ),
