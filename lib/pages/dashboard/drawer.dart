@@ -10,6 +10,9 @@ import 'package:shunya_app/widgets/custom_text.dart';
 import 'package:shunya_app/widgets/customcontainer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../models/user_model.dart';
+import '../../services/db_service.dart';
+
 // ignore: strict_top_level_inference
 customdrawer({required BuildContext context}) {
   return Drawer(
@@ -54,56 +57,58 @@ customdrawer({required BuildContext context}) {
               ),
             ),
             SizedBox(height: hp(2)),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: wp(3), vertical: hp(2)),
-              decoration: BoxDecoration(
-                color: AppColors.PRIMARY_COLOR,
-                borderRadius:
-                    const BorderRadius.only(bottomRight: Radius.circular(60)),
-              ),
-              child: Row(
-                children: [
-                  /// PROFILE IMAGE
-                  Container(
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(color: AppColors.WHITE, width: wp(0.5)),
-                      shape: BoxShape.circle,
+            FutureBuilder(
+              future: DBService.getUser(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox();
+                }
+                // ignore: unnecessary_cast
+                final user = snapshot.data as UserModel?;
+                return Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: wp(3), vertical: hp(2)),
+                  decoration: BoxDecoration(
+                    color: AppColors.PRIMARY_COLOR,
+                    borderRadius: const BorderRadius.only(
+                      bottomRight: Radius.circular(60),
                     ),
-                    child: CircleAvatar(
-                      backgroundColor: AppColors.PRIMARY_COLOR,
-                      radius: dp(context, 25),
-                      child: Image.asset(
-                        'assets/images/splash_logo.png',
-                        color: AppColors.WHITE,
-                        fit: BoxFit.fill,
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: AppColors.PRIMARY_COLOR,
+                        radius: dp(context, 25),
+                        child: Image.asset(
+                          'assets/images/splash_logo.png',
+                          color: AppColors.WHITE,
+                          fit: BoxFit.fill,
+                        ),
                       ),
-                    ),
-                  ),
-
-                  SizedBox(width: wp(4)),
-
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(
-                          text: "Shunya Chetna Tatvapith",
-                          color: AppColors.WHITE,
-                          fontSize: dp(context, 12),
+                      SizedBox(width: wp(4)),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text: user?.name ?? "No Name",
+                              color: AppColors.WHITE,
+                              fontSize: dp(context, 12),
+                            ),
+                            SizedBox(height: hp(0.5)),
+                            CustomText(
+                              text: user?.email ?? "No Email",
+                              color: AppColors.WHITE,
+                              fontSize: dp(context, 10),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: hp(0.5)),
-                        CustomText(
-                          text: "apurvpatel9112@gmail.com",
-                          color: AppColors.WHITE,
-                          fontSize: dp(context, 10),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
             Customcontainer(
               margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
