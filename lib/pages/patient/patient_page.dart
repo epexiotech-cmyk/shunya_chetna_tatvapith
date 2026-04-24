@@ -82,87 +82,86 @@ class PatientPage extends StatelessWidget {
                           ],
                         ),
                         child: ListTile(
+                          /// NAME
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                size: dp(context, 24),
+                                color: AppColors.PRIMARY_COLOR,
+                              ),
+                              SizedBox(width: wp(2)),
+                              CustomText(
+                                text: patient.name,
+                                color: AppColors.PRIMARY_COLOR,
+                                fontSize: dp(context, 24),
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ],
+                          ),
 
-                            /// NAME
-                            title: Row(
-                              children: [
-                                Icon(
-                                  Icons.person,
-                                  size: dp(context, 16),
-                                  color: AppColors.PRIMARY_COLOR,
-                                ),
-                                SizedBox(width: wp(2)),
-                                CustomText(
-                                  text: patient.name,
-                                  color: AppColors.PRIMARY_COLOR,
-                                  fontSize: dp(context, 16),
-                                  fontStyle: FontStyle.normal,
-                                ),
-                              ],
-                            ),
-
-                            /// MOBILE + ADDRESS
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: hp(0.5)),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.phone,
-                                      size: dp(context, 16),
-                                      color: AppColors.PRIMARY_COLOR,
-                                    ),
-                                    SizedBox(width: wp(2)),
-                                    CustomText(
-                                      text: patient.mobile,
+                          /// MOBILE + ADDRESS
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: hp(0.5)),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.phone,
+                                    size: dp(context, 20),
+                                    color: AppColors.PRIMARY_COLOR,
+                                  ),
+                                  SizedBox(width: wp(2)),
+                                  CustomText(
+                                    text: patient.mobile,
+                                    color: AppColors.DARK,
+                                    fontSize: dp(context, 20),
+                                    fontStyle: FontStyle.normal,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: hp(0.5)),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    size: dp(context, 18),
+                                    color: AppColors.PRIMARY_COLOR,
+                                  ),
+                                  SizedBox(width: wp(2)),
+                                  Expanded(
+                                    child: CustomText(
+                                      text: patient.village,
                                       color: AppColors.DARK,
-                                      fontSize: dp(context, 13),
+                                      fontSize: dp(context, 18),
                                       fontStyle: FontStyle.normal,
                                     ),
-                                  ],
-                                ),
-                                SizedBox(height: hp(0.5)),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      size: dp(context, 16),
-                                      color: AppColors.PRIMARY_COLOR,
-                                    ),
-                                    SizedBox(width: wp(2)),
-                                    Expanded(
-                                      child: CustomText(
-                                        text: patient.village,
-                                        color: AppColors.DARK,
-                                        fontSize: dp(context, 12),
-                                        fontStyle: FontStyle.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () {
-                                    if (index <
-                                        controller.filteredList.length) {
-                                      controller.deletePatient(patient);
-                                    }
-                                  },
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: AppColors.PRIMARY_COLOR,
-                                  size: dp(context, 16),
-                                ),
-                              ],
-                            )),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  if (index < controller.filteredList.length) {
+                                    controller.deletePatient(patient);
+                                  }
+                                },
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: AppColors.PRIMARY_COLOR,
+                                size: dp(context, 16),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },

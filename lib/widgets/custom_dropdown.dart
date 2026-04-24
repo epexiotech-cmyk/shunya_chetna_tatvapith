@@ -22,44 +22,32 @@ class CustomDropdown extends StatelessWidget {
     return DropdownButtonFormField<String>(
       isExpanded: true,
       value: initialValue,
-
       icon: Icon(Icons.keyboard_arrow_down, color: AppColors.PRIMARY_COLOR),
-
       dropdownColor: AppColors.WHITE,
-
-      style: TextStyle(fontSize: dp(context, 14), color: AppColors.DARK),
-
+      style: TextStyle(fontSize: dp(context, 20), color: AppColors.DARK),
       decoration: InputDecoration(
         labelText: labelText,
-
         focusColor: AppColors.PRIMARY_COLOR,
         labelStyle: TextStyle(color: AppColors.PRIMARY_COLOR),
-
         prefixIcon: Icon(iconprefix, color: AppColors.PRIMARY_COLOR),
-
         contentPadding: EdgeInsets.symmetric(
           vertical: hp(2),
           horizontal: wp(3),
         ),
-
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.LIGHT_GREY, width: 1),
         ),
-
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.LIGHT_GREY, width: 1),
         ),
-
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.PRIMARY_COLOR, width: 1.5),
         ),
       ),
-
       items: items,
-
       onChanged: onChanged,
     );
   }

@@ -28,7 +28,6 @@ class BillingPage extends StatelessWidget {
                   controller: controller.searchController,
                   hint: "Search Biller Name",
                   labeltext: 'Search Biller Name',
-
                   suffixIcon: Icon(
                     Icons.search,
                     color: AppColors.PRIMARY_COLOR,
@@ -43,20 +42,29 @@ class BillingPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final patient = controller.billingList[index];
 
-                        return Card(
-                          color: AppColors.WHITE,
-                          elevation: dp(context, 1),
-                          shadowColor: AppColors.PRIMARY_COLOR,
-                          margin: EdgeInsets.only(bottom: hp(1.5)),
-                          shape: RoundedRectangleBorder(
+                        return Container(
+                          margin: EdgeInsets.only(bottom: hp(1)),
+                          decoration: BoxDecoration(
+                            color: AppColors.WHITE,
                             borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColors.LIGHT_GREY),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.LIGHT_GREY.withOpacity(0.1),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                           ),
-
                           child: GestureDetector(
                             onTap: () {
                               Get.toNamed(
                                 routebillingdetailspage,
-                                arguments: controller.billingList[index],
+                                arguments: {
+                                  "patient_id": patient["patient_id"],
+                                  "visit_id": patient["visit_id"],
+                                },
                               );
                             },
                             child: ListTile(
@@ -83,7 +91,6 @@ class BillingPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: hp(0.5)),
-
                                   Row(
                                     children: [
                                       Icon(
@@ -100,9 +107,7 @@ class BillingPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-
                                   SizedBox(height: hp(0.5)),
-
                                   Row(
                                     children: [
                                       Icon(
@@ -122,12 +127,6 @@ class BillingPage extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: hp(0.5)),
-                                  CustomText(
-                                    text: "Total ₹${patient["amount"]}",
-                                    color: AppColors.PRIMARY_COLOR,
-                                    fontSize: dp(context, 12),
-                                    fontStyle: FontStyle.normal,
-                                  ),
                                 ],
                               ),
 

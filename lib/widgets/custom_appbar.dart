@@ -43,14 +43,14 @@ class CustomAppBarAction extends StatelessWidget
               child: Icon(
                 iconleft,
                 color: AppColors.WHITE,
-                size: dp(context, 30),
+                size: dp(context, 27),
               ),
             ),
           Text(
             title,
             style: TextStyle(
               color: AppColors.WHITE,
-              fontSize: dp(context, 25),
+              fontSize: dp(context, 27),
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.w500,
             ),
@@ -61,7 +61,7 @@ class CustomAppBarAction extends StatelessWidget
               child: Icon(
                 iconright,
                 color: AppColors.WHITE,
-                size: dp(context, 30),
+                size: dp(context, 27),
               ),
             )
           else

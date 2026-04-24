@@ -149,8 +149,11 @@
 //   }
 // }
 
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
+import 'package:shunya_app/models/patient_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/db_service.dart';
@@ -208,6 +211,13 @@ class BillingDetailsController extends GetxController {
 
     /// 🔥 GET ARGUMENTS
     final args = Get.arguments;
+
+    /// 🔥 NEW ADD (safe)
+    if (args != null &&
+        args["patient_id"] != null &&
+        args["visit_id"] != null) {
+      await loadFromDB(args["patient_id"], args["visit_id"]);
+    }
 
     if (args != null) {
       isHistory = args["isHistory"] ?? false;
@@ -321,5 +331,30 @@ Thank you!
   /// 🔥 OPEN PDF
   Future<void> openPdf(String path) async {
     await OpenFile.open(path);
+  }
+
+  Future<void> loadFromDB(int patientId, int visitId) async {
+    /// 🔹 Patient
+    final patient = await DBService.isar.patientModels.get(patientId);
+
+    if (patient != null) {
+      patientName = patient.name ?? "";
+      patientMobile = patient.mobile ?? "";
+      patientCity = patient.address ?? "";
+    }
+
+    /// 🔹 Visit
+    final visits = await DBService.getVisits(patientId);
+
+    final visit = visits.firstWhere((v) => v.id == visitId);
+
+    billDate = visit.date?.toString() ?? "";
+
+    /// 🔥 Medicines JSON
+    if (visit.medicinesJson != null) {
+      medicineList = List<Map<String, dynamic>>.from(
+        jsonDecode(visit.medicinesJson!),
+      );
+    }
   }
 }

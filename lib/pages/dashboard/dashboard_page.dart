@@ -88,7 +88,7 @@ class DashboardPage extends StatelessWidget {
                         : controller.bottomNavIndex.value == 2
                             ? "Add Inventory"
                             : "Add Diseace",
-                    fontSize: dp(context, 10),
+                    fontSize: dp(context, 18),
                     color: AppColors.WHITE,
                   ),
                 );

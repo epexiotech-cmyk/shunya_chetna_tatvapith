@@ -81,7 +81,7 @@ class InventoryPage extends StatelessWidget {
                             title: CustomText(
                               text: item["name"] ?? "",
                               color: AppColors.PRIMARY_COLOR,
-                              fontSize: dp(context, 16),
+                              fontSize: dp(context, 24),
                             ),
 
                             subtitle: Column(
@@ -90,7 +90,7 @@ class InventoryPage extends StatelessWidget {
                                 CustomText(
                                   text: "Price ₹${item["price"]}",
                                   color: AppColors.DARK,
-                                  fontSize: dp(context, 13),
+                                  fontSize: dp(context, 20),
                                 ),
                                 CustomText(
                                   text: "Qty: ${item["qty"]}",

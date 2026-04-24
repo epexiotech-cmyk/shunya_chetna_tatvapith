@@ -49,14 +49,14 @@ class ClinicPage extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.local_hospital,
-                            size: dp(context, 16),
+                            size: dp(context, 24),
                             color: AppColors.PRIMARY_COLOR,
                           ),
                           SizedBox(width: wp(2)),
                           CustomText(
                             text: clinic.clinicName,
                             color: AppColors.PRIMARY_COLOR,
-                            fontSize: dp(context, 16),
+                            fontSize: dp(context, 24),
                             fontStyle: FontStyle.normal,
                           ),
                         ],
@@ -71,14 +71,14 @@ class ClinicPage extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.person,
-                                size: dp(context, 16),
+                                size: dp(context, 20),
                                 color: AppColors.PRIMARY_COLOR,
                               ),
                               SizedBox(width: wp(2)),
                               CustomText(
                                 text: clinic.doctorName,
                                 color: AppColors.DARK,
-                                fontSize: dp(context, 13),
+                                fontSize: dp(context, 20),
                                 fontStyle: FontStyle.normal,
                               ),
                             ],
@@ -90,7 +90,7 @@ class ClinicPage extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.location_on,
-                                size: dp(context, 16),
+                                size: dp(context, 18),
                                 color: AppColors.PRIMARY_COLOR,
                               ),
                               SizedBox(width: wp(2)),
@@ -98,7 +98,7 @@ class ClinicPage extends StatelessWidget {
                                 child: CustomText(
                                   text: clinic.address,
                                   color: AppColors.DARK,
-                                  fontSize: dp(context, 12),
+                                  fontSize: dp(context, 18),
                                   fontStyle: FontStyle.normal,
                                 ),
                               ),

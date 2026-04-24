@@ -56,7 +56,7 @@ class DiseasePage extends StatelessWidget {
                   title: CustomText(
                     text: disease.name,
                     color: AppColors.PRIMARY_COLOR,
-                    fontSize: dp(context, 16),
+                    fontSize: dp(context, 20),
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),

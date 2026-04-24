@@ -51,7 +51,7 @@ class Customcontainer extends StatelessWidget {
                 child: Text(
                   text,
                   style: TextStyle(
-                    fontSize: singlefontSize ?? dp(context, 16),
+                    fontSize: singlefontSize ?? dp(context, 20),
                     color: textcolor ?? AppColors.WHITE,
                   ),
                 ),
