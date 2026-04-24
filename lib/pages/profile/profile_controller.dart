@@ -109,6 +109,43 @@ class ProfileController extends GetxController {
     );
   }
 
+  // Future<void> saveclinic() async {
+  //   List<ClinicModel> clinics = [];
+
+  //   for (var c in clinicList) {
+  //     if (c.clinicnameController.text.trim().isNotEmpty &&
+  //         c.doctornameController.text.trim().isNotEmpty) {
+  //       clinics.add(
+  //         ClinicModel()
+  //           ..clinicName = c.clinicnameController.text.trim()
+  //           ..doctorName = c.doctornameController.text.trim()
+  //           ..address = c.addressController.text.trim()
+  //           ..mobile = c.mobileController.text.trim()
+  //           ..upiId = c.upiidController.text.trim()
+  //           ..qualification = c.qualificationController.text.trim(),
+  //       );
+  //     }
+  //   }
+
+  //   if (clinics.isEmpty) {
+  //     Get.snackbar("Error", "Add at least one clinic");
+  //     return;
+  //   }
+
+  //   /// 🔥 SAVE ALL CLINICS
+  //   await DBService.saveClinics(clinics);
+
+  //   /// 🔥 VERY IMPORTANT: SET FIRST CLINIC AS SELECTED
+  //   await DBService.updateSelectedClinic(clinics.first.clinicName);
+
+  //   /// 🔥 NAVIGATION
+  //   if (clinics.length == 1) {
+  //     Get.offAllNamed(routedashboard);
+  //   } else {
+  //     Get.offAllNamed(routeclinicpage);
+  //   }
+  // }
+
   Future<void> saveclinic() async {
     List<ClinicModel> clinics = [];
 
@@ -132,16 +169,20 @@ class ProfileController extends GetxController {
       return;
     }
 
-    /// 🔥 SAVE ALL CLINICS
+    /// 🔥 SAVE NEW CLINICS
     await DBService.saveClinics(clinics);
 
-    /// 🔥 VERY IMPORTANT: SET FIRST CLINIC AS SELECTED
-    await DBService.updateSelectedClinic(clinics.first.clinicName);
+    /// 🔥 GET TOTAL CLINICS FROM DB (IMPORTANT FIX)
+    final allClinics = await DBService.getClinics();
+    print("TOTAL CLINICS: ${allClinics.length}");
 
-    /// 🔥 NAVIGATION
-    if (clinics.length == 1) {
+    /// 🔥 IF ONLY ONE TOTAL → DIRECT DASHBOARD
+    if (allClinics.length == 1) {
+      await DBService.updateSelectedClinic(allClinics.first.id.toString());
+
       Get.offAllNamed(routedashboard);
     } else {
+      /// 🔥 MULTIPLE → GO TO SELECT PAGE
       Get.offAllNamed(routeclinicpage);
     }
   }

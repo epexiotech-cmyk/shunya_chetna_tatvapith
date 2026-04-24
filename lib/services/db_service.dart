@@ -499,10 +499,24 @@ class DBService {
   // 🏥 CLINIC
   // =========================
 
+  // static Future<void> saveClinics(List<ClinicModel> clinics) async {
+  //   await isar.writeTxn(() async {
+  //     await isar.clinicModels.clear();
+  //     await isar.clinicModels.putAll(clinics);
+  //   });
+  // }
   static Future<void> saveClinics(List<ClinicModel> clinics) async {
     await isar.writeTxn(() async {
-      await isar.clinicModels.clear();
-      await isar.clinicModels.putAll(clinics);
+      for (var clinic in clinics) {
+        final existing = await isar.clinicModels
+            .filter()
+            .clinicNameEqualTo(clinic.clinicName)
+            .findFirst();
+
+        if (existing == null) {
+          await isar.clinicModels.put(clinic);
+        }
+      }
     });
   }
 
