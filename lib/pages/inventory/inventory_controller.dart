@@ -49,75 +49,6 @@ class InventoryController extends GetxController {
     }).toList();
   }
 
-  /// 🔥 SAVE INVENTORY
-  Future<void> saveOrUpdateInventory() async {
-    final user = await DBService.getUser();
-    final clinicId = await DBService.getSelectedClinicId();
-
-    if (user == null || clinicId == null) {
-      Get.snackbar("Error", "User/Clinic not found");
-      return;
-    }
-
-    final item = inventoryList.first;
-
-    /// 🔥 CHECK EXISTING MASTER
-    final existing = await DBService.getInventoryByName(
-      item.name.text,
-      user.firebaseUid,
-    );
-
-    int inventoryId;
-
-    if (existing != null) {
-      inventoryId = existing.id;
-    } else {
-      final newItem = InventoryModel()
-        ..userId = user.firebaseUid
-        ..name = item.name.text
-        ..type = item.type.value
-        ..use = item.use.value;
-
-      inventoryId = await DBService.saveInventory(newItem);
-    }
-
-    /// 🔥 CHECK STOCK
-    final existingStock = await DBService.getStockByClinicAndInventory(
-      clinicId,
-      inventoryId,
-    );
-
-    if (existingStock != null) {
-      await DBService.updateStock(
-        existingStock.id,
-        int.tryParse(item.qty.text) ?? 0,
-        int.tryParse(item.price.text) ?? 0,
-      );
-    } else {
-      final stock = InventoryStockModel()
-        ..userId = user.firebaseUid
-        ..clinicId = clinicId
-        ..inventoryId = inventoryId
-        ..qty = int.tryParse(item.qty.text) ?? 0
-        ..price = int.tryParse(item.price.text) ?? 0;
-
-      await DBService.saveInventoryStock(stock);
-    }
-
-    // Get.snackbar("Success", "Inventory Saved");
-
-    /// 🔥 VERY IMPORTANT
-    // 🔥 FORCE REFRESH
-    Get.snackbar(
-      "Success",
-      "Inventory Saved",
-      duration: const Duration(milliseconds: 500),
-    );
-    loadInventory();
-    resetForm();
-    Get.back(closeOverlays: true);
-  }
-
   /// 🔥 LOAD INVENTORY
   Future<void> loadInventory() async {
     final user = await DBService.getUser();
@@ -133,6 +64,75 @@ class InventoryController extends GetxController {
     );
 
     stockList.assignAll(data);
+  }
+
+  Future<void> saveOrUpdateInventory() async {
+    final user = await DBService.getUser();
+    final clinicId = await DBService.getSelectedClinicId();
+
+    if (user == null || clinicId == null) {
+      Get.snackbar("Error", "User/Clinic not found");
+      return;
+    }
+
+    /// 🔥 LOOP ALL ITEMS
+    for (var item in inventoryList) {
+      /// 🔥 VALIDATION (optional but recommended)
+      if (item.name.text.trim().isEmpty) continue;
+
+      /// 🔥 CHECK EXISTING MASTER
+      final existing = await DBService.getInventoryByName(
+        item.name.text,
+        user.firebaseUid,
+      );
+
+      int inventoryId;
+
+      if (existing != null) {
+        inventoryId = existing.id;
+      } else {
+        final newItem = InventoryModel()
+          ..userId = user.firebaseUid
+          ..name = item.name.text
+          ..type = item.type.value
+          ..use = item.use.value;
+
+        inventoryId = await DBService.saveInventory(newItem);
+      }
+
+      /// 🔥 STOCK CHECK
+      final existingStock = await DBService.getStockByClinicAndInventory(
+        clinicId,
+        inventoryId,
+      );
+
+      if (existingStock != null) {
+        await DBService.updateStock(
+          existingStock.id,
+          int.tryParse(item.qty.text) ?? 0,
+          int.tryParse(item.price.text) ?? 0,
+        );
+      } else {
+        final stock = InventoryStockModel()
+          ..userId = user.firebaseUid
+          ..clinicId = clinicId
+          ..inventoryId = inventoryId
+          ..qty = int.tryParse(item.qty.text) ?? 0
+          ..price = int.tryParse(item.price.text) ?? 0;
+
+        await DBService.saveInventoryStock(stock);
+      }
+    }
+
+    Get.snackbar(
+      "Success",
+      "Inventory Saved",
+      duration: const Duration(milliseconds: 500),
+    );
+
+    await loadInventory();
+    resetForm();
+    Get.back(closeOverlays: true);
   }
 
   void setEditData(Map<String, dynamic> data, int index) {
