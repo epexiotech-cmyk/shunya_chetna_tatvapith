@@ -140,6 +140,19 @@ customdrawer({required BuildContext context}) {
               padding: EdgeInsets.only(left: wp(5)),
               mainAxisAlignment: MainAxisAlignment.start,
               context: context,
+              icon: Icons.store_mall_directory_outlined,
+              text: "Clinic",
+              color: AppColors.WHITE,
+              bordercolor: AppColors.LIGHT_GREY,
+              onTap: () {
+                Get.toNamed(routeclinicpage);
+              },
+            ),
+            Customcontainer(
+              margin: EdgeInsets.only(top: hp(1), left: wp(2), right: wp(2)),
+              padding: EdgeInsets.only(left: wp(5)),
+              mainAxisAlignment: MainAxisAlignment.start,
+              context: context,
               icon: Icons.logout_sharp,
               text: "Logout",
               color: AppColors.WHITE,
