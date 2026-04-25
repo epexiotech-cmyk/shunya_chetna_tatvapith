@@ -305,37 +305,40 @@ class PatientController extends GetxController
   Future<VisitModel> addVisit(PatientModel patient) async {
     final now = DateTime.now();
 
+    /// 🔥 FIXED MEDICINE JSON (PRICE ADD)
+    final medicinesData = medicineList.map((e) {
+      return {
+        "name": e["name"],
+        "qty": e["qty"].toString(),
+
+        /// 🔥 MAIN FIX
+        "price": e["price"].toString(),
+      };
+    }).toList();
+
     final visit = VisitModel()
       ..patientId = patient.id
       ..date = "${now.day}/${now.month}/${now.year}"
       ..problem = patientproblemController.text
       ..observation = patientobservationlavelController.text
-      ..medicinesJson = jsonEncode(
-        medicineList
-            .map((e) => {
-                  "name": e["name"],
-                  "qty": e["qty"],
-                })
-            .toList(),
-      )
+      ..medicinesJson = jsonEncode(medicinesData) // 🔥 UPDATED
       ..pdfPaths = pdfList.map((e) => e.path).toList()
       ..disease = selectedDisease.value.isEmpty ? null : selectedDisease.value;
 
     await DBService.saveVisit(visit);
-
-    // print("Saving Disease ::: ${selectedDisease.value}");
 
     Get.snackbar("Success", "Visit Added");
 
     /// reload visits
     await loadVisits(patient.id);
 
-    /// ⚠️ CLEAR AFTER SAVE (SAFE)
+    /// ⚠️ CLEAR AFTER SAVE
     patientproblemController.clear();
     patientobservationlavelController.clear();
     pdfList.clear();
+    print("medicinesData  :: $medicinesData");
 
-    return visit; // 🔥 IMPORTANT
+    return visit;
   }
 
   Future<void> loadVisits(int patientId) async {

@@ -51,6 +51,11 @@ const VisitModelSchema = CollectionSchema(
       id: 6,
       name: r'problem',
       type: IsarType.string,
+    ),
+    r'totalAmount': PropertySchema(
+      id: 7,
+      name: r'totalAmount',
+      type: IsarType.double,
     )
   },
   estimateSize: _visitModelEstimateSize,
@@ -111,6 +116,7 @@ void _visitModelSerialize(
   writer.writeLong(offsets[4], object.patientId);
   writer.writeStringList(offsets[5], object.pdfPaths);
   writer.writeString(offsets[6], object.problem);
+  writer.writeDouble(offsets[7], object.totalAmount);
 }
 
 VisitModel _visitModelDeserialize(
@@ -128,6 +134,7 @@ VisitModel _visitModelDeserialize(
   object.patientId = reader.readLong(offsets[4]);
   object.pdfPaths = reader.readStringList(offsets[5]) ?? [];
   object.problem = reader.readString(offsets[6]);
+  object.totalAmount = reader.readDouble(offsets[7]);
   return object;
 }
 
@@ -152,6 +159,8 @@ P _visitModelDeserializeProp<P>(
       return (reader.readStringList(offset) ?? []) as P;
     case 6:
       return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1280,6 +1289,72 @@ extension VisitModelQueryFilter
       ));
     });
   }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      totalAmountEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'totalAmount',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      totalAmountGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'totalAmount',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      totalAmountLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'totalAmount',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterFilterCondition>
+      totalAmountBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'totalAmount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
 }
 
 extension VisitModelQueryObject
@@ -1359,6 +1434,18 @@ extension VisitModelQuerySortBy
   QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByProblemDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'problem', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByTotalAmount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalAmount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> sortByTotalAmountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalAmount', Sort.desc);
     });
   }
 }
@@ -1448,6 +1535,18 @@ extension VisitModelQuerySortThenBy
       return query.addSortBy(r'problem', Sort.desc);
     });
   }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenByTotalAmount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalAmount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VisitModel, VisitModel, QAfterSortBy> thenByTotalAmountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalAmount', Sort.desc);
+    });
+  }
 }
 
 extension VisitModelQueryWhereDistinct
@@ -1499,6 +1598,12 @@ extension VisitModelQueryWhereDistinct
       return query.addDistinctBy(r'problem', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<VisitModel, VisitModel, QDistinct> distinctByTotalAmount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'totalAmount');
+    });
+  }
 }
 
 extension VisitModelQueryProperty
@@ -1548,6 +1653,12 @@ extension VisitModelQueryProperty
   QueryBuilder<VisitModel, String, QQueryOperations> problemProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'problem');
+    });
+  }
+
+  QueryBuilder<VisitModel, double, QQueryOperations> totalAmountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'totalAmount');
     });
   }
 }

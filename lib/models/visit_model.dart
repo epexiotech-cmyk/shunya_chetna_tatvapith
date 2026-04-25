@@ -22,4 +22,5 @@ class VisitModel {
   /// 📄 pdf paths
   List<String> pdfPaths = [];
   String? disease;
+  double totalAmount = 0;
 }
