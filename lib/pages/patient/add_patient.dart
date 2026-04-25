@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shunya_app/dependency_injection.dart';
 import 'package:shunya_app/pages/patient/patient_controller.dart';
 import 'package:shunya_app/routes/common/common_app_pages.dart';
@@ -654,7 +655,22 @@ class AddPatientPage extends StatelessWidget {
                       final patient = args["patientList"]; // 🔥 correct patient
 
                       final visit = await controller.addVisit(patient);
+                      Get.dialog(
+                        Center(
+                          child: Lottie.asset(
+                            'assets/animations/stethoscope.json',
+                            width: 120,
+                            height: 120,
+                          ),
+                        ),
+                        barrierColor: Colors.black.withOpacity(0.2),
+                        barrierDismissible: false,
+                      );
 
+                      /// 🔥 WAIT (LOADING TIME)
+                      await Future.delayed(const Duration(milliseconds: 2000));
+
+                      /// 🔥 YOUR ORIGINAL FUNCTION
                       Get.toNamed(
                         routebillingdetailspage,
                         arguments: {
@@ -664,6 +680,9 @@ class AddPatientPage extends StatelessWidget {
                           "isHistory": false,
                         },
                       );
+
+                      /// 🔥 CLOSE LOADER
+                      Get.back();
                     } else {
                       controller.savePatient();
                     }

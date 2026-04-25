@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:open_file/open_file.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
@@ -191,8 +192,27 @@ class PatientController extends GetxController
     Get.snackbar("Success", "Patient Saved");
 
     await loadPatients();
+    Get.dialog(
+      Center(
+        child: Lottie.asset(
+          'assets/animations/stethoscope.json',
+          width: 120,
+          height: 120,
+        ),
+      ),
+      barrierColor: Colors.black.withOpacity(0.2),
+      barrierDismissible: false,
+    );
+
+    /// 🔥 WAIT (LOADING TIME)
+    await Future.delayed(const Duration(milliseconds: 2000));
     clearForm();
+
+    /// 🔥 YOUR ORIGINAL FUNCTION
     Get.back(closeOverlays: true);
+
+    /// 🔥 CLOSE LOADER
+    Get.back();
   }
 
   /// 🔥 SET DATA FOR EDIT

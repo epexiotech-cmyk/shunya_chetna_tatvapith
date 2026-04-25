@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../services/db_service.dart';
 import '../../routes/common/common_app_pages.dart';
@@ -122,6 +123,23 @@ class PinController extends GetxController {
         final clinics = await DBService.getClinics();
 
         /// 🔥 ROUTING LOGIC
+        ///
+        Get.dialog(
+          Center(
+            child: Lottie.asset(
+              'assets/animations/stethoscope.json',
+              width: 120,
+              height: 120,
+            ),
+          ),
+          barrierColor: Colors.black.withOpacity(0.2),
+          barrierDismissible: false,
+        );
+
+        /// 🔥 WAIT (LOADING TIME)
+        await Future.delayed(const Duration(milliseconds: 2000));
+
+        /// 🔥 YOUR ORIGINAL FUNCTION
         if (clinics.isEmpty) {
           /// ❌ No clinic → Profile
           Get.offAllNamed(routeprofilepage);
@@ -134,6 +152,9 @@ class PinController extends GetxController {
           /// 🔥 Multiple clinics → Selection page
           Get.offAllNamed(routeclinicpage);
         }
+
+        /// 🔥 CLOSE LOADER
+        Get.back();
       } else {
         Get.snackbar("Error", "Incorrect PIN");
       }

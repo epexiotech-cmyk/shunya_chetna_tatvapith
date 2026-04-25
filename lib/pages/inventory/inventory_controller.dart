@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shunya_app/models/inventory_model.dart';
 import 'package:shunya_app/models/inventory_stock_model.dart';
 import 'package:shunya_app/services/db_service.dart';
@@ -124,11 +125,30 @@ class InventoryController extends GetxController {
       }
     }
 
+    Get.dialog(
+      Center(
+        child: Lottie.asset(
+          'assets/animations/stethoscope.json',
+          width: 120,
+          height: 120,
+        ),
+      ),
+      barrierColor: Colors.black.withOpacity(0.2),
+      barrierDismissible: false,
+    );
+
+    /// 🔥 WAIT (LOADING TIME)
+    await Future.delayed(const Duration(milliseconds: 2000));
+
+    /// 🔥 YOUR ORIGINAL FUNCTION
     Get.snackbar(
       "Success",
       "Inventory Saved",
       duration: const Duration(milliseconds: 500),
     );
+
+    /// 🔥 CLOSE LOADER
+    Get.back();
 
     await loadInventory();
     resetForm();

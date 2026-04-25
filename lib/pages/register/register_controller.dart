@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import '../../auth_controller.dart';
 import '../../services/db_service.dart';
 import '../../routes/common/common_app_pages.dart';
@@ -85,10 +86,30 @@ class RegisterController extends GetxController {
       Get.snackbar('Success', 'Registration Successful');
 
       /// 🔥 NAVIGATION (AUTO DISPOSE SAFE)
+      ///
+      Get.dialog(
+        Center(
+          child: Lottie.asset(
+            'assets/animations/stethoscope.json',
+            width: 120,
+            height: 120,
+          ),
+        ),
+        barrierColor: Colors.black.withOpacity(0.2),
+        barrierDismissible: false,
+      );
+
+      /// 🔥 WAIT (LOADING TIME)
+      await Future.delayed(const Duration(milliseconds: 2000));
+
+      /// 🔥 YOUR ORIGINAL FUNCTION
       Get.offAllNamed(
         routepinpage,
         arguments: {"isSet": true, "isReset": false},
       );
+
+      /// 🔥 CLOSE LOADER
+      Get.back();
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong');
     }

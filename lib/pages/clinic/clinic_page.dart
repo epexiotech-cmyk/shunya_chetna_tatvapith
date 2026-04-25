@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shunya_app/pages/clinic/clinic_controller.dart';
 import 'package:shunya_app/utils/colors.dart';
 import 'package:shunya_app/utils/responsive.dart';
@@ -24,8 +25,28 @@ class ClinicPage extends StatelessWidget {
               final clinic = controller.clinicList[index];
 
               return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    /// 🔥 SHOW LOADER DIALOG
+                    Get.dialog(
+                      Center(
+                        child: Lottie.asset(
+                          'assets/animations/stethoscope.json',
+                          width: 120,
+                          height: 120,
+                        ),
+                      ),
+                      barrierColor: Colors.black.withOpacity(0.2),
+                      barrierDismissible: false,
+                    );
+
+                    /// 🔥 WAIT (LOADING TIME)
+                    await Future.delayed(const Duration(milliseconds: 2000));
+
+                    /// 🔥 YOUR ORIGINAL FUNCTION
                     controller.selectClinic(clinic);
+
+                    /// 🔥 CLOSE LOADER
+                    Get.back();
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: hp(1)),
