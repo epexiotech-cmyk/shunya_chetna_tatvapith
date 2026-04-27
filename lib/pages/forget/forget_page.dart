@@ -34,7 +34,10 @@ class ForgetScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: hp(2)),
-                    const CustomText(text: "PMS Forget Password"),
+                    CustomText(
+                      text: "PMS Forget Password",
+                      fontSize: dp(context, 24),
+                    ),
 
                     SizedBox(height: hp(4)),
                     // Email Field

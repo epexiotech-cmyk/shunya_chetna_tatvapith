@@ -35,7 +35,10 @@ class LoginScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: hp(2)),
-                    const CustomText(text: "PMS Doctor Login"),
+                    CustomText(
+                      text: "PMS Doctor Login",
+                      fontSize: dp(context, 24),
+                    ),
 
                     SizedBox(height: hp(4)),
                     // Email Field
@@ -94,7 +97,7 @@ class LoginScreen extends StatelessWidget {
                         child: CustomText(
                           text: "Forget Password?",
                           color: AppColors.PRIMARY_COLOR,
-                          fontSize: dp(context, 12),
+                          fontSize: dp(context, 16),
                         ),
                       ),
                     ),
@@ -113,14 +116,14 @@ class LoginScreen extends StatelessWidget {
                         CustomText(
                           text: "Don't have an account? ",
                           color: AppColors.LIGHT_GREY,
-                          fontSize: dp(context, 12),
+                          fontSize: dp(context, 16),
                         ),
                         InkWell(
                           onTap: () => controller.goToRegister(),
                           child: CustomText(
                             text: "Create Account",
                             color: AppColors.PRIMARY_COLOR,
-                            fontSize: dp(context, 12),
+                            fontSize: dp(context, 16),
                           ),
                         ),
                       ],

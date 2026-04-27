@@ -35,7 +35,10 @@ class RegisterScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: hp(2)),
-                    const CustomText(text: "PMS Create Account"),
+                    CustomText(
+                      text: "PMS Create Account",
+                      fontSize: dp(context, 24),
+                    ),
 
                     SizedBox(height: hp(4)),
 
@@ -152,14 +155,14 @@ class RegisterScreen extends StatelessWidget {
                         CustomText(
                           text: "Already have an account? ",
                           color: AppColors.LIGHT_GREY,
-                          fontSize: dp(context, 12),
+                          fontSize: dp(context, 16),
                         ),
                         InkWell(
                           onTap: () => controller.goToLogin(),
                           child: CustomText(
                             text: "Back to Login",
                             color: AppColors.PRIMARY_COLOR,
-                            fontSize: dp(context, 12),
+                            fontSize: dp(context, 16),
                           ),
                         ),
                       ],
